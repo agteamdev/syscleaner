@@ -1,0 +1,312 @@
+# Built-in SysCleaner tasks.
+# Put your own tasks into ~/.config/syscleaner/tasks.d/*.yaml (same format).
+#
+# Task fields:
+#   id        unique identifier (latin letters, no spaces)
+#   group     id of a group from `groups`
+#   title     name shown in the list
+#   desc      explanation: what it does and what it risks
+#   cmd       bash command (with root: true write it WITHOUT sudo, it runs via pkexec)
+#   root      needs root privileges (default: false)
+#   risk      safe | caution | danger
+#   default   checked by default
+#   requires  program that must exist, otherwise the task is greyed out
+#   estimate  command whose last output line is a number of bytes (used by dry-run);
+#             helper available: sz PATH... prints the total size of the paths in bytes
+#   preview   command showing what would be affected (used by dry-run)
+#   schedule  true = may be added to the schedule (danger tasks are never scheduled)
+#   disabled  true = hide a built-in task with this id (use it in a user file)
+
+groups:
+  - {id: clean,    title: "🧹 Cleanup"}
+  - {id: find,     title: "🔎 Find junk (read-only)"}
+  - {id: security, title: "🔐 Diagnostics & security"}
+
+tasks:
+  # ───────────── CLEANUP ─────────────
+  - id: apt_clean
+    group: clean
+    title: "APT cache"
+    desc: >-
+      Removes downloaded .deb files from /var/cache/apt/archives and obsolete archives.
+      Packages are downloaded again when needed.
+    cmd: apt-get clean && apt-get autoclean
+    root: true
+    default: true
+    schedule: true
+    estimate: sz /var/cache/apt/archives
+    preview: ls -lh /var/cache/apt/archives/*.deb 2>/dev/null | head -20; true
+
+  - id: apt_autoremove
+    group: clean
+    title: "Unused packages and old kernels (autoremove)"
+    desc: >-
+      Removes auto-installed dependencies of removed packages and kernels the system
+      itself marked as unneeded. The running kernel is never touched by apt.
+    cmd: apt-get autoremove --purge -y
+    root: true
+    risk: caution
+    default: true
+    preview: apt-get -s autoremove --purge | grep '^Remv' | head -40; true
+    estimate: |
+      apt-get -s autoremove --purge 2>/dev/null | awk '/disk space will be freed/ {gsub(",","",$4); m=($5=="kB")?1024:(($5=="MB")?1048576:(($5=="GB")?1073741824:1)); printf "%d\n", $4*m}'
+
+  - id: rc_configs
+    group: clean
+    title: "Leftover configs of removed packages (rc)"
+    desc: >-
+      Packages removed without --purge leave their config files behind.
+      The list is printed to the log.
+    cmd: |
+      L=$(dpkg -l | awk '/^rc/ {print $2}'); echo "Found: ${L:-none}"
+      [ -n "$L" ] && echo "$L" | xargs -r apt-get purge -y || true
+    root: true
+    default: true
+    schedule: true
+    preview: dpkg -l | awk '/^rc/ {print $2}'; true
+
+  - id: journal
+    group: clean
+    title: "systemd logs: keep 2 weeks / max 200 MB"
+    desc: Removes journal entries older than 2 weeks and anything above 200 MB (journalctl --vacuum).
+    cmd: |
+      journalctl --disk-usage
+      journalctl --vacuum-time=2weeks
+      journalctl --vacuum-size=200M
+      journalctl --disk-usage
+    root: true
+    default: true
+    schedule: true
+    preview: journalctl --disk-usage
+    estimate: |
+      s=$(sz /var/log/journal); [ "${s:-0}" -gt 209715200 ] && echo $((s-209715200)) || echo 0
+
+  - id: tmp
+    group: clean
+    title: "Temporary files in /tmp older than 1 day"
+    desc: >-
+      A safe replacement for rm -rf /tmp/*: fresh files and sockets of running
+      programs are left alone.
+    cmd: find /tmp -mindepth 1 -mtime +1 -delete 2>/dev/null || true
+    root: true
+    default: true
+    schedule: true
+    preview: find /tmp -mindepth 1 -mtime +1 2>/dev/null | head -30; true
+    estimate: |
+      find /tmp -mindepth 1 -mtime +1 -print0 2>/dev/null | du -sbc --files0-from=- 2>/dev/null | tail -1 | cut -f1
+
+  - id: thumbs
+    group: clean
+    title: "Thumbnail cache"
+    desc: ~/.thumbnails and ~/.cache/thumbnails. Thumbnails are regenerated when you browse folders.
+    cmd: rm -rf ~/.thumbnails/* ~/.cache/thumbnails/* 2>/dev/null; echo ok
+    default: true
+    schedule: true
+    estimate: sz ~/.thumbnails ~/.cache/thumbnails
+
+  - id: brave
+    group: clean
+    title: "Brave browser cache"
+    desc: >-
+      Only ~/.cache/BraveSoftware. History and passwords live in ~/.config and are not
+      touched; tabs load a bit slower once.
+    cmd: rm -rf ~/.cache/BraveSoftware/* 2>/dev/null; echo ok
+    risk: caution
+    estimate: sz ~/.cache/BraveSoftware
+
+  - id: flatpak_cache
+    group: clean
+    title: "Flatpak cache"
+    desc: ~/.cache/flatpak/system-cache.
+    cmd: rm -rf ~/.cache/flatpak/system-cache 2>/dev/null; echo ok
+    requires: flatpak
+    estimate: sz ~/.cache/flatpak/system-cache
+
+  - id: trash
+    group: clean
+    title: "Empty the trash"
+    desc: Permanently deletes everything in ~/.local/share/Trash. Check the trash first!
+    cmd: rm -rf ~/.local/share/Trash/files/* ~/.local/share/Trash/info/* ~/.local/share/Trash/expunged 2>/dev/null; echo ok
+    risk: caution
+    preview: ls -la ~/.local/share/Trash/files | head -30
+    estimate: sz ~/.local/share/Trash/files
+
+  - id: npm
+    group: clean
+    title: "npm cache"
+    desc: npm cache clean --force.
+    cmd: npm cache clean --force
+    requires: npm
+    schedule: true
+    estimate: sz ~/.npm/_cacache
+
+  - id: pip
+    group: clean
+    title: "pip cache"
+    desc: pip cache purge.
+    cmd: pip3 cache purge 2>/dev/null || python3 -m pip cache purge
+    requires: pip3
+    schedule: true
+    estimate: sz ~/.cache/pip
+
+  - id: go
+    group: clean
+    title: "Go cache (build + modcache)"
+    desc: go clean -cache -modcache. Can free gigabytes; dependencies are downloaded again.
+    cmd: go clean -cache -modcache
+    risk: caution
+    requires: go
+    estimate: sz ~/.cache/go-build ~/go/pkg/mod
+
+  - id: flatpak_unused
+    group: clean
+    title: "Flatpak: unused runtimes"
+    desc: flatpak uninstall --unused. Application data is not removed.
+    cmd: flatpak uninstall --unused -y
+    requires: flatpak
+    preview: flatpak uninstall --unused --assumeno 2>&1 | head -30
+
+  - id: docker_img
+    group: clean
+    title: "Docker: dangling images and build cache"
+    desc: >-
+      docker image prune + builder prune. Volumes, networks and tagged images are not
+      touched. Requires docker access without sudo (docker group).
+    cmd: docker image prune -f; docker builder prune -f
+    risk: caution
+    requires: docker
+    preview: docker images -f dangling=true
+
+  - id: docker_cont
+    group: clean
+    title: "Docker: stopped containers"
+    desc: >-
+      docker container prune. Check docker ps -a first: a stopped container may still
+      be needed (for example a Portainer stack).
+    cmd: docker ps -a; docker container prune -f
+    risk: danger
+    requires: docker
+    preview: docker ps -a -f status=exited -f status=created
+
+  - id: deborphan
+    group: clean
+    title: "Orphaned packages (deborphan)"
+    desc: >-
+      Removes packages nothing depends on. False positives are possible, so look at the
+      list in the dry-run first. Requires the deborphan package.
+    cmd: |
+      L=$(deborphan); echo "Orphans: ${L:-none}"
+      [ -n "$L" ] && apt-get purge --autoremove -y $L || true
+    root: true
+    risk: danger
+    requires: deborphan
+    preview: deborphan; true
+
+  # ───────────── FIND JUNK ─────────────
+  - id: top_dirs
+    group: find
+    title: "Largest folders in /"
+    desc: Which directories take the most space (see the "Disk" tab for an interactive view).
+    cmd: du -h -x --max-depth=1 / 2>/dev/null | sort -hr | head -15
+    root: true
+
+  - id: top_home
+    group: find
+    title: "Largest folders in your home directory"
+    desc: What eats the space in ~.
+    cmd: du -h --max-depth=1 ~ 2>/dev/null | sort -hr | head -15
+
+  - id: big_files
+    group: find
+    title: "Files larger than 500 MB"
+    desc: Finds large files on the root filesystem.
+    cmd: find / -xdev -type f -size +500M -exec ls -lh {} + 2>/dev/null
+    root: true
+
+  - id: debs
+    group: find
+    title: "Manually downloaded .deb files in ~"
+    desc: A plain list; deleting is up to you.
+    cmd: find ~ -maxdepth 3 -name '*.deb' -exec ls -lh {} \;
+
+  - id: big_logs
+    group: find
+    title: "Large logs in /var/log (>50 MB)"
+    desc: List only, nothing is deleted.
+    cmd: find /var/log -type f -size +50M -exec ls -lh {} \;
+    root: true
+
+  - id: kernels
+    group: find
+    title: "Installed kernels"
+    desc: The running kernel (uname -r) must NEVER be removed.
+    cmd: |
+      echo "Running: $(uname -r)"
+      dpkg --list | grep -E 'linux-image|linux-headers'
+
+  # ───────────── DIAGNOSTICS ─────────────
+  - id: est
+    group: security
+    title: "Current network connections"
+    desc: ss -tunap state established.
+    cmd: ss -tunap state established
+    root: true
+
+  - id: listen
+    group: security
+    title: "Listening ports"
+    desc: Every listening port should be explainable (Docker, Portainer, Deluge...).
+    cmd: ss -tulnp
+    root: true
+
+  - id: ufw
+    group: security
+    title: "Firewall status (ufw)"
+    desc: "If it is disabled: sudo ufw enable."
+    cmd: ufw status verbose
+    root: true
+    requires: ufw
+
+  - id: logins
+    group: security
+    title: "Logins"
+    desc: Recent logins, failed attempts and who is logged in right now.
+    cmd: |
+      last -a | head -20
+      echo '--- failed ---'; lastb 2>/dev/null | head -20
+      echo '--- now ---'; who
+    root: true
+
+  - id: autostart
+    group: security
+    title: "Autostart and cron"
+    desc: Enabled services, slowest units at boot, cron jobs and GUI autostart entries.
+    cmd: |
+      systemctl list-unit-files --state=enabled | grep -v '^systemd'
+      echo; systemd-analyze blame | head -20
+      echo '--- cron ---'; crontab -l 2>/dev/null
+      ls ~/.config/autostart/ 2>/dev/null
+
+  - id: recent
+    group: security
+    title: "System files changed in the last 7 days"
+    desc: /usr/bin, /usr/local/bin, /etc - useful if something looks suspicious.
+    cmd: find /usr/bin /usr/local/bin /etc -mtime -7 -type f 2>/dev/null
+    root: true
+
+  - id: rkhunter
+    group: security
+    title: "rkhunter scan"
+    desc: A long rootkit scan.
+    cmd: rkhunter --check --sk
+    root: true
+    requires: rkhunter
+
+  - id: upgrade
+    group: security
+    title: "Upgrade the system (apt update && upgrade)"
+    desc: "Not read-only: installs updates. A reboot is needed after a kernel update."
+    cmd: apt-get update && apt-get upgrade -y
+    root: true
+    risk: caution
+    requires: apt-get

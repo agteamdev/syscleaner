@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=SysCleaner
+GenericName=System Cleaner
+Comment=Cleanup and diagnostics for Linux Mint / Debian
+Exec=syscleaner
+Icon=syscleaner
+Terminal=false
+Categories=System;Utility;
+Keywords=cleanup;clean;disk;cache;storage;maintenance;
+StartupNotify=true
