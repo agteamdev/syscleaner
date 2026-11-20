@@ -1,6 +1,0 @@
-#!/bin/sh
-# AppImage: приложение на Python, GTK/PyGObject берутся из системы (python3-gi есть в Mint/Ubuntu/Debian).
-HERE="$(dirname "$(readlink -f "$0")")"
-unset PYTHONHOME
-export PYTHONPATH="$HERE/usr/lib/syscleaner${PYTHONPATH:+:$PYTHONPATH}"
-exec python3 -m syscleaner "$@"
