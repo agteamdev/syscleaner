@@ -11,8 +11,8 @@ cp -r syscleaner "$APPDIR/usr/lib/syscleaner/"
 find "$APPDIR" -name __pycache__ -type d -prune -exec rm -rf {} +
 install -m755 packaging/AppRun "$APPDIR/AppRun"
 install -m644 packaging/syscleaner.desktop "$APPDIR/syscleaner.desktop"
-install -m644 packaging/syscleaner.svg "$APPDIR/syscleaner.svg"
-cp "$APPDIR/syscleaner.svg" "$APPDIR/.DirIcon"
+install -m644 packaging/icons/256x256/syscleaner.png "$APPDIR/syscleaner.png"
+cp "$APPDIR/syscleaner.png" "$APPDIR/.DirIcon"
 
 TOOL="${APPIMAGETOOL:-build/appimagetool}"
 if [ ! -x "$TOOL" ]; then

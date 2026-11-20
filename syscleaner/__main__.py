@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import pwd
+import signal
 import sys
 
 from . import __version__
@@ -9,6 +10,7 @@ from .tasks import load
 
 
 def main():
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)  # `syscleaner --list | head` must not traceback
     ap = argparse.ArgumentParser(prog="syscleaner",
                                  description="GUI cleanup and diagnostics for Linux Mint / Debian")
     ap.add_argument("--version", action="version", version=__version__)

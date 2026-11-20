@@ -8,6 +8,7 @@ import shlex
 import shutil
 import subprocess
 
+from .i18n import _
 from .tasks import Task, available
 
 PRELUDE = r"""export DEBIAN_FRONTEND=noninteractive LC_ALL=C.UTF-8
@@ -17,10 +18,11 @@ EST_RE = re.compile(r"^@@EST (\S+) (\d+|-)\s*$")
 
 
 def fmt_size(n) -> str:
+    units = (_("B"), _("KB"), _("MB"), _("GB"), _("TB"))
     n = float(n)
-    for u in ("B", "KB", "MB", "GB", "TB"):
-        if n < 1024 or u == "TB":
-            return f"{n:.0f} {u}" if u == "B" else f"{n:.1f} {u}"
+    for i, u in enumerate(units):
+        if n < 1024 or i == len(units) - 1:
+            return f"{n:.0f} {u}" if i == 0 else f"{n:.1f} {u}"
         n /= 1024
     return "?"
 

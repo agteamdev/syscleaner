@@ -8,6 +8,8 @@ import shlex
 import subprocess
 from pathlib import Path
 
+from .i18n import _
+
 UNIT = "syscleaner"
 CONF_DIR = "/etc/syscleaner"
 FREQS = {
@@ -15,6 +17,8 @@ FREQS = {
     "Weekly (Sunday)": "Sun *-*-* {t}:00",
     "Monthly (1st day)": "*-*-01 {t}:00",
 }
+# display names, same order as FREQS
+FREQ_NAMES = (_("Daily"), _("Weekly (Sunday)"), _("Monthly (1st day)"))
 TIME_RE = re.compile(r"^([01]?\d|2[0-3]):[0-5]\d$")
 
 
@@ -60,7 +64,7 @@ WantedBy=timers.target
 SYSCLEANER_EOF
 systemctl daemon-reload
 systemctl enable --now {UNIT}.timer
-echo "Schedule enabled: {cal}"
+echo "{_('Schedule enabled')}: {cal}"
 systemctl list-timers {UNIT}.timer --no-pager
 """
 
@@ -69,7 +73,7 @@ def uninstall_script() -> str:
     return f"""systemctl disable --now {UNIT}.timer 2>/dev/null || true
 rm -f /etc/systemd/system/{UNIT}.timer /etc/systemd/system/{UNIT}.service {CONF_DIR}/schedule.json
 systemctl daemon-reload
-echo "Schedule disabled and removed"
+echo "{_('Schedule disabled and removed')}"
 """
 
 
@@ -77,9 +81,9 @@ def status() -> str:
     try:
         en = subprocess.run(["systemctl", "is-enabled", f"{UNIT}.timer"], capture_output=True, text=True)
         if en.returncode != 0:
-            return "not configured"
+            return _("not configured")
         nxt = subprocess.run(["systemctl", "show", f"{UNIT}.timer", "-p", "NextElapseUSecRealtime", "--value"],
                              capture_output=True, text=True).stdout.strip()
-        return f"enabled · next run: {nxt or 'n/a'}"
+        return _("enabled · next run: {when}").format(when=nxt or _("n/a"))
     except Exception as e:  # noqa: BLE001
         return f"n/a ({e})"

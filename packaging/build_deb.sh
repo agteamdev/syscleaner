@@ -6,8 +6,7 @@ VER=$(python3 -c "import syscleaner; print(syscleaner.__version__)")
 PKG=build/syscleaner_${VER}_all
 rm -rf "$PKG"; mkdir -p dist
 mkdir -p "$PKG/DEBIAN" "$PKG/usr/bin" "$PKG/usr/lib/syscleaner" \
-         "$PKG/usr/share/applications" "$PKG/usr/share/icons/hicolor/scalable/apps" \
-         "$PKG/usr/share/doc/syscleaner"
+         "$PKG/usr/share/applications" "$PKG/usr/share/doc/syscleaner"
 
 cp -r syscleaner "$PKG/usr/lib/syscleaner/"
 find "$PKG" -name __pycache__ -type d -prune -exec rm -rf {} +
@@ -19,7 +18,10 @@ WRAP
 chmod 755 "$PKG/usr/bin/syscleaner"
 
 install -m644 packaging/syscleaner.desktop "$PKG/usr/share/applications/syscleaner.desktop"
-install -m644 packaging/syscleaner.svg "$PKG/usr/share/icons/hicolor/scalable/apps/syscleaner.svg"
+for dir in packaging/icons/*x*; do
+  size=$(basename "$dir")
+  install -Dm644 "$dir/syscleaner.png" "$PKG/usr/share/icons/hicolor/$size/apps/syscleaner.png"
+done
 install -m644 LICENSE "$PKG/usr/share/doc/syscleaner/copyright"
 
 cat > "$PKG/DEBIAN/control" <<CTL

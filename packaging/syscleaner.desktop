@@ -2,10 +2,13 @@
 Type=Application
 Name=SysCleaner
 GenericName=System Cleaner
+GenericName[ru]=Очистка системы
 Comment=Cleanup and diagnostics for Linux Mint / Debian
+Comment[ru]=Очистка и диагностика Linux Mint / Debian
 Exec=syscleaner
 Icon=syscleaner
 Terminal=false
 Categories=System;Utility;
 Keywords=cleanup;clean;disk;cache;storage;maintenance;
+Keywords[ru]=очистка;кэш;диск;мусор;
 StartupNotify=true

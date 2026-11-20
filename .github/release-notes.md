@@ -12,6 +12,7 @@ A graphical cleanup and diagnostics tool for **Linux Mint / Debian / Ubuntu**, b
 - ⏱ **Scheduling** through a **systemd timer** (daily / weekly / monthly). Logs: `journalctl -u syscleaner`.
 - 📝 **Tasks live in YAML**: add your own in `~/.config/syscleaner/tasks.d/*.yaml` without touching the code, or hide built-in ones.
 - 🔐 One password prompt per run (polkit / `pkexec`), no `sudo` inside the GUI.
+- 🌗 **Follows your system**: light/dark GTK theme and system language (English and Russian included; adding a language is one YAML file).
 - 💻 CLI / headless mode: `syscleaner --list`, `syscleaner --headless --dry-run --tasks tmp,thumbs`.
 
 ### Safe by design

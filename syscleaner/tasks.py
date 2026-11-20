@@ -6,6 +6,8 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
+from .i18n import group_title, task_text
+
 try:
     import yaml
 except ImportError:  # pragma: no cover
@@ -89,4 +91,10 @@ def load():
                 tasks[tid] = t
             except Exception as e:  # noqa: BLE001
                 warnings.append(f"{f.name}: task {str(raw)[:50]!r}: {e}")
+    # apply translations of the system language (English is the source text)
+    groups = {gid: group_title(gid, title) for gid, title in groups.items()}
+    for t in tasks.values():
+        tr = task_text(t.id)
+        t.title = str(tr.get("title", t.title))
+        t.desc = str(tr.get("desc", t.desc)).strip()
     return list(groups.items()), list(tasks.values()), warnings

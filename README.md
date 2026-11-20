@@ -1,4 +1,8 @@
-# SysCleaner
+<p align="center">
+  <img src="packaging/icons/256x256/syscleaner.png" width="128" alt="SysCleaner icon">
+</p>
+
+<h1 align="center">SysCleaner</h1>
 
 **GUI cleanup and diagnostics for Linux Mint / Debian / Ubuntu** (GTK3 + Python).
 
@@ -14,6 +18,13 @@ Pick tasks with checkboxes, read what each one does and how risky it is, preview
 - **Tasks in YAML**: add your own without changing the code.
 - **One password prompt** for all root tasks (polkit / `pkexec`).
 - **Headless / CLI mode** for scripts and the scheduler.
+- **Follows your system**: light/dark GTK theme and system language (English and Russian included; more are one YAML file away).
+
+## Screenshots
+
+| Cleanup | Preview (dry-run) | Disk |
+|---|---|---|
+| ![Cleanup](docs/screenshots/cleanup.png) | ![Preview](docs/screenshots/preview.png) | ![Disk](docs/screenshots/disk.png) |
 
 ## Install
 
@@ -63,13 +74,22 @@ tasks:
 
 Other fields: `root`, `default`, `requires` (a program that must exist, otherwise the task is greyed out). YAML errors are shown as warnings in the log.
 
+## Language and theme
+
+- **Theme**: SysCleaner is a plain GTK3 app, so it uses your current system theme (light or dark). Log colours adapt automatically.
+- **Language**: detected from `LANGUAGE` / `LC_ALL` / `LANG`. Force one with `SYSCLEANER_LANG=en syscleaner`.
+- **Add a language**: copy `syscleaner/data/i18n/ru.yaml` to `<lang>.yaml`, translate the values (keys stay in English), then run `python3 tools/check_i18n.py`. Personal tweaks without touching the repo go to `~/.config/syscleaner/i18n/<lang>.yaml`.
+
 ## Build
 
 ```bash
-make check      # compile + validate YAML
+make check      # compile + validate YAML + check translations
 make deb        # dist/syscleaner_<ver>_all.deb
 make appimage   # dist/SysCleaner-<ver>-x86_64.AppImage (needs internet for appimagetool)
+make screenshots  # refresh docs/screenshots/*.png (run inside a desktop session)
 ```
+
+For light/dark screenshots: `SYSCLEANER_LANG=en GTK_THEME=Adwaita:dark python3 tools/screenshots.py dark` (and `GTK_THEME=Adwaita ... light`).
 
 Pushing a tag builds both packages on GitHub Actions and attaches them to a release:
 
