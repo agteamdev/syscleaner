@@ -1,4 +1,4 @@
-.PHONY: run check deb appimage screenshots clean
+.PHONY: run check deb appimage clean
 run:
 	python3 -m syscleaner
 check:
@@ -9,8 +9,6 @@ deb:
 	./packaging/build_deb.sh
 appimage:
 	./packaging/build_appimage.sh
-screenshots:
-	python3 tools/screenshots.py
 clean:
 	rm -rf build dist
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +

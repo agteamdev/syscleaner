@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
-"""Take README screenshots of the real app. Run it inside a desktop session (X11 / XWayland):
+"""Take the README screenshot (docs/screenshots/cleanup.png) of the real app.
+
+Run it inside a desktop session (X11 / XWayland):
 
     python3 tools/screenshots.py                  # current theme and language
-    SYSCLEANER_LANG=en GTK_THEME=Adwaita:dark python3 tools/screenshots.py dark
-    SYSCLEANER_LANG=en GTK_THEME=Adwaita      python3 tools/screenshots.py light
+    SYSCLEANER_LANG=en GTK_THEME=Adwaita:dark python3 tools/screenshots.py dark   # -> cleanup-dark.png
 
-Output: docs/screenshots/{cleanup,preview,disk}[-<suffix>].png
-
-Privacy: only a fixed allow-list of user-level cache tasks is previewed (no password prompt, no file
-names in the log) and the Disk tab scans /usr, so no personal paths end up in the images.
-Still, look at the PNGs before you commit them.
+The shot shows the Cleanup tab after a preview of a fixed allow-list of user-level cache tasks
+(no password prompt, no file names in the log). Look at the PNG before committing it.
 """
 import os
 import sys
@@ -53,34 +51,25 @@ def main():
             st["wait"] -= 1
             return True
         step = st["step"]
-        if step == 0:  # main tab with the first task selected
+        if step == 0:  # select the first task so the details panel is filled
             win.tree.get_selection().select_path(Gtk.TreePath.new_from_string("0:0"))
-            st["step"], st["wait"] = 1, 2
-        elif step == 1:
-            shot(win, "cleanup")
-            for grp in win.store:
+            for grp in win.store:  # preview only the allow-listed user-level tasks
                 grp[0] = False
                 for ch in grp.iterchildren():
                     ch[0] = bool(ch[3] and ch[2] in PREVIEW_IDS)
+            win.start(True)
+            st["step"], st["wait"] = 1, 2
+        elif step == 1:
+            if win.btn_stop.get_sensitive():  # preview still running
+                return True
+            for grp in win.store:  # back to the default selection for a natural look
+                grp[0] = False
+                for ch in grp.iterchildren():
+                    ch[0] = bool(ch[3] and win.by_id[ch[2]].default)
             win.update_total()
-            win.start(True)  # dry-run of user-level tasks only
-            st["step"], st["wait"] = 2, 2
-        elif step == 2:
-            if win.btn_stop.get_sensitive():  # still running
-                return True
-            st["step"], st["wait"] = 3, 2
-        elif step == 3:
-            shot(win, "preview")
-            win.nb.set_current_page(1)
-            win.disk_tab.scan("/usr")
-            st["step"], st["wait"] = 4, 2
-        elif step == 4:
-            if len(win.disk_tab.store) == 0 and st["wait"] > -60:
-                st["wait"] -= 1
-                return True
-            st["step"], st["wait"] = 5, 2
+            st["step"], st["wait"] = 2, 3
         else:
-            shot(win, "disk")
+            shot(win, "cleanup")
             Gtk.main_quit()
             return False
         return True

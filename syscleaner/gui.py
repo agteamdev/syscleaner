@@ -7,6 +7,7 @@ import re
 import shutil
 import subprocess
 import threading
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -15,7 +16,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import GLib, Gtk, Pango  # noqa: E402
 
-from . import __version__, schedule  # noqa: E402
+from . import __version__, diskscan, schedule  # noqa: E402
 from .i18n import _  # noqa: E402
 from .runner import EST_RE, Runner, build_script, fmt_size  # noqa: E402
 from .tasks import available, load  # noqa: E402
@@ -61,11 +62,23 @@ def _msg(parent, kind, text, secondary=None, buttons=Gtk.ButtonsType.OK):
 
 # ───────────────────────── "Disk" tab ─────────────────────────
 class DiskTab(Gtk.Box):
-    """ncdu-like browser: double-click enters a folder, the bar shows the share of the parent."""
+    """ncdu-like browser: double-click enters a folder, the bar shows the share of the parent.
+
+    Scanning streams results folder by folder, so a progress bar (percent of items done),
+    the item being measured and the elapsed time are shown while it runs.
+    """
 
     def __init__(self):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         self.set_border_width(PAD)
+        self._gen = 0            # scan generation: stale scans are ignored and killed
+        self._proc = None
+        self._scanning = False
+        self._items: list = []
+        self._n = self._done = 0
+        self._cur = ""
+        self._t0 = 0.0
+
         top = Gtk.Box(spacing=6)
         self.entry = Gtk.Entry(text=str(Path.home()), hexpand=True)
         self.entry.connect("activate", lambda *_a: self.scan(self.entry.get_text()))
@@ -82,6 +95,9 @@ class DiskTab(Gtk.Box):
         go = Gtk.Button(label=_("Scan"))
         go.connect("clicked", lambda *_a: self.scan(self.entry.get_text()))
         top.pack_start(go, False, False, 0)
+        self.btn_stop = Gtk.Button(label=_("■ Stop"), sensitive=False)
+        self.btn_stop.connect("clicked", lambda *_a: self.stop_scan())
+        top.pack_start(self.btn_stop, False, False, 0)
         self.pack_start(top, False, False, 0)
 
         self.cur = str(Path.home())
@@ -98,6 +114,10 @@ class DiskTab(Gtk.Box):
         sw.set_shadow_type(Gtk.ShadowType.IN)
         sw.add(tv)
         self.pack_start(sw, True, True, 0)
+
+        self.progress = Gtk.ProgressBar(show_text=True)
+        self.progress.set_no_show_all(True)  # shown only while scanning
+        self.pack_start(self.progress, False, False, 0)
         self.status = Gtk.Label(xalign=0, label=_("Press “Scan”. Double-click a folder to enter it."))
         self.pack_start(self.status, False, False, 0)
 
@@ -106,46 +126,121 @@ class DiskTab(Gtk.Box):
         if row[4]:
             self.scan(row[3])
 
+    # ---- scan control ----
     def scan(self, path):
         path = os.path.abspath(os.path.expanduser(path))
         if not os.path.isdir(path):
             self.status.set_text(_("Not a folder: {path}").format(path=path))
             return
+        self._cancel_running()
+        self._gen += 1
+        gen = self._gen
         self.cur = path
         self.entry.set_text(path)
         self.store.clear()
+        self._items, self._n, self._done, self._cur = [], 0, 0, ""
+        self._t0 = time.monotonic()
+        self._scanning = True
+        self.progress.set_fraction(0.0)
+        self.progress.set_text("")
+        self.progress.show()
+        self.btn_stop.set_sensitive(True)
         self.status.set_text(_("⏳ Scanning… (can take a minute on large filesystems)"))
-        threading.Thread(target=self._scan, args=(path, self.chk_root.get_active()), daemon=True).start()
+        GLib.timeout_add_seconds(1, self._tick, gen)
+        threading.Thread(target=self._scan, args=(path, self.chk_root.get_active(), gen), daemon=True).start()
 
-    def _scan(self, path, as_root):
-        argv = ["du", "-xa", "-B1", "--max-depth=1", path]
-        if as_root:
-            argv.insert(0, "pkexec")
-        p = subprocess.run(argv, capture_output=True, text=True, errors="replace")
-        rows, total = [], 0
-        for line in p.stdout.splitlines():
-            try:
-                size, pp = line.split("\t", 1)
-                size = int(size)
-            except ValueError:
-                continue
-            if pp == path:
-                total = size
-            else:
-                rows.append((size, pp))
-        rows.sort(reverse=True)
-        out = [(size, pp, os.path.isdir(pp) and not os.path.islink(pp)) for size, pp in rows[:500]]
-        GLib.idle_add(self._fill, path, total, out)
+    def _cancel_running(self):
+        self._gen += 1  # makes the running thread stop at its next line
+        if self._proc is not None and self._proc.poll() is None:
+            self._proc.terminate()
 
-    def _fill(self, path, total, rows):
-        if path != self.cur:
+    def stop_scan(self):
+        if not self._scanning:
             return
+        self._cancel_running()
+        self._scanning = False
+        self.progress.hide()
+        self.btn_stop.set_sensitive(False)
+        self.status.set_text(_("Scan stopped"))
+
+    # ---- worker thread ----
+    def _scan(self, path, as_root, gen):
+        try:
+            proc = diskscan.start(path, as_root)
+        except OSError as e:
+            GLib.idle_add(self._failed, str(e), gen)
+            return
+        self._proc = proc
+        for line in proc.stdout:
+            if gen != self._gen:
+                proc.terminate()
+                return
+            ev = diskscan.parse_line(line)
+            if ev is None:
+                continue
+            if ev[0] == "n":
+                GLib.idle_add(self._on_n, ev[1], gen)
+            elif ev[0] == "cur":
+                GLib.idle_add(self._on_cur, ev[1], gen)
+            elif ev[0] == "item":
+                GLib.idle_add(self._on_item, ev[1], ev[2], ev[3], gen)
+        proc.wait()
+        GLib.idle_add(self._finish, path, gen)
+
+    # ---- UI callbacks (main thread) ----
+    def _update_progress(self):
+        pct = int(100 * self._done / self._n) if self._n else 0
+        self.progress.set_fraction(self._done / self._n if self._n else 0.0)
+        self.progress.set_text(_("{pct}% · {done}/{n} · {sec} s · {cur}").format(
+            pct=pct, done=self._done, n=self._n, sec=int(time.monotonic() - self._t0),
+            cur=os.path.basename(self._cur.rstrip("/")) or self._cur))
+
+    def _tick(self, gen):
+        if gen != self._gen or not self._scanning:
+            return False
+        self._update_progress()
+        return True
+
+    def _on_n(self, n, gen):
+        if gen == self._gen:
+            self._n = n
+            self._update_progress()
+
+    def _on_cur(self, cur, gen):
+        if gen == self._gen:
+            self._cur = cur
+            self._update_progress()
+
+    def _on_item(self, isdir, size, path, gen):
+        if gen != self._gen:
+            return
+        self._items.append((size, path, isdir))
+        self._done += 1
+        self.store.append([("📁 " if isdir else "📄 ") + os.path.basename(path), fmt_size(size), 0, path, isdir])
+        self._update_progress()
+
+    def _finish(self, path, gen):
+        if gen != self._gen:
+            return
+        self._scanning = False
+        self.progress.hide()
+        self.btn_stop.set_sensitive(False)
+        rows = sorted(self._items, reverse=True)[:500]
+        total = sum(size for size, _p, _d in self._items)
+        self.store.clear()
         for size, pp, isdir in rows:
             pct = int(100 * size / total) if total else 0
             self.store.append([("📁 " if isdir else "📄 ") + os.path.basename(pp), fmt_size(size),
                                min(pct, 100), pp, isdir])
         self.status.set_text(_("{path} — total {total}, items: {n} (this filesystem only, -x)").format(
-            path=path, total=fmt_size(total), n=len(rows)))
+            path=path, total=fmt_size(total), n=len(self._items)))
+
+    def _failed(self, err, gen):
+        if gen == self._gen:
+            self._scanning = False
+            self.progress.hide()
+            self.btn_stop.set_sensitive(False)
+            self.status.set_text(_("Failed to start: {err}").format(err=err))
 
 
 # ───────────────────────── main window ─────────────────────────

@@ -32,7 +32,7 @@ Priority: optional
 Architecture: all
 Depends: python3, python3-gi, gir1.2-gtk-3.0, python3-yaml, policykit-1 | pkexec
 Recommends: deborphan
-Maintainer: agteamdev <noreply@users.noreply.github.com>
+Maintainer: AG TEAM DEV <agteamdev@users.noreply.github.com>
 Homepage: https://github.com/agteamdev/syscleaner
 Description: GUI cleanup and diagnostics for Linux Mint / Debian
  Pick tasks with explanations and risk levels, preview (dry-run) with size

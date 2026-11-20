@@ -28,6 +28,8 @@ ui:
   "Press “Scan”. Double-click a folder to enter it.": "Нажми «Сканировать». Двойной клик по папке — зайти внутрь."
   "Not a folder: {path}": "Не папка: {path}"
   "⏳ Scanning… (can take a minute on large filesystems)": "⏳ Сканирование… (на больших разделах может занять минуту)"
+  "Scan stopped": "Сканирование остановлено"
+  "{pct}% · {done}/{n} · {sec} s · {cur}": "{pct}% · {done}/{n} · {sec} с · {cur}"
   "{path} — total {total}, items: {n} (this filesystem only, -x)": "{path} — всего {total}, элементов: {n} (только этот раздел, -x)"
 
   "{prog} not found": "{prog} не найден"
