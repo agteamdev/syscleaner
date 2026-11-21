@@ -12,7 +12,10 @@ SysCleaner is a graphical cleanup and diagnostics tool for Linux Mint, Debian an
 - Disk tab: ncdu-style browser with scan progress, drill-down and an optional scan as root
 - Scheduling with a systemd timer (daily, weekly, monthly); logs via `journalctl -u syscleaner`
 - Your own tasks in YAML (`~/.config/syscleaner/tasks.d/`), no code changes needed
-- Follows the system light/dark theme and language (English and Russian included)
+- Follows the system light/dark theme and language (English and Russian included); the language can also be chosen manually
+- Remembers the window size, position and panel split between runs
+- Progress bar with percent and elapsed time while scanning and cleaning
+- About dialog: version, update check, links to the issue tracker, ways to support the project
 - One password prompt per run (polkit / pkexec)
 - CLI / headless mode: `syscleaner --list`, `syscleaner --headless --dry-run --tasks tmp,thumbs`
 

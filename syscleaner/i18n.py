@@ -4,13 +4,17 @@ A catalog is a YAML file  data/i18n/<lang>.yaml  with three sections:
   ui:      {English source string: translation}
   groups:  {group id: translated title}
   tasks:   {task id: {title: ..., desc: ...}}
+  meta:    {name: native language name}   (shown in the language picker)
 Users can add or override translations in ~/.config/syscleaner/i18n/<lang>.yaml.
-Set SYSCLEANER_LANG=en (or ru, ...) to force a language.
+
+Language priority: SYSCLEANER_LANG env var > choice saved in settings.json (About dialog) > system locale.
 """
 from __future__ import annotations
 
 import os
 from pathlib import Path
+
+from . import settings
 
 try:
     import yaml
@@ -26,6 +30,9 @@ def detect_langs() -> list[str]:
     forced = os.environ.get("SYSCLEANER_LANG")
     if forced:
         return [forced]
+    chosen = settings.load().get("language")
+    if isinstance(chosen, str) and chosen not in ("", "auto"):
+        return [chosen]
     raw: list[str] = []
     for var in ("LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG"):
         v = os.environ.get(var)
@@ -76,6 +83,17 @@ def _(msgid: str) -> str:
 
 def group_title(gid: str, default: str) -> str:
     return CATALOG["groups"].get(gid, default)
+
+
+def available_languages() -> list:
+    """[(code, native name)] for the language picker: English plus every installed catalog."""
+    found = {"en": "English"}
+    for folder in (DATA_DIR, USER_DIR):
+        if folder.is_dir():
+            for f in sorted(folder.glob("*.yaml")):
+                meta = _read(f).get("meta") or {}
+                found.setdefault(f.stem, str(meta.get("name") or f.stem))
+    return sorted(found.items(), key=lambda kv: (kv[0] != "en", kv[1].lower()))
 
 
 def task_text(tid: str) -> dict:

@@ -6,6 +6,7 @@ import pwd
 import re
 import shutil
 import subprocess
+import sys
 import threading
 import time
 from datetime import datetime
@@ -14,11 +15,13 @@ from pathlib import Path
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import GLib, Gtk, Pango  # noqa: E402
+gi.require_version("Gdk", "3.0")
+from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
-from . import __version__, diskscan, schedule  # noqa: E402
+from . import __version__, diskscan, schedule, settings  # noqa: E402
+from .about import RESTART, AboutDialog  # noqa: E402
 from .i18n import _  # noqa: E402
-from .runner import EST_RE, Runner, build_script, fmt_size  # noqa: E402
+from .runner import BEGIN_RE, EST_RE, Runner, build_script, fmt_duration, fmt_size  # noqa: E402
 from .tasks import READONLY_GROUPS, available, load  # noqa: E402
 
 RISK = {"safe": _("🟢 safe"), "caution": _("🟡 caution"), "danger": _("🔴 dangerous")}
@@ -194,8 +197,8 @@ class DiskTab(Gtk.Box):
     def _update_progress(self):
         pct = int(100 * self._done / self._n) if self._n else 0
         self.progress.set_fraction(self._done / self._n if self._n else 0.0)
-        self.progress.set_text(_("{pct}% · {done}/{n} · {sec} s · {cur}").format(
-            pct=pct, done=self._done, n=self._n, sec=int(time.monotonic() - self._t0),
+        self.progress.set_text(_("{pct}% · {done}/{n} · {elapsed} · {cur}").format(
+            pct=pct, done=self._done, n=self._n, elapsed=fmt_duration(time.monotonic() - self._t0),
             cur=os.path.basename(self._cur.rstrip("/")) or self._cur))
 
     def _tick(self, gen):
@@ -250,7 +253,20 @@ class DiskTab(Gtk.Box):
 class MainWindow(Gtk.Window):
     def __init__(self):
         super().__init__(title=f"SysCleaner {__version__}")
-        self.set_default_size(1200, 780)
+        self.cfg = settings.load()
+        self._ws = settings.window_state(self.cfg)  # remembered size / position / maximized / panel split
+        self._geom = {k: self._ws[k] for k in ("width", "height", "x", "y") if k in self._ws}
+        self._maximized = False
+        self._busy = False
+        self.set_default_size(self._ws.get("width", 1200), self._ws.get("height", 780))
+        if "x" in self._ws and "y" in self._ws and self._position_ok(
+                self._ws["x"], self._ws["y"], self._ws.get("width", 1200)):
+            self.move(self._ws["x"], self._ws["y"])  # ignored by Wayland compositors, works on X11
+        if self._ws.get("maximized"):
+            self.maximize()
+        self.connect("configure-event", self._on_configure)
+        self.connect("window-state-event", self._on_state)
+        self.connect("delete-event", self._on_delete)
         self.set_icon_name("syscleaner")
         icon = Path(__file__).resolve().parent.parent / "packaging" / "icons" / "256x256" / "syscleaner.png"
         if icon.exists():  # running from a source checkout
@@ -267,9 +283,14 @@ class MainWindow(Gtk.Window):
         outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         outer.set_border_width(PAD)
         self.add(outer)
+        top = Gtk.Box(spacing=8)
         self.disk_lbl = Gtk.Label(xalign=0)
+        top.pack_start(self.disk_lbl, True, True, 0)
+        about = Gtk.Button(label=_("ℹ About"))
+        about.connect("clicked", self.on_about)
+        top.pack_end(about, False, False, 0)
+        outer.pack_start(top, False, False, 0)
         self.disk_bar = Gtk.ProgressBar()
-        outer.pack_start(self.disk_lbl, False, False, 0)
         outer.pack_start(self.disk_bar, False, False, 0)
         self.nb = Gtk.Notebook()
         self.nb.set_show_border(False)  # the panels below carry their own single frame
@@ -282,6 +303,60 @@ class MainWindow(Gtk.Window):
         self.apply_theme()
         for w in self.warnings:
             self.write(f"⚠ {w}\n", "err")
+
+    # ---- window state (remembered between runs) ----
+    def _position_ok(self, x, y, w) -> bool:
+        """True if the saved position still lands on a connected monitor (screens come and go)."""
+        try:
+            display = Gdk.Display.get_default()
+            for i in range(display.get_n_monitors()):
+                g = display.get_monitor(i).get_geometry()
+                if g.x - w + 120 <= x <= g.x + g.width - 120 and g.y - 10 <= y <= g.y + g.height - 80:
+                    return True
+        except Exception:  # noqa: BLE001
+            pass
+        return False
+
+    def _on_configure(self, *_a):
+        if not self._maximized:  # keep the normal (un-maximized) geometry
+            w, h = self.get_size()
+            x, y = self.get_position()
+            self._geom = {"width": w, "height": h, "x": x, "y": y}
+        return False
+
+    def _on_state(self, _w, event):
+        self._maximized = bool(event.new_window_state & Gdk.WindowState.MAXIMIZED)
+        return False
+
+    def save_window_state(self):
+        state = dict(self._geom)
+        state["maximized"] = self._maximized
+        state["paned"] = self.paned.get_position()
+        self.cfg["window"] = state
+        settings.save(self.cfg)
+
+    def _on_delete(self, *_a):
+        self.save_window_state()
+        return False
+
+    def is_busy(self) -> bool:
+        return self._busy or self.disk_tab._scanning
+
+    def restart(self):
+        """Start a fresh copy (used after changing the language)."""
+        self.save_window_state()
+        try:
+            os.execv(sys.executable, [sys.executable, "-m", "syscleaner"] + sys.argv[1:])
+        except OSError as e:
+            self.write(_("Failed to start: {err}").format(err=e) + "\n", "err")
+
+    def on_about(self, _b):
+        dlg = AboutDialog(self, self.cfg, self.is_busy)
+        dlg.show_all()
+        resp = dlg.run()
+        dlg.destroy()
+        if resp == RESTART:
+            self.restart()
 
     # ---- theme ----
     def apply_theme(self, *_a):
@@ -300,6 +375,7 @@ class MainWindow(Gtk.Window):
         page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         page.set_border_width(PAD)
         paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
+        self.paned = paned
         page.pack_start(paned, True, True, 0)
 
         # columns: active, markup, id, sensitive, risk, size
@@ -374,10 +450,16 @@ class MainWindow(Gtk.Window):
         right_frame.set_shadow_type(Gtk.ShadowType.IN)
         right_frame.add(right)
         paned.pack2(right_frame, True, False)
-        paned.set_position(620)
+        paned.set_position(self._ws.get("paned", 620))
+
+        self._run = {"gen": 0, "active": False, "t0": 0.0, "idx": 0, "total": 0, "title": ""}
+        self.run_bar = Gtk.ProgressBar(show_text=True)
+        self.run_bar.set_no_show_all(True)  # shown only while tasks run
+        page.pack_start(self.run_bar, False, False, 0)
 
         bar = Gtk.Box(spacing=8)
-        for text, fn in ((_("Safe only"), self.sel_safe), (_("Select none"), self.sel_none),
+        for text, fn in ((_("Safe only"), self.sel_safe), (_("Select all"), self.sel_all),
+                         (_("Select none"), self.sel_none),
                          (_("Clear log"), lambda *_a: buf.set_text(""))):
             b = Gtk.Button(label=text)
             b.connect("clicked", fn)
@@ -459,6 +541,13 @@ class MainWindow(Gtk.Window):
                 ch[0] = ch[3] and t.risk == "safe" and t.group not in READONLY_GROUPS
         self.update_total()
 
+    def sel_all(self, *_a):
+        for grp in self.store:
+            grp[0] = True
+            for ch in grp.iterchildren():
+                ch[0] = bool(ch[3])  # every task that is available on this system
+        self.update_total()
+
     def sel_none(self, *_a):
         for grp in self.store:
             grp[0] = False
@@ -490,18 +579,44 @@ class MainWindow(Gtk.Window):
         self.update_total()
 
     def set_busy(self, busy):
+        self._busy = busy
         for b in (self.btn_run, self.btn_dry, self.btn_sched):
             b.set_sensitive(not busy)
         self.btn_stop.set_sensitive(busy)
 
     # ---- run / preview ----
     def handle_line(self, line):
+        b = BEGIN_RE.match(line)
+        if b:
+            GLib.idle_add(self._on_begin, int(b.group(1)), int(b.group(2)), b.group(3))
+            return
         m = EST_RE.match(line)
         if m:
             v = None if m.group(2) == "-" else int(m.group(2))
             GLib.idle_add(self._set_est, m.group(1), v)
         else:
             GLib.idle_add(self.write, line + "\n")
+
+    # ---- run progress bar ----
+    def _on_begin(self, idx, total, tid):
+        t = self.by_id.get(tid)
+        self._run.update(idx=idx, total=total, title=t.title if t else tid)
+        self._update_run_bar()
+
+    def _update_run_bar(self):
+        r = self._run
+        done = max(r["idx"] - 1, 0)
+        frac = done / r["total"] if r["total"] else 0.0
+        self.run_bar.set_fraction(frac)
+        self.run_bar.set_text(_("{pct}% · {idx}/{total} · {elapsed} · {title}").format(
+            pct=int(100 * frac), idx=r["idx"], total=r["total"],
+            elapsed=fmt_duration(time.monotonic() - r["t0"]), title=r["title"] or _("starting…")))
+
+    def _tick_run(self, gen):
+        if gen != self._run["gen"] or not self._run["active"]:
+            return False
+        self._update_run_bar()
+        return True
 
     def _set_est(self, tid, v):
         self.estimates[tid] = v
@@ -523,6 +638,12 @@ class MainWindow(Gtk.Window):
         self.set_busy(True)
         self.runner.stopped = False
         self.free_before = self.update_disk()
+        gen = self._run["gen"] + 1
+        self._run = {"gen": gen, "active": True, "t0": time.monotonic(), "idx": 0, "total": len(tasks), "title": ""}
+        self.run_bar.set_fraction(0.0)
+        self._update_run_bar()
+        self.run_bar.show()
+        GLib.timeout_add_seconds(1, self._tick_run, gen)
         head = _("PREVIEW (nothing is deleted)") if dry else _("RUN")
         self.write(f"\n=== {head} · {datetime.now():%H:%M:%S} ===\n", "head")
         threading.Thread(target=self.worker, args=(tasks, dry), daemon=True).start()
@@ -533,11 +654,11 @@ class MainWindow(Gtk.Window):
             ut = [t for t in tasks if not t.root]
             if rt:
                 GLib.idle_add(self.write, "━━ " + _("root tasks (single password prompt)") + " ━━\n", "head")
-                rc = self.runner.stream(["pkexec", "bash", "-c", build_script(rt, dry)], self.handle_line)
+                rc = self.runner.stream(["pkexec", "bash", "-c", build_script(rt, dry, 0, len(tasks))], self.handle_line)
                 GLib.idle_add(self.write, _("[exit code: {rc}]").format(rc=rc) + "\n", "ok" if rc == 0 else "err")
             if ut and not self.runner.stopped:
                 GLib.idle_add(self.write, "━━ " + _("user tasks") + " ━━\n", "head")
-                rc = self.runner.stream(["bash", "-c", build_script(ut, dry)], self.handle_line)
+                rc = self.runner.stream(["bash", "-c", build_script(ut, dry, len(rt), len(tasks))], self.handle_line)
                 GLib.idle_add(self.write, _("[exit code: {rc}]").format(rc=rc) + "\n", "ok" if rc == 0 else "err")
         except Exception as e:  # noqa: BLE001
             GLib.idle_add(self.write, _("Failed to start: {err}").format(err=e) + "\n", "err")
@@ -546,13 +667,17 @@ class MainWindow(Gtk.Window):
 
     def finish(self, dry):
         free = self.update_disk()
+        took = fmt_duration(time.monotonic() - self._run["t0"])
+        self._run["active"] = False
+        self.run_bar.hide()
         if dry:
             self.refresh_sizes()
             tot = sum(self.estimates.get(i) or 0 for i in self.sel_ids())
-            self.write("\n" + _("✔ Preview finished. Can free ≈ {size}").format(size=fmt_size(tot)) + "\n", "ok")
+            self.write("\n" + _("✔ Preview finished. Can free ≈ {size} · {elapsed}").format(
+                size=fmt_size(tot), elapsed=took) + "\n", "ok")
         else:
-            self.write("\n" + _("✔ Done. Free space increased by {size}").format(
-                size=fmt_size(max(0, free - self.free_before))) + "\n", "ok")
+            self.write("\n" + _("✔ Done. Free space increased by {size} · {elapsed}").format(
+                size=fmt_size(max(0, free - self.free_before)), elapsed=took) + "\n", "ok")
             self.estimates.clear()
             self.refresh_sizes()
         self.set_busy(False)

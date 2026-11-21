@@ -19,11 +19,14 @@ Pick tasks with checkboxes, read what each one does and how risky it is, preview
 - **Tasks with explanations and risk levels**: 🟢 safe · 🟡 caution · 🔴 dangerous (dangerous tasks ask for confirmation).
 - **Preview (dry-run)**: deletes nothing; shows what would be affected and a size estimate per task and in total.
 - **Live log** of every command, plus a "freed space" summary.
-- **Disk tab**: ncdu-style browser with a scan progress bar; double-click to drill down, bars show the share of the parent folder, optional scan as root.
+- **Progress** with percent and elapsed time (00:00:00) while scanning and cleaning.
+- **Disk tab**: ncdu-style browser; double-click to drill down, bars show the share of the parent folder, optional scan as root.
 - **Scheduling** via systemd timer (daily / weekly / monthly); logs: `journalctl -u syscleaner`.
 - **Tasks in YAML**: add your own without changing the code.
 - **One password prompt** for all root tasks (polkit / `pkexec`).
-- **Follows your system**: light/dark theme and language (English and Russian included).
+- **Follows your system**: light/dark theme and language (English and Russian included), with a manual language choice.
+- **Remembers the window**: size, position and panel split are restored on the next start.
+- **About dialog**: version, update check with a link to the new release, issue tracker and ways to support the project.
 - **Headless / CLI mode** for scripts and the scheduler.
 
 ## Install
@@ -85,8 +88,8 @@ Other fields: `root`, `default`, `requires` (a program that must exist), `requir
 ## Language and theme
 
 - **Theme**: SysCleaner is a plain GTK3 app, so it uses your current system theme (light or dark).
-- **Language**: detected from `LANGUAGE` / `LC_ALL` / `LANG`; force one with `SYSCLEANER_LANG=en syscleaner`.
-- **Add a language**: copy `syscleaner/data/i18n/ru.yaml` to `<lang>.yaml`, translate the values (keys stay in English) and run `python3 tools/check_i18n.py`.
+- **Language**: pick one in **About** (applies after a restart), or leave it on *System default* (detected from `LANGUAGE` / `LC_ALL` / `LANG`). `SYSCLEANER_LANG=en syscleaner` overrides both. Settings are stored in `~/.config/syscleaner/settings.json`.
+- **Add a language**: copy `syscleaner/data/i18n/ru.yaml` to `<lang>.yaml`, translate the values (keys stay in English), set `meta.name` to the language's own name, and run `python3 tools/check_i18n.py`. The new language then appears in the picker.
 
 ## Build from source
 

@@ -16,6 +16,7 @@ sz() { du -sbc "$@" 2>/dev/null | tail -1 | cut -f1; }
 running() { for p in "$@"; do ps -C "$p" -o stat= 2>/dev/null | grep -qv "^Z" && return 0; done; return 1; }
 """
 EST_RE = re.compile(r"^@@EST (\S+) (\d+|-)\s*$")
+BEGIN_RE = re.compile(r"^@@BEGIN (\d+) (\d+) (\S+)\s*$")  # progress marker: index, total, task id
 
 
 def fmt_size(n) -> str:
@@ -28,10 +29,21 @@ def fmt_size(n) -> str:
     return "?"
 
 
-def build_script(tasks, dry: bool = False) -> str:
-    """Build one bash script for a batch of tasks (real run or dry-run)."""
+def fmt_duration(seconds) -> str:
+    """Seconds -> HH:MM:SS."""
+    s = max(0, int(seconds))
+    return f"{s // 3600:02d}:{s % 3600 // 60:02d}:{s % 60:02d}"
+
+
+def build_script(tasks, dry: bool = False, offset: int = 0, total: int = 0) -> str:
+    """Build one bash script for a batch of tasks (real run or dry-run).
+
+    offset/total let several batches (root + user) report one continuous progress 1..total.
+    """
+    total = total or len(tasks)
     parts = [PRELUDE]
-    for t in tasks:
+    for k, t in enumerate(tasks):
+        parts.append(f"echo @@BEGIN {offset + k + 1} {total} {t.id}")
         parts.append(f"echo; echo {shlex.quote('▶ ' + t.title)}")
         if dry:
             if t.preview:
@@ -89,6 +101,8 @@ def headless(ids, user: str, tasks, dry: bool = False) -> int:
             sel.append(t)
 
     def out(line):
+        if BEGIN_RE.match(line):
+            return  # progress marker for the GUI, not for logs
         m = EST_RE.match(line)
         if m:
             print("  estimate: " + ("n/a" if m.group(2) == "-" else fmt_size(int(m.group(2)))), flush=True)
@@ -102,11 +116,11 @@ def headless(ids, user: str, tasks, dry: bool = False) -> int:
     user_t = [t for t in sel if not t.root]
     if root_t:
         if os.geteuid() == 0:
-            rc_all |= r.stream(["bash", "-c", build_script(root_t, dry)], out)
+            rc_all |= r.stream(["bash", "-c", build_script(root_t, dry, 0, len(sel))], out)
         else:
             print("! root tasks skipped: run as root (sudo)")
     if user_t:
-        rc_all |= r.stream(user_argv(build_script(user_t, dry), user), out)
+        rc_all |= r.stream(user_argv(build_script(user_t, dry, len(root_t), len(sel)), user), out)
     if not dry:
         print(f"\nTotal freed: {fmt_size(max(0, shutil.disk_usage('/').free - free0))}")
     return 1 if rc_all else 0

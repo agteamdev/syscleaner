@@ -39,6 +39,8 @@ def main():
         cat = yaml.safe_load(cat_file.read_text(encoding="utf-8"))
         ui, groups, tasks = cat.get("ui") or {}, cat.get("groups") or {}, cat.get("tasks") or {}
         problems = []
+        if not (cat.get("meta") or {}).get("name"):
+            problems.append("missing meta.name (the native language name shown in the language picker)")
         problems += [f"missing ui string: {s!r}" for s in sorted(src - set(ui))]
         problems += [f"stale ui string: {s!r}" for s in sorted(set(ui) - src)]
         problems += [f"missing group: {g}" for g in sorted(gids - set(groups))]

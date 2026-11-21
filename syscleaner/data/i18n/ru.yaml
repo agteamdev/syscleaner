@@ -2,6 +2,9 @@
 # Ключи раздела ui — английские исходные строки из кода (плейсхолдеры {x} менять нельзя).
 # Проверка: python3 tools/check_i18n.py
 
+meta:
+  name: "Русский"
+
 ui:
   "🟢 safe": "🟢 безопасно"
   "🟡 caution": "🟡 внимание"
@@ -29,7 +32,6 @@ ui:
   "Not a folder: {path}": "Не папка: {path}"
   "⏳ Scanning… (can take a minute on large filesystems)": "⏳ Сканирование… (на больших разделах может занять минуту)"
   "Scan stopped": "Сканирование остановлено"
-  "{pct}% · {done}/{n} · {sec} s · {cur}": "{pct}% · {done}/{n} · {sec} с · {cur}"
   "{path} — total {total}, items: {n} (this filesystem only, -x)": "{path} — всего {total}, элементов: {n} (только этот раздел, -x)"
 
   "{prog} not found": "{prog} не найден"
@@ -61,8 +63,6 @@ ui:
   "user tasks": "пользовательские задачи"
   "[exit code: {rc}]": "[код возврата: {rc}]"
   "Failed to start: {err}": "Не удалось запустить: {err}"
-  "✔ Preview finished. Can free ≈ {size}": "✔ Предпросмотр завершён. Можно освободить ≈ {size}"
-  "✔ Done. Free space increased by {size}": "✔ Готово. Свободного места стало больше на {size}"
 
   "Cleanup schedule (systemd timer)": "Расписание очистки (systemd timer)"
   "Close": "Закрыть"
@@ -85,6 +85,41 @@ ui:
   "Schedule disabled and removed": "Расписание отключено и удалено"
   "not configured": "не настроено"
   "enabled · next run: {when}": "включено · следующий запуск: {when}"
+
+  "ℹ About": "ℹ О программе"
+  "Select all": "Отметить все"
+  "starting…": "запуск…"
+  "{pct}% · {done}/{n} · {elapsed} · {cur}": "{pct}% · {done}/{n} · {elapsed} · {cur}"
+  "{pct}% · {idx}/{total} · {elapsed} · {title}": "{pct}% · {idx}/{total} · {elapsed} · {title}"
+  "✔ Preview finished. Can free ≈ {size} · {elapsed}": "✔ Предпросмотр завершён. Можно освободить ≈ {size} · {elapsed}"
+  "✔ Done. Free space increased by {size} · {elapsed}": "✔ Готово. Свободного места стало больше на {size} · {elapsed}"
+
+  "About SysCleaner": "О программе SysCleaner"
+  "Version {version}": "Версия {version}"
+  "Cleanup and diagnostics for Linux Mint / Debian / Ubuntu": "Очистка и диагностика для Linux Mint / Debian / Ubuntu"
+  "MIT license · © AG TEAM DEV": "Лицензия MIT · © AG TEAM DEV"
+  "Checking for updates…": "Проверка обновлений…"
+  "Check again": "Проверить снова"
+  "Open the release page": "Открыть страницу релиза"
+  "New version available: {latest} (you have {current}).": "Доступна новая версия: {latest} (у вас {current})."
+  "You have the latest version ({current}).": "У вас последняя версия ({current})."
+  "No published releases found yet.": "Опубликованных релизов пока нет."
+  "Could not check for updates ({reason}).": "Не удалось проверить обновления ({reason})."
+  "no connection": "нет соединения"
+  "GitHub rate limit reached, try again later": "превышен лимит запросов GitHub, повторите позже"
+  "unexpected response": "неожиданный ответ сервера"
+  "Website": "Сайт проекта"
+  "Report an issue": "Сообщить о проблеме"
+  "All releases": "Все релизы"
+  "Support the project": "Поддержать проект"
+  "SysCleaner is free and open source. If it saved you time, you can support its development:": "SysCleaner бесплатный и с открытым исходным кодом. Если он сэкономил вам время, можно поддержать разработку:"
+  "Donate (NOWPayments)": "Пожертвовать (NOWPayments)"
+  "Language:": "Язык:"
+  "System default": "Как в системе"
+  "Restart now": "Перезапустить сейчас"
+  "The new language is applied after a restart.": "Новый язык применится после перезапуска."
+  "Wait until the current operation finishes, then restart.": "Дождитесь окончания текущей операции и перезапустите."
+  "The SYSCLEANER_LANG environment variable is set and overrides this choice.": "В окружении задана переменная SYSCLEANER_LANG, она важнее этого выбора."
 
 groups:
   clean: "🧹 Система и пакеты"
