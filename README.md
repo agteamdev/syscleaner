@@ -12,6 +12,10 @@ Pick tasks with checkboxes, read what each one does and how risky it is, preview
 
 ## Features
 
+- **System and package cleanup**: APT, Snap, DNF, Pacman and Zypper caches, old kernels, logs, crash reports, core dumps, Flatpak, thumbnails, trash.
+- **Browsers**: Firefox, Chrome, Chromium, Edge, Brave, Vivaldi and Opera (regular, Snap and Flatpak installs). Only caches are removed, never profiles, passwords or bookmarks, and a running browser is skipped.
+- **Developer tools**: npm, pip, pnpm, Yarn, Cargo, Gradle, Go and Docker.
+- **Only what applies to your system is shown**: missing browsers, package managers and tools are hidden.
 - **Tasks with explanations and risk levels**: 🟢 safe · 🟡 caution · 🔴 dangerous (dangerous tasks ask for confirmation).
 - **Preview (dry-run)**: deletes nothing; shows what would be affected and a size estimate per task and in total.
 - **Live log** of every command, plus a "freed space" summary.
@@ -39,6 +43,8 @@ sudo apt install python3-gi gir1.2-gtk-3.0 python3-yaml policykit-1
 python3 -m syscleaner
 ```
 
+> Built for Debian-based systems. The DNF, Pacman and Zypper tasks are included but not yet tested on those distributions.
+>
 > The AppImage uses the system `python3-gi` / GTK3 (preinstalled on Mint, Ubuntu and Debian desktops).
 > If you enable the schedule from an AppImage, don't move the file afterwards: the timer points to its path.
 
@@ -74,7 +80,7 @@ tasks:
     disabled: true
 ```
 
-Other fields: `root`, `default`, `requires` (a program that must exist, otherwise the task is greyed out). YAML errors are shown as warnings in the log.
+Other fields: `root`, `default`, `requires` (a program that must exist), `requires_path` (folders that must exist, `~` and `*` allowed) and `hide_missing` (hide the task instead of greying it out when those are missing). YAML errors are shown as warnings in the log.
 
 ## Language and theme
 

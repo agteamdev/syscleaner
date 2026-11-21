@@ -19,7 +19,7 @@ from gi.repository import GLib, Gtk, Pango  # noqa: E402
 from . import __version__, diskscan, schedule  # noqa: E402
 from .i18n import _  # noqa: E402
 from .runner import EST_RE, Runner, build_script, fmt_size  # noqa: E402
-from .tasks import available, load  # noqa: E402
+from .tasks import READONLY_GROUPS, available, load  # noqa: E402
 
 RISK = {"safe": _("🟢 safe"), "caution": _("🟡 caution"), "danger": _("🔴 dangerous")}
 ERR_RE = re.compile(r"(?i)(\berror\b|\bfailed\b|permission denied|^E: )")
@@ -304,14 +304,23 @@ class MainWindow(Gtk.Window):
 
         # columns: active, markup, id, sensitive, risk, size
         self.store = Gtk.TreeStore(bool, str, str, bool, str, str)
+        # tasks that do not apply to this system (missing program / no data) are hidden, empty groups too
+        visible = [t for t in self.tasks if available(t) or not t.hide_missing]
+        by_group: dict = {}
+        for t in visible:
+            by_group.setdefault(t.group, []).append(t)
         parents = {}
         for gid, gtitle in self.groups:
-            parents[gid] = self.store.append(None, [False, f"<b>{GLib.markup_escape_text(gtitle)}</b>", "", True, "", ""])
-        for t in self.tasks:
+            if gid in by_group:
+                parents[gid] = self.store.append(
+                    None, [False, f"<b>{GLib.markup_escape_text(gtitle)}</b>", "", True, "", ""])
+        for t in visible:
             ok = available(t)
             label = GLib.markup_escape_text(t.title) + (" ⏱" if t.schedule else "")
             if not ok:
-                label += "  <i>(" + _("{prog} not found").format(prog=GLib.markup_escape_text(t.requires)) + ")</i>"
+                why = _("{prog} not found").format(prog=GLib.markup_escape_text(t.requires)) if t.requires \
+                    else _("nothing found")
+                label += f"  <i>({why})</i>"
             self.store.append(parents[t.group], [t.default and ok, label, t.id, ok, RISK[t.risk], ""])
 
         tv = Gtk.TreeView(model=self.store)
@@ -447,7 +456,7 @@ class MainWindow(Gtk.Window):
             grp[0] = False
             for ch in grp.iterchildren():
                 t = self.by_id[ch[2]]
-                ch[0] = ch[3] and t.risk == "safe" and t.group == "clean"
+                ch[0] = ch[3] and t.risk == "safe" and t.group not in READONLY_GROUPS
         self.update_total()
 
     def sel_none(self, *_a):

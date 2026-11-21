@@ -13,6 +13,7 @@ from .tasks import Task, available
 
 PRELUDE = r"""export DEBIAN_FRONTEND=noninteractive LC_ALL=C.UTF-8
 sz() { du -sbc "$@" 2>/dev/null | tail -1 | cut -f1; }
+running() { for p in "$@"; do ps -C "$p" -o stat= 2>/dev/null | grep -qv "^Z" && return 0; done; return 1; }
 """
 EST_RE = re.compile(r"^@@EST (\S+) (\d+|-)\s*$")
 
@@ -83,7 +84,7 @@ def headless(ids, user: str, tasks, dry: bool = False) -> int:
         elif t.risk == "danger":
             print(f"! skipped (dangerous): {i}")
         elif not available(t):
-            print(f"! skipped ({t.requires} not found): {i}")
+            print(f"! skipped (not available on this system): {i}")
         else:
             sel.append(t)
 

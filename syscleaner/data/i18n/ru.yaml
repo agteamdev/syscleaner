@@ -33,6 +33,7 @@ ui:
   "{path} — total {total}, items: {n} (this filesystem only, -x)": "{path} — всего {total}, элементов: {n} (только этот раздел, -x)"
 
   "{prog} not found": "{prog} не найден"
+  "nothing found": "ничего не найдено"
   "Select a task on the left to see its description and command.\n⏱ means the task can be added to the schedule. “Preview” deletes nothing and shows a size estimate.": "Выбери задачу слева — здесь появятся описание и команда.\n⏱ — задачу можно поставить в расписание. «Предпросмотр» ничего не удаляет и показывает оценку размера."
   "Safe only": "Только безопасные"
   "Select none": "Снять всё"
@@ -86,7 +87,9 @@ ui:
   "enabled · next run: {when}": "включено · следующий запуск: {when}"
 
 groups:
-  clean: "🧹 Очистка"
+  clean: "🧹 Система и пакеты"
+  browsers: "🌐 Браузеры"
+  dev: "🛠 Инструменты разработчика и контейнеры"
   find: "🔎 Поиск мусора (только чтение)"
   security: "🔐 Диагностика и безопасность"
 
@@ -111,9 +114,9 @@ tasks:
     desc: "~/.thumbnails и ~/.cache/thumbnails. Миниатюры пересоздадутся при просмотре папок."
   brave:
     title: "Кэш браузера Brave"
-    desc: "Только ~/.cache/BraveSoftware. История и пароли лежат в ~/.config и не затрагиваются; вкладки один раз загрузятся медленнее."
+    desc: "Удаляет папку кэша Brave (~/.cache/BraveSoftware и кэш Flatpak). История и пароли лежат в ~/.config и не затрагиваются; вкладки один раз загрузятся медленнее."
   flatpak_cache:
-    title: "Кэш Flatpak"
+    title: "Кэш репозиториев Flatpak"
     desc: "~/.cache/flatpak/system-cache."
   trash:
     title: "Очистить корзину"
@@ -181,3 +184,63 @@ tasks:
   upgrade:
     title: "Обновить систему (apt update && upgrade)"
     desc: "Не только чтение — ставит обновления. После обновления ядра нужна перезагрузка."
+  snap_old:
+    title: "Старые ревизии Snap"
+    desc: "Удаляет отключённые (старые) ревизии установленных snap-пакетов: snapd хранит их для отката. Текущая ревизия каждого пакета остаётся. На Ubuntu обычно освобождает гигабайты."
+  dnf_clean:
+    title: "Кэш DNF (Fedora / семейство RHEL)"
+    desc: "dnf clean all: удаляет кэш пакетов и метаданные репозиториев. При необходимости они скачаются заново."
+  pacman_cache:
+    title: "Кэш Pacman (семейство Arch)"
+    desc: "paccache -r: удаляет версии пакетов в кэше, кроме трёх последних. Нужен пакет pacman-contrib."
+  zypper_clean:
+    title: "Кэш Zypper (openSUSE)"
+    desc: "zypper clean --all: удаляет кэш пакетов и метаданные репозиториев."
+  old_logs:
+    title: "Архивные логи в /var/log (старше 14 дней)"
+    desc: "Удаляет архивные логи (*.gz, *.xz, *.1 ... *.9, *.old) старше 14 дней. Текущие логи и журнал systemd не затрагиваются. История старых логов будет потеряна."
+  crash_reports:
+    title: "Отчёты о сбоях (/var/crash)"
+    desc: "Удаляет отчёты о сбоях Apport (Ubuntu / Linux Mint). Они бывают большими и могут содержать фрагменты памяти программ."
+  coredumps:
+    title: "Дампы памяти (systemd-coredump)"
+    desc: "Удаляет сохранённые дампы из /var/lib/systemd/coredump. systemd сам чистит их через несколько дней; здесь место освобождается сразу."
+  var_tmp:
+    title: "Временные файлы в /var/tmp старше 30 дней"
+    desc: "/var/tmp сохраняет файлы между перезагрузками, поэтому удаляется только то, к чему не прикасались 30 дней. Программе, которой нужен старый файл оттуда, придётся создать его заново."
+  recent_docs:
+    title: "Список недавних файлов"
+    desc: "Очищает список «недавних документов», который показывают файловые менеджеры и приложения (приватность). Сами файлы не затрагиваются."
+  flatpak_app_caches:
+    title: "Кэши приложений Flatpak"
+    desc: "Очищает папку кэша каждого Flatpak-приложения (~/.var/app/<приложение>/cache): по правилам Flatpak это несущественные данные. Сначала закрой приложения; кэш они пересоздадут."
+  firefox_cache:
+    title: "Кэш Firefox"
+    desc: "Удаляет дисковый кэш Firefox (cache2) для обычной, Snap- и Flatpak-установки. Пароли, история, закладки и cookies сохраняются. Страницы один раз загрузятся медленнее."
+  chrome_cache:
+    title: "Кэш Google Chrome"
+    desc: "Удаляет папку кэша Chrome (~/.cache/google-chrome, а также Beta / Dev и кэш Flatpak). Профиль лежит в ~/.config и не затрагивается."
+  chromium_cache:
+    title: "Кэш Chromium"
+    desc: "Удаляет папку кэша Chromium для обычной, Snap- и Flatpak-установки. Профиль лежит в ~/.config и не затрагивается."
+  edge_cache:
+    title: "Кэш Microsoft Edge"
+    desc: "Удаляет папку кэша Edge (~/.cache/microsoft-edge и кэш Flatpak). Профиль лежит в ~/.config и не затрагивается."
+  vivaldi_cache:
+    title: "Кэш Vivaldi"
+    desc: "Удаляет папку кэша Vivaldi (~/.cache/vivaldi). Профиль лежит в ~/.config и не затрагивается."
+  opera_cache:
+    title: "Кэш Opera"
+    desc: "Удаляет папку кэша Opera (~/.cache/opera). Профиль лежит в ~/.config и не затрагивается."
+  pnpm_store:
+    title: "Хранилище pnpm (неиспользуемые пакеты)"
+    desc: "pnpm store prune: удаляет только пакеты, которые не использует ни один проект на этом компьютере. Это рекомендуемый способ, удалять хранилище целиком не стоит."
+  yarn_classic:
+    title: "Глобальный кэш Yarn (classic)"
+    desc: "Удаляет глобальный кэш Yarn 1.x в ~/.cache/yarn. Файлы проектов не затрагиваются, пакеты скачаются заново при следующей установке. (Кэши проектов Yarn 2+ не трогаются.)"
+  cargo_registry:
+    title: "Кэш и исходники реестра Cargo (Rust)"
+    desc: "Удаляет ~/.cargo/registry/cache и ~/.cargo/registry/src. Крейты скачаются заново при следующей сборке, поэтому до этого офлайн-сборка не работает."
+  gradle_caches:
+    title: "Кэши Gradle"
+    desc: "Удаляет ~/.gradle/caches (часто несколько ГБ). Сначала останови демоны Gradle (gradle --stop). Зависимости скачаются заново при следующей сборке."

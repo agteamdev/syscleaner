@@ -1,6 +1,7 @@
 """Task loading from YAML: built-in tasks plus user tasks (~/.config/syscleaner/tasks.d/*.yaml)."""
 from __future__ import annotations
 
+import glob
 import os
 import shutil
 from dataclasses import dataclass
@@ -16,6 +17,7 @@ except ImportError:  # pragma: no cover
 DATA_DIR = Path(__file__).resolve().parent / "data"
 USER_DIR = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config") / "syscleaner" / "tasks.d"
 RISKS = ("safe", "caution", "danger")
+READONLY_GROUPS = {"find", "security"}  # groups that only inspect the system (not selected by "Safe only")
 
 
 @dataclass
@@ -32,10 +34,23 @@ class Task:
     estimate: str = ""      # command whose last output line is a number of bytes (dry-run)
     preview: str = ""       # command showing what would be affected (dry-run)
     schedule: bool = False  # may be added to the systemd timer schedule
+    requires_path: tuple = ()   # globs (~ allowed); the task needs at least one of them to exist
+    hide_missing: bool = False  # hide the task entirely when `requires` / `requires_path` is not met
 
 
 def available(t: Task) -> bool:
-    return not t.requires or shutil.which(t.requires) is not None
+    """True if the program and/or data the task needs exist on this system."""
+    if t.requires and shutil.which(t.requires) is None:
+        return False
+    if t.requires_path and not any(glob.glob(os.path.expanduser(p)) for p in t.requires_path):
+        return False
+    return True
+
+
+def _paths(value) -> tuple:
+    if not value:
+        return ()
+    return (str(value),) if isinstance(value, str) else tuple(str(v) for v in value)
 
 
 def _read(path: Path, warnings: list):
@@ -81,6 +96,8 @@ def load():
                     estimate=str(raw.get("estimate", "")).strip(),
                     preview=str(raw.get("preview", "")).strip(),
                     schedule=bool(raw.get("schedule", False)),
+                    requires_path=_paths(raw.get("requires_path")),
+                    hide_missing=bool(raw.get("hide_missing", False)),
                 )
                 if t.risk not in RISKS:
                     raise ValueError(f"risk must be one of {RISKS}")

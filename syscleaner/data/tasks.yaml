@@ -2,28 +2,37 @@
 # Put your own tasks into ~/.config/syscleaner/tasks.d/*.yaml (same format).
 #
 # Task fields:
-#   id        unique identifier (latin letters, no spaces)
-#   group     id of a group from `groups`
-#   title     name shown in the list
-#   desc      explanation: what it does and what it risks
-#   cmd       bash command (with root: true write it WITHOUT sudo, it runs via pkexec)
-#   root      needs root privileges (default: false)
-#   risk      safe | caution | danger
-#   default   checked by default
-#   requires  program that must exist, otherwise the task is greyed out
-#   estimate  command whose last output line is a number of bytes (used by dry-run);
-#             helper available: sz PATH... prints the total size of the paths in bytes
-#   preview   command showing what would be affected (used by dry-run)
-#   schedule  true = may be added to the schedule (danger tasks are never scheduled)
-#   disabled  true = hide a built-in task with this id (use it in a user file)
+#   id            unique identifier (latin letters, no spaces)
+#   group         id of a group from `groups`
+#   title         name shown in the list
+#   desc          explanation: what it does and what it risks
+#   cmd           bash command (with root: true write it WITHOUT sudo, it runs via pkexec)
+#   root          needs root privileges (default: false)
+#   risk          safe | caution | danger
+#   default       checked by default
+#   requires      program that must exist
+#   requires_path list of globs (~ allowed); at least one must exist (e.g. browser cache folders)
+#   hide_missing  true = hide the task when requires / requires_path is not met
+#                 (default: it stays visible but greyed out)
+#   estimate      command whose last output line is a number of bytes (used by dry-run);
+#                 helper available: sz PATH... prints the total size of the paths in bytes
+#   preview       command showing what would be affected (used by dry-run)
+#   schedule      true = may be added to the schedule (danger tasks are never scheduled)
+#   disabled      true = hide a built-in task with this id (use it in a user file)
+#
+# Helpers available inside every command:
+#   sz PATH...          total size in bytes
+#   running NAME...     true if a live (non-zombie) process with one of these exact names exists
 
 groups:
-  - {id: clean,    title: "🧹 Cleanup"}
+  - {id: clean,    title: "🧹 System & package cleanup"}
+  - {id: browsers, title: "🌐 Browsers"}
+  - {id: dev,      title: "🛠 Developer tools & containers"}
   - {id: find,     title: "🔎 Find junk (read-only)"}
   - {id: security, title: "🔐 Diagnostics & security"}
 
 tasks:
-  # ───────────── CLEANUP ─────────────
+  # ═════════════ SYSTEM & PACKAGE CLEANUP ═════════════
   - id: apt_clean
     group: clean
     title: "APT cache"
@@ -34,6 +43,8 @@ tasks:
     root: true
     default: true
     schedule: true
+    requires: apt-get
+    hide_missing: true
     estimate: sz /var/cache/apt/archives
     preview: ls -lh /var/cache/apt/archives/*.deb 2>/dev/null | head -20; true
 
@@ -47,6 +58,8 @@ tasks:
     root: true
     risk: caution
     default: true
+    requires: apt-get
+    hide_missing: true
     preview: apt-get -s autoremove --purge | grep '^Remv' | head -40; true
     estimate: |
       apt-get -s autoremove --purge 2>/dev/null | awk '/disk space will be freed/ {gsub(",","",$4); m=($5=="kB")?1024:(($5=="MB")?1048576:(($5=="GB")?1073741824:1)); printf "%d\n", $4*m}'
@@ -63,7 +76,67 @@ tasks:
     root: true
     default: true
     schedule: true
+    requires: dpkg
+    hide_missing: true
     preview: dpkg -l | awk '/^rc/ {print $2}'; true
+
+  - id: snap_old
+    group: clean
+    title: "Old Snap revisions"
+    desc: >-
+      Removes disabled (old) revisions of installed snaps; snapd keeps them for rollback.
+      The current revision of every snap stays. Typically frees gigabytes on Ubuntu.
+    cmd: |
+      LANG=C snap list --all | awk '/disabled/{print $1, $3}' | while read -r name rev; do
+        snap remove "$name" --revision="$rev"
+      done
+    root: true
+    risk: caution
+    requires: snap
+    hide_missing: true
+    preview: LANG=C snap list --all | awk '/disabled/{print $1, "revision", $3}'; true
+    estimate: |
+      LANG=C snap list --all | awk '/disabled/{print "/var/lib/snapd/snaps/" $1 "_" $3 ".snap"}' | xargs -r du -sbc 2>/dev/null | tail -1 | cut -f1
+
+  - id: dnf_clean
+    group: clean
+    title: "DNF cache (Fedora / RHEL family)"
+    desc: >-
+      dnf clean all: removes cached packages and repository metadata. They are downloaded
+      again when needed.
+    cmd: dnf clean all
+    root: true
+    default: true
+    schedule: true
+    requires: dnf
+    hide_missing: true
+    preview: du -sh /var/cache/dnf /var/cache/libdnf5 2>/dev/null; true
+    estimate: sz /var/cache/dnf /var/cache/libdnf5
+
+  - id: pacman_cache
+    group: clean
+    title: "Pacman package cache (Arch family)"
+    desc: >-
+      paccache -r: removes cached package versions older than the last three. Needs the
+      pacman-contrib package.
+    cmd: paccache -r
+    root: true
+    default: true
+    schedule: true
+    requires: paccache
+    hide_missing: true
+    preview: paccache -d; true
+
+  - id: zypper_clean
+    group: clean
+    title: "Zypper cache (openSUSE)"
+    desc: "zypper clean --all: removes cached packages and repository metadata."
+    cmd: zypper clean --all
+    root: true
+    default: true
+    schedule: true
+    requires: zypper
+    hide_missing: true
 
   - id: journal
     group: clean
@@ -77,9 +150,52 @@ tasks:
     root: true
     default: true
     schedule: true
+    requires: journalctl
+    hide_missing: true
     preview: journalctl --disk-usage
     estimate: |
       s=$(sz /var/log/journal); [ "${s:-0}" -gt 209715200 ] && echo $((s-209715200)) || echo 0
+
+  - id: old_logs
+    group: clean
+    title: "Rotated and compressed logs in /var/log (older than 14 days)"
+    desc: >-
+      Removes archived logs (*.gz, *.xz, *.1 ... *.9, *.old) older than 14 days. Current logs
+      and the systemd journal are not touched. Old log history is lost.
+    cmd: |
+      find /var/log -type f \( -name '*.gz' -o -name '*.xz' -o -name '*.[0-9]' -o -name '*.old' \) -mtime +14 -delete 2>/dev/null || true
+    root: true
+    risk: caution
+    preview: |
+      find /var/log -type f \( -name '*.gz' -o -name '*.xz' -o -name '*.[0-9]' -o -name '*.old' \) -mtime +14 2>/dev/null | head -30; true
+    estimate: |
+      find /var/log -type f \( -name '*.gz' -o -name '*.xz' -o -name '*.[0-9]' -o -name '*.old' \) -mtime +14 -print0 2>/dev/null | du -sbc --files0-from=- 2>/dev/null | tail -1 | cut -f1
+
+  - id: crash_reports
+    group: clean
+    title: "Crash reports (/var/crash)"
+    desc: >-
+      Deletes crash reports left by Apport (Ubuntu / Linux Mint). They can be large and may
+      contain fragments of program memory.
+    cmd: find /var/crash -mindepth 1 -type f -delete 2>/dev/null || true
+    root: true
+    requires_path: ["/var/crash"]
+    hide_missing: true
+    preview: ls -lh /var/crash 2>/dev/null | head -20; true
+    estimate: sz /var/crash
+
+  - id: coredumps
+    group: clean
+    title: "Core dumps (systemd-coredump)"
+    desc: >-
+      Deletes stored core dumps from /var/lib/systemd/coredump. systemd removes them after a
+      few days on its own; this frees the space right away.
+    cmd: find /var/lib/systemd/coredump -mindepth 1 -type f -delete 2>/dev/null || true
+    root: true
+    requires_path: ["/var/lib/systemd/coredump"]
+    hide_missing: true
+    preview: ls -lh /var/lib/systemd/coredump 2>/dev/null | head -20; true
+    estimate: sz /var/lib/systemd/coredump
 
   - id: tmp
     group: clean
@@ -95,6 +211,19 @@ tasks:
     estimate: |
       find /tmp -mindepth 1 -mtime +1 -print0 2>/dev/null | du -sbc --files0-from=- 2>/dev/null | tail -1 | cut -f1
 
+  - id: var_tmp
+    group: clean
+    title: "Temporary files in /var/tmp older than 30 days"
+    desc: >-
+      /var/tmp keeps files across reboots, so only entries untouched for 30 days are removed.
+      A program that relies on an old file there may need to recreate it.
+    cmd: find /var/tmp -mindepth 1 -mtime +30 -delete 2>/dev/null || true
+    root: true
+    risk: caution
+    preview: find /var/tmp -mindepth 1 -mtime +30 2>/dev/null | head -30; true
+    estimate: |
+      find /var/tmp -mindepth 1 -mtime +30 -print0 2>/dev/null | du -sbc --files0-from=- 2>/dev/null | tail -1 | cut -f1
+
   - id: thumbs
     group: clean
     title: "Thumbnail cache"
@@ -104,23 +233,14 @@ tasks:
     schedule: true
     estimate: sz ~/.thumbnails ~/.cache/thumbnails
 
-  - id: brave
+  - id: recent_docs
     group: clean
-    title: "Brave browser cache"
+    title: "Recently used files list"
     desc: >-
-      Only ~/.cache/BraveSoftware. History and passwords live in ~/.config and are not
-      touched; tabs load a bit slower once.
-    cmd: rm -rf ~/.cache/BraveSoftware/* 2>/dev/null; echo ok
-    risk: caution
-    estimate: sz ~/.cache/BraveSoftware
-
-  - id: flatpak_cache
-    group: clean
-    title: "Flatpak cache"
-    desc: ~/.cache/flatpak/system-cache.
-    cmd: rm -rf ~/.cache/flatpak/system-cache 2>/dev/null; echo ok
-    requires: flatpak
-    estimate: sz ~/.cache/flatpak/system-cache
+      Clears the "recent documents" list that file managers and apps show (a privacy
+      cleanup). Your files themselves are not touched.
+    cmd: rm -f ~/.local/share/recently-used.xbel; echo ok
+    estimate: sz ~/.local/share/recently-used.xbel
 
   - id: trash
     group: clean
@@ -131,32 +251,14 @@ tasks:
     preview: ls -la ~/.local/share/Trash/files | head -30
     estimate: sz ~/.local/share/Trash/files
 
-  - id: npm
+  - id: flatpak_cache
     group: clean
-    title: "npm cache"
-    desc: npm cache clean --force.
-    cmd: npm cache clean --force
-    requires: npm
-    schedule: true
-    estimate: sz ~/.npm/_cacache
-
-  - id: pip
-    group: clean
-    title: "pip cache"
-    desc: pip cache purge.
-    cmd: pip3 cache purge 2>/dev/null || python3 -m pip cache purge
-    requires: pip3
-    schedule: true
-    estimate: sz ~/.cache/pip
-
-  - id: go
-    group: clean
-    title: "Go cache (build + modcache)"
-    desc: go clean -cache -modcache. Can free gigabytes; dependencies are downloaded again.
-    cmd: go clean -cache -modcache
-    risk: caution
-    requires: go
-    estimate: sz ~/.cache/go-build ~/go/pkg/mod
+    title: "Flatpak repository cache"
+    desc: ~/.cache/flatpak/system-cache.
+    cmd: rm -rf ~/.cache/flatpak/system-cache 2>/dev/null; echo ok
+    requires: flatpak
+    hide_missing: true
+    estimate: sz ~/.cache/flatpak/system-cache
 
   - id: flatpak_unused
     group: clean
@@ -164,29 +266,25 @@ tasks:
     desc: flatpak uninstall --unused. Application data is not removed.
     cmd: flatpak uninstall --unused -y
     requires: flatpak
+    hide_missing: true
     preview: flatpak uninstall --unused --assumeno 2>&1 | head -30
 
-  - id: docker_img
+  - id: flatpak_app_caches
     group: clean
-    title: "Docker: dangling images and build cache"
+    title: "Flatpak app caches"
     desc: >-
-      docker image prune + builder prune. Volumes, networks and tagged images are not
-      touched. Requires docker access without sudo (docker group).
-    cmd: docker image prune -f; docker builder prune -f
+      Empties the cache folder of every Flatpak app (~/.var/app/<app>/cache), which Flatpak
+      defines as the app's non-essential data. Close the apps first; they rebuild their caches.
+    cmd: |
+      for d in ~/.var/app/*/cache; do
+        [ -d "$d" ] && find "$d" -mindepth 1 -delete 2>/dev/null
+      done
+      echo ok
     risk: caution
-    requires: docker
-    preview: docker images -f dangling=true
-
-  - id: docker_cont
-    group: clean
-    title: "Docker: stopped containers"
-    desc: >-
-      docker container prune. Check docker ps -a first: a stopped container may still
-      be needed (for example a Portainer stack).
-    cmd: docker ps -a; docker container prune -f
-    risk: danger
-    requires: docker
-    preview: docker ps -a -f status=exited -f status=created
+    requires_path: ["~/.var/app/*/cache"]
+    hide_missing: true
+    preview: du -sh ~/.var/app/*/cache 2>/dev/null | sort -hr | head -15; true
+    estimate: sz ~/.var/app/*/cache
 
   - id: deborphan
     group: clean
@@ -202,7 +300,263 @@ tasks:
     requires: deborphan
     preview: deborphan; true
 
-  # ───────────── FIND JUNK ─────────────
+  # ═════════════ BROWSERS (only the ones found on this system are shown) ═════════════
+  # Only cache folders are removed. Profiles, passwords, history and bookmarks live elsewhere
+  # (~/.config, ~/.mozilla ...). A running browser is skipped: close it and run the task again.
+  - id: firefox_cache
+    group: browsers
+    title: "Firefox cache"
+    desc: >-
+      Deletes Firefox's disk cache (cache2) for the regular, Snap and Flatpak installs.
+      Passwords, history, bookmarks and cookies are kept. Pages load slower once.
+    cmd: |
+      if running firefox firefox-bin firefox-esr; then
+        echo "Firefox is running: close it and run this task again (skipped)."
+      else
+        rm -rf ~/.cache/mozilla/firefox/*/cache2 ~/snap/firefox/common/.cache/mozilla/firefox/*/cache2 ~/.var/app/org.mozilla.firefox/cache/mozilla/firefox/*/cache2
+        echo ok
+      fi
+    risk: caution
+    requires_path:
+      - "~/.cache/mozilla/firefox/*/cache2"
+      - "~/snap/firefox/common/.cache/mozilla/firefox/*/cache2"
+      - "~/.var/app/org.mozilla.firefox/cache/mozilla/firefox/*/cache2"
+    hide_missing: true
+    preview: |
+      if running firefox firefox-bin firefox-esr; then echo "Firefox is running: it will be skipped until you close it."; else echo "Firefox is not running."; fi
+    estimate: sz ~/.cache/mozilla/firefox/*/cache2 ~/snap/firefox/common/.cache/mozilla/firefox/*/cache2 ~/.var/app/org.mozilla.firefox/cache/mozilla/firefox/*/cache2
+
+  - id: chrome_cache
+    group: browsers
+    title: "Google Chrome cache"
+    desc: >-
+      Deletes Chrome's cache folder (~/.cache/google-chrome, also Beta / Dev, and the Flatpak
+      cache). The profile lives in ~/.config and is not touched.
+    cmd: |
+      if running chrome google-chrome; then
+        echo "Chrome is running: close it and run this task again (skipped)."
+      else
+        rm -rf ~/.cache/google-chrome* ~/.var/app/com.google.Chrome/cache/google-chrome
+        echo ok
+      fi
+    risk: caution
+    requires_path:
+      - "~/.cache/google-chrome*"
+      - "~/.var/app/com.google.Chrome/cache/google-chrome"
+    hide_missing: true
+    preview: |
+      if running chrome google-chrome; then echo "Chrome is running: it will be skipped until you close it."; else echo "Chrome is not running."; fi
+    estimate: sz ~/.cache/google-chrome* ~/.var/app/com.google.Chrome/cache/google-chrome
+
+  - id: chromium_cache
+    group: browsers
+    title: "Chromium cache"
+    desc: >-
+      Deletes Chromium's cache folder for the regular, Snap and Flatpak installs. The profile
+      lives in ~/.config and is not touched.
+    cmd: |
+      if running chromium chromium-browser; then
+        echo "Chromium is running: close it and run this task again (skipped)."
+      else
+        rm -rf ~/.cache/chromium ~/snap/chromium/common/.cache/chromium ~/.var/app/org.chromium.Chromium/cache/chromium
+        echo ok
+      fi
+    risk: caution
+    requires_path:
+      - "~/.cache/chromium"
+      - "~/snap/chromium/common/.cache/chromium"
+      - "~/.var/app/org.chromium.Chromium/cache/chromium"
+    hide_missing: true
+    preview: |
+      if running chromium chromium-browser; then echo "Chromium is running: it will be skipped until you close it."; else echo "Chromium is not running."; fi
+    estimate: sz ~/.cache/chromium ~/snap/chromium/common/.cache/chromium ~/.var/app/org.chromium.Chromium/cache/chromium
+
+  - id: edge_cache
+    group: browsers
+    title: "Microsoft Edge cache"
+    desc: >-
+      Deletes Edge's cache folder (~/.cache/microsoft-edge and the Flatpak cache). The profile
+      lives in ~/.config and is not touched.
+    cmd: |
+      if running msedge microsoft-edge; then
+        echo "Edge is running: close it and run this task again (skipped)."
+      else
+        rm -rf ~/.cache/microsoft-edge* ~/.var/app/com.microsoft.Edge/cache/microsoft-edge
+        echo ok
+      fi
+    risk: caution
+    requires_path:
+      - "~/.cache/microsoft-edge*"
+      - "~/.var/app/com.microsoft.Edge/cache/microsoft-edge"
+    hide_missing: true
+    preview: |
+      if running msedge microsoft-edge; then echo "Edge is running: it will be skipped until you close it."; else echo "Edge is not running."; fi
+    estimate: sz ~/.cache/microsoft-edge* ~/.var/app/com.microsoft.Edge/cache/microsoft-edge
+
+  - id: brave
+    group: browsers
+    title: "Brave browser cache"
+    desc: >-
+      Deletes Brave's cache folder (~/.cache/BraveSoftware and the Flatpak cache). History and
+      passwords live in ~/.config and are not touched; tabs load a bit slower once.
+    cmd: |
+      if running brave brave-browser; then
+        echo "Brave is running: close it and run this task again (skipped)."
+      else
+        rm -rf ~/.cache/BraveSoftware ~/.var/app/com.brave.Browser/cache/BraveSoftware
+        echo ok
+      fi
+    risk: caution
+    requires_path:
+      - "~/.cache/BraveSoftware"
+      - "~/.var/app/com.brave.Browser/cache/BraveSoftware"
+    hide_missing: true
+    preview: |
+      if running brave brave-browser; then echo "Brave is running: it will be skipped until you close it."; else echo "Brave is not running."; fi
+    estimate: sz ~/.cache/BraveSoftware ~/.var/app/com.brave.Browser/cache/BraveSoftware
+
+  - id: vivaldi_cache
+    group: browsers
+    title: "Vivaldi cache"
+    desc: >-
+      Deletes Vivaldi's cache folder (~/.cache/vivaldi). The profile lives in ~/.config and is
+      not touched.
+    cmd: |
+      if running vivaldi-bin vivaldi; then
+        echo "Vivaldi is running: close it and run this task again (skipped)."
+      else
+        rm -rf ~/.cache/vivaldi*
+        echo ok
+      fi
+    risk: caution
+    requires_path: ["~/.cache/vivaldi*"]
+    hide_missing: true
+    preview: |
+      if running vivaldi-bin vivaldi; then echo "Vivaldi is running: it will be skipped until you close it."; else echo "Vivaldi is not running."; fi
+    estimate: sz ~/.cache/vivaldi*
+
+  - id: opera_cache
+    group: browsers
+    title: "Opera cache"
+    desc: >-
+      Deletes Opera's cache folder (~/.cache/opera). The profile lives in ~/.config and is not
+      touched.
+    cmd: |
+      if running opera; then
+        echo "Opera is running: close it and run this task again (skipped)."
+      else
+        rm -rf ~/.cache/opera*
+        echo ok
+      fi
+    risk: caution
+    requires_path: ["~/.cache/opera*"]
+    hide_missing: true
+    preview: |
+      if running opera; then echo "Opera is running: it will be skipped until you close it."; else echo "Opera is not running."; fi
+    estimate: sz ~/.cache/opera*
+
+  # ═════════════ DEVELOPER TOOLS & CONTAINERS (shown only if the tool is installed) ═════════════
+  - id: npm
+    group: dev
+    title: "npm cache"
+    desc: npm cache clean --force.
+    cmd: npm cache clean --force
+    requires: npm
+    hide_missing: true
+    schedule: true
+    estimate: sz ~/.npm/_cacache
+
+  - id: pip
+    group: dev
+    title: "pip cache"
+    desc: pip cache purge.
+    cmd: pip3 cache purge 2>/dev/null || python3 -m pip cache purge
+    requires: pip3
+    hide_missing: true
+    schedule: true
+    estimate: sz ~/.cache/pip
+
+  - id: pnpm_store
+    group: dev
+    title: "pnpm store (unreferenced packages)"
+    desc: >-
+      pnpm store prune: removes only packages that no project on this machine uses.
+      It is the recommended way, deleting the whole store is not.
+    cmd: pnpm store prune
+    requires: pnpm
+    hide_missing: true
+    schedule: true
+
+  - id: yarn_classic
+    group: dev
+    title: "Yarn (classic) global cache"
+    desc: >-
+      Removes the global Yarn 1.x cache in ~/.cache/yarn. Project files are not touched and
+      packages are downloaded again on the next install. (Yarn 2+ project caches are left alone.)
+    cmd: rm -rf ~/.cache/yarn; echo ok
+    requires_path: ["~/.cache/yarn"]
+    hide_missing: true
+    estimate: sz ~/.cache/yarn
+
+  - id: cargo_registry
+    group: dev
+    title: "Cargo (Rust) registry cache and sources"
+    desc: >-
+      Removes ~/.cargo/registry/cache and ~/.cargo/registry/src. Crates are downloaded again
+      on the next build, so offline builds stop working until then.
+    cmd: rm -rf ~/.cargo/registry/cache ~/.cargo/registry/src; echo ok
+    risk: caution
+    requires_path: ["~/.cargo/registry"]
+    hide_missing: true
+    estimate: sz ~/.cargo/registry/cache ~/.cargo/registry/src
+
+  - id: gradle_caches
+    group: dev
+    title: "Gradle caches"
+    desc: >-
+      Removes ~/.gradle/caches (often several GB). Stop Gradle daemons first (gradle --stop).
+      Dependencies are downloaded again on the next build.
+    cmd: rm -rf ~/.gradle/caches; echo ok
+    risk: caution
+    requires_path: ["~/.gradle/caches"]
+    hide_missing: true
+    estimate: sz ~/.gradle/caches
+
+  - id: go
+    group: dev
+    title: "Go cache (build + modcache)"
+    desc: go clean -cache -modcache. Can free gigabytes; dependencies are downloaded again.
+    cmd: go clean -cache -modcache
+    risk: caution
+    requires: go
+    hide_missing: true
+    estimate: sz ~/.cache/go-build ~/go/pkg/mod
+
+  - id: docker_img
+    group: dev
+    title: "Docker: dangling images and build cache"
+    desc: >-
+      docker image prune + builder prune. Volumes, networks and tagged images are not
+      touched. Requires docker access without sudo (docker group).
+    cmd: docker image prune -f; docker builder prune -f
+    risk: caution
+    requires: docker
+    hide_missing: true
+    preview: docker images -f dangling=true
+
+  - id: docker_cont
+    group: dev
+    title: "Docker: stopped containers"
+    desc: >-
+      docker container prune. Check docker ps -a first: a stopped container may still
+      be needed (for example a Portainer stack).
+    cmd: docker ps -a; docker container prune -f
+    risk: danger
+    requires: docker
+    hide_missing: true
+    preview: docker ps -a -f status=exited -f status=created
+
+  # ═════════════ FIND JUNK ═════════════
   - id: top_dirs
     group: find
     title: "Largest folders in /"
@@ -228,6 +582,8 @@ tasks:
     title: "Manually downloaded .deb files in ~"
     desc: A plain list; deleting is up to you.
     cmd: find ~ -maxdepth 3 -name '*.deb' -exec ls -lh {} \;
+    requires: dpkg
+    hide_missing: true
 
   - id: big_logs
     group: find
@@ -243,8 +599,10 @@ tasks:
     cmd: |
       echo "Running: $(uname -r)"
       dpkg --list | grep -E 'linux-image|linux-headers'
+    requires: dpkg
+    hide_missing: true
 
-  # ───────────── DIAGNOSTICS ─────────────
+  # ═════════════ DIAGNOSTICS ═════════════
   - id: est
     group: security
     title: "Current network connections"
@@ -310,3 +668,4 @@ tasks:
     root: true
     risk: caution
     requires: apt-get
+    hide_missing: true

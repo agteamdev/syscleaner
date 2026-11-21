@@ -2,7 +2,10 @@ SysCleaner is a graphical cleanup and diagnostics tool for Linux Mint, Debian an
 
 ## Features
 
-- 30 built-in tasks: cleanup, find junk, diagnostics and security checks
+- System and package cleanup: APT, Snap, DNF, Pacman and Zypper caches, old kernels, logs, crash reports, core dumps, Flatpak, thumbnails, trash
+- Browsers: Firefox, Chrome, Chromium, Edge, Brave, Vivaldi and Opera (regular, Snap and Flatpak installs); only caches are removed, never profiles or passwords, and a running browser is skipped
+- Developer tools: npm, pip, pnpm, Yarn, Cargo, Gradle, Go and Docker
+- Only tasks that apply to your system are shown
 - Risk levels (safe / caution / dangerous) with an explanation for every task; dangerous tasks ask for confirmation and are never scheduled
 - Preview (dry-run) with per-task and total size estimates; nothing is deleted
 - Live log with a summary of freed space
@@ -29,4 +32,5 @@ Python 3, `python3-gi`, GTK 3 (`gir1.2-gtk-3.0`), `python3-yaml` and polkit (`pk
 ## Notes
 
 - The AppImage uses the system GTK / PyGObject. If you enable the schedule from an AppImage, do not move the file afterwards.
-- Size estimates are approximate; some tasks (Docker, Flatpak) show `n/a`.
+- Built for Debian-based systems. The DNF, Pacman and Zypper tasks are included but not yet tested on those distributions.
+- Size estimates are approximate; some tasks (Docker, Pacman, Zypper) show `n/a`.
