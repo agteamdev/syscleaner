@@ -1,34 +1,32 @@
-A graphical cleanup and diagnostics tool for **Linux Mint / Debian / Ubuntu**: pick what to clean, read what each task does and how risky it is, preview the result, then run it and watch the live log.
+SysCleaner is a graphical cleanup and diagnostics tool for Linux Mint, Debian and Ubuntu. Pick tasks, read what each one does and how risky it is, preview the result with size estimates, then run it and follow the live log.
 
-### Highlights
+## Features
 
-- 🧹 **30 ready-made tasks** in three groups: cleanup, find junk, diagnostics & security.
-- 🟢🟡🔴 **Risk levels and explanations** for every task; dangerous ones need confirmation and can never be scheduled.
-- 🔍 **Preview (dry-run)** with per-task and total **size estimates** before anything is deleted.
-- 📜 **Live log** with colour-coded output and a "freed space" summary.
-- 📊 **Disk tab**: ncdu-style browser with scan progress, drill-down and optional "as root" scan.
-- ⏱ **Scheduling** through a **systemd timer** (daily / weekly / monthly). Logs: `journalctl -u syscleaner`.
-- 📝 **Tasks live in YAML**: add your own in `~/.config/syscleaner/tasks.d/*.yaml` without touching the code.
-- 🌗 **Follows your system**: light/dark GTK theme and system language (English and Russian included).
-- 🔐 One password prompt per run (polkit / `pkexec`).
-- 💻 CLI / headless mode: `syscleaner --list`, `syscleaner --headless --dry-run --tasks tmp,thumbs`.
+- 30 built-in tasks: cleanup, find junk, diagnostics and security checks
+- Risk levels (safe / caution / dangerous) with an explanation for every task; dangerous tasks ask for confirmation and are never scheduled
+- Preview (dry-run) with per-task and total size estimates; nothing is deleted
+- Live log with a summary of freed space
+- Disk tab: ncdu-style browser with scan progress, drill-down and an optional scan as root
+- Scheduling with a systemd timer (daily, weekly, monthly); logs via `journalctl -u syscleaner`
+- Your own tasks in YAML (`~/.config/syscleaner/tasks.d/`), no code changes needed
+- Follows the system light/dark theme and language (English and Russian included)
+- One password prompt per run (polkit / pkexec)
+- CLI / headless mode: `syscleaner --list`, `syscleaner --headless --dry-run --tasks tmp,thumbs`
 
-### Safe by design
+SysCleaner deliberately does not run `rm -rf /tmp/*`, `rm -rf ~/.cache/*`, `docker system prune -a --volumes`, manual kernel removal or log truncation.
 
-SysCleaner deliberately does **not** run `rm -rf /tmp/*`, `rm -rf ~/.cache/*`, `docker system prune -a --volumes`, manual kernel removal or log truncation.
+## Downloads
 
-### Downloads
-
-| File | For |
+| File | Use with |
 |---|---|
 | `syscleaner_<version>_all.deb` | Linux Mint / Debian / Ubuntu: `sudo apt install ./syscleaner_*_all.deb` |
-| `SysCleaner-<version>-x86_64.AppImage` | Any distro with `python3-gi` + GTK3: `chmod +x` and run |
+| `SysCleaner-<version>-x86_64.AppImage` | Any distro with `python3-gi` and GTK 3: `chmod +x SysCleaner-*.AppImage && ./SysCleaner-*.AppImage` |
 
-### Requirements
+## Requirements
 
-Python 3, `python3-gi`, GTK 3 (`gir1.2-gtk-3.0`), `python3-yaml`, polkit (`pkexec`).
+Python 3, `python3-gi`, GTK 3 (`gir1.2-gtk-3.0`), `python3-yaml` and polkit (`pkexec`).
 
-### Notes
+## Notes
 
-- The AppImage uses the system GTK/PyGObject. If you enable the schedule from an AppImage, do not move the file afterwards.
+- The AppImage uses the system GTK / PyGObject. If you enable the schedule from an AppImage, do not move the file afterwards.
 - Size estimates are approximate; some tasks (Docker, Flatpak) show `n/a`.
