@@ -34,6 +34,38 @@ PALETTE = {
 }
 PAD = 12  # base spacing in pixels
 
+# GTK themes draw a dashed `outline` around the focused list / log. On big panels it just looks
+# like stray dashes (the selected row is already highlighted), so it is switched off for them only.
+CSS = b"""
+treeview.sc-nofocus:focus,
+textview.sc-nofocus:focus,
+textview.sc-nofocus text:focus {
+    outline-style: none;
+    outline-width: 0;
+}
+"""
+
+
+def install_css():
+    provider = Gtk.CssProvider()
+    try:
+        provider.load_from_data(CSS)
+    except GLib.Error:
+        return
+    screen = Gdk.Screen.get_default()
+    if screen is not None:
+        Gtk.StyleContext.add_provider_for_screen(screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+
+def themed_button(label, icon_name):
+    """Button with a real theme icon next to the label (icon skipped if the theme lacks it)."""
+    btn = Gtk.Button(label=label)
+    theme = Gtk.IconTheme.get_default()
+    if theme is not None and theme.has_icon(icon_name):
+        btn.set_image(Gtk.Image.new_from_icon_name(icon_name, Gtk.IconSize.BUTTON))
+        btn.set_always_show_image(True)
+    return btn
+
 
 def pad(widget, h=PAD, v=8):
     """Give a widget breathing room so text does not touch the edges."""
@@ -106,6 +138,7 @@ class DiskTab(Gtk.Box):
         self.cur = str(Path.home())
         self.store = Gtk.ListStore(str, str, int, str, bool)  # name, size, percent, path, is_dir
         tv = Gtk.TreeView(model=self.store)
+        tv.get_style_context().add_class("sc-nofocus")
         c1 = Gtk.TreeViewColumn(_("Name"), Gtk.CellRendererText(xpad=8, ypad=4), text=0)
         c1.set_expand(True)
         tv.append_column(c1)
@@ -253,6 +286,7 @@ class DiskTab(Gtk.Box):
 class MainWindow(Gtk.Window):
     def __init__(self):
         super().__init__(title=f"SysCleaner {__version__}")
+        install_css()
         self.cfg = settings.load()
         self._ws = settings.window_state(self.cfg)  # remembered size / position / maximized / panel split
         self._geom = {k: self._ws[k] for k in ("width", "height", "x", "y") if k in self._ws}
@@ -286,7 +320,7 @@ class MainWindow(Gtk.Window):
         top = Gtk.Box(spacing=8)
         self.disk_lbl = Gtk.Label(xalign=0)
         top.pack_start(self.disk_lbl, True, True, 0)
-        about = Gtk.Button(label=_("ℹ About"))
+        about = themed_button(_("About"), "help-about")
         about.connect("clicked", self.on_about)
         top.pack_end(about, False, False, 0)
         outer.pack_start(top, False, False, 0)
@@ -400,6 +434,7 @@ class MainWindow(Gtk.Window):
             self.store.append(parents[t.group], [t.default and ok, label, t.id, ok, RISK[t.risk], ""])
 
         tv = Gtk.TreeView(model=self.store)
+        tv.get_style_context().add_class("sc-nofocus")
         self.tree = tv
         tv.set_headers_visible(False)
         tv.set_enable_tree_lines(False)
@@ -433,6 +468,7 @@ class MainWindow(Gtk.Window):
         right.pack_start(self.total_lbl, False, False, 0)
         right.pack_start(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL), False, False, 0)
         self.log = Gtk.TextView(editable=False, monospace=True, wrap_mode=Gtk.WrapMode.WORD_CHAR)
+        self.log.get_style_context().add_class("sc-nofocus")
         self.log.set_left_margin(PAD)
         self.log.set_right_margin(PAD)
         self.log.set_top_margin(PAD)

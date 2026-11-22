@@ -1,0 +1,275 @@
+# Українська translation of SysCleaner.
+# Keys of the `ui` section are the English source strings from the code (placeholders like {x} must stay unchanged).
+# Check: python3 tools/check_i18n.py
+
+meta:
+  name: Українська
+ui:
+  (none — check tasks marked with ⏱ in the list): (немає — позначте у списку завдання зі значком ⏱)
+  About: Про програму
+  About SysCleaner: Про SysCleaner
+  All releases: Усі випуски
+  Also see system folders you have no access to (asks for a password): Показати також системні теки без прав доступу (запитає пароль)
+  B: Б
+  KB: КБ
+  MB: МБ
+  GB: ГБ
+  TB: ТБ
+  Check again: Перевірити знову
+  'Checked tasks marked with ⏱ will run:': 'Запускатимуться позначені завдання зі значком ⏱:'
+  Checking for updates…: Перевірка оновлень…
+  Cleanup and diagnostics for Linux Mint / Debian / Ubuntu: Очищення та діагностика для Linux Mint / Debian / Ubuntu
+  Cleanup schedule (systemd timer): Розклад очищення (systemd timer)
+  Clear log: Очистити журнал
+  Close: Закрити
+  Could not check for updates ({reason}).: Не вдалося перевірити оновлення ({reason}).
+  Daily: Щодня
+  Dangerous tasks selected: Вибрано небезпечні завдання
+  Disable schedule: Вимкнути розклад
+  Disabling schedule: Вимкнення розкладу
+  'Disk <b>/</b>: used <b>{used:.1f}</b> GB of {total:.1f}, free <b>{free:.1f}</b> GB': 'Диск <b>/</b>: зайнято <b>{used:.1f}</b> ГБ із {total:.1f}, вільно <b>{free:.1f}</b> ГБ'
+  Donate (NOWPayments): Пожертвувати (NOWPayments)
+  Enable / update: Увімкнути / оновити
+  Enabling schedule: Увімкнення розкладу
+  'Estimated to free for the selection: <b>{size}</b> (approximate)': 'Оцінка обсягу, що звільниться для вибраного: <b>{size}</b> (приблизно)'
+  'Failed to start: {err}': 'Не вдалося запустити: {err}'
+  'Frequency:': 'Періодичність:'
+  GitHub rate limit reached, try again later: перевищено ліміт запитів GitHub, спробуйте пізніше
+  'Language:': 'Мова:'
+  MIT license · © AG TEAM DEV: Ліцензія MIT · © AG TEAM DEV
+  Monthly (1st day): Щомісяця (1-го числа)
+  Name: Назва
+  'New version available: {latest} (you have {current}).': 'Доступна нова версія: {latest} (у вас {current}).'
+  No published releases found yet.: Опублікованих випусків поки немає.
+  No schedulable tasks selected: Немає завдань для розкладу
+  'Not a folder: {path}': 'Не тека: {path}'
+  Nothing selected: Нічого не вибрано
+  Open the release page: Відкрити сторінку випуску
+  PREVIEW (nothing is deleted): ПОПЕРЕДНІЙ ПЕРЕГЛЯД (нічого не видаляється)
+  Press “Scan”. Double-click a folder to enter it.: Натисніть «Сканувати». Подвійний клік по теці — зайти всередину.
+  'Preview uses:': 'Для попереднього перегляду:'
+  RUN: ЗАПУСК
+  Report an issue: Повідомити про проблему
+  Restart now: Перезапустити зараз
+  Risk: Ризик
+  'Risk:': 'Ризик:'
+  Run “Preview” first. Continue anyway?: Спершу зробіть «Попередній перегляд». Усе одно продовжити?
+  'Runs as root via systemd with low priority; logs: journalctl -u syscleaner. Dangerous tasks are never scheduled.': 'Запуск від root через systemd з низьким пріоритетом; журнал: journalctl -u syscleaner. Небезпечні завдання до розкладу не потрапляють.'
+  Safe only: Лише безпечні
+  Scan: Сканувати
+  Scan stopped: Сканування зупинено
+  Schedule disabled and removed: Розклад вимкнено й видалено
+  Schedule enabled: Розклад увімкнено
+  ? 'Select a task on the left to see its description and command.
+
+    ⏱ means the task can be added to the schedule. “Preview” deletes nothing and shows a size estimate.'
+  : 'Виберіть завдання ліворуч — тут з’являться опис і команда.
+
+    ⏱ — завдання можна поставити в розклад. «Попередній перегляд» нічого не видаляє й показує оцінку розміру.'
+  Select all: Позначити все
+  Select none: Зняти все
+  Share of folder: Частка теки
+  Size: Розмір
+  'Status: {status}': 'Стан: {status}'
+  Support the project: Підтримати проєкт
+  'SysCleaner is free and open source. If it saved you time, you can support its development:': 'SysCleaner безкоштовний і з відкритим кодом. Якщо він заощадив вам час, можна підтримати розробку:'
+  System default: Як у системі
+  Task: Завдання
+  The SYSCLEANER_LANG environment variable is set and overrides this choice.: У середовищі задано змінну SYSCLEANER_LANG, вона важливіша за цей вибір.
+  The new language is applied after a restart.: Нова мова застосується після перезапуску.
+  Time must be in HH:MM format: Час має бути у форматі ГГ:ХХ
+  Version {version}: Версія {version}
+  Wait until the current operation finishes, then restart.: Дочекайтеся завершення поточної операції та перезапустіть.
+  Website: Сайт проєкту
+  Weekly (Sunday): Щотижня (неділя)
+  You have the latest version ({current}).: У вас остання версія ({current}).
+  '[exit code: {rc}]': '[код повернення: {rc}]'
+  as root: від root
+  can be scheduled ⏱: можна за розкладом ⏱
+  'enabled · next run: {when}': 'увімкнено · наступний запуск: {when}'
+  'estimate: {size}': 'оцінка: {size}'
+  n/a: н/д
+  needs root (asks for a password): потрібен root (запитає пароль)
+  no connection: немає з’єднання
+  no root needed: без root
+  not configured: не налаштовано
+  nothing found: нічого не знайдено
+  root tasks (single password prompt): завдання root (один запит пароля)
+  starting…: запуск…
+  'time (HH:MM):': 'час (ГГ:ХХ):'
+  unexpected response: неочікувана відповідь сервера
+  user tasks: користувацькі завдання
+  '{path} — total {total}, items: {n} (this filesystem only, -x)': '{path} — усього {total}, елементів: {n} (лише ця файлова система, -x)'
+  '{pct}% · {done}/{n} · {elapsed} · {cur}': '{pct}% · {done}/{n} · {elapsed} · {cur}'
+  '{pct}% · {idx}/{total} · {elapsed} · {title}': '{pct}% · {idx}/{total} · {elapsed} · {title}'
+  '{prog} not found': '{prog} не знайдено'
+  ⏱ Schedule…: ⏱ Розклад…
+  ⏳ Scanning… (can take a minute on large filesystems): ⏳ Сканування… (на великих розділах може тривати хвилину)
+  ■ Stop: ■ Стоп
+  ▶ Run selected: ▶ Запустити вибране
+  ✔ Done. Free space increased by {size} · {elapsed}: ✔ Готово. Вільного місця побільшало на {size} · {elapsed}
+  ✔ Preview finished. Can free ≈ {size} · {elapsed}: ✔ Попередній перегляд завершено. Можна звільнити ≈ {size} · {elapsed}
+  ⬆ Up: ⬆ Вгору
+  📊 Disk: 📊 Диск
+  🔍 Preview: 🔍 Попередній перегляд
+  🔴 dangerous: 🔴 небезпечно
+  🟡 caution: 🟡 обережно
+  🟢 safe: 🟢 безпечно
+  🧹 Cleanup: 🧹 Очищення
+groups:
+  clean: 🧹 Система та пакети
+  browsers: 🌐 Браузери
+  dev: 🛠 Інструменти розробника та контейнери
+  find: 🔎 Пошук сміття (лише читання)
+  security: 🔐 Діагностика та безпека
+tasks:
+  apt_clean:
+    title: Кеш APT
+    desc: Видаляє завантажені .deb із /var/cache/apt/archives і застарілі архіви. За потреби пакети завантажаться знову.
+  apt_autoremove:
+    title: Невикористані пакети та старі ядра (autoremove)
+    desc: Прибирає автозалежності вилучених пакетів і ядра, які система сама позначила непотрібними. Поточне ядро apt не чіпає.
+  rc_configs:
+    title: Залишки конфігів вилучених пакетів (rc)
+    desc: Пакети, вилучені без --purge, залишають конфіги. Список виводиться в журнал.
+  snap_old:
+    title: Старі ревізії Snap
+    desc: 'Видаляє вимкнені (старі) ревізії встановлених snap-пакетів: snapd зберігає їх для відкоту. Поточна ревізія кожного пакета залишається. В Ubuntu зазвичай звільняє гігабайти.'
+  dnf_clean:
+    title: Кеш DNF (Fedora / родина RHEL)
+    desc: 'dnf clean all: видаляє кеш пакетів і метадані репозиторіїв. За потреби вони завантажаться знову.'
+  pacman_cache:
+    title: Кеш Pacman (родина Arch)
+    desc: 'paccache -r: видаляє версії пакетів у кеші, крім трьох останніх. Потрібен пакет pacman-contrib.'
+  zypper_clean:
+    title: Кеш Zypper (openSUSE)
+    desc: 'zypper clean --all: видаляє кеш пакетів і метадані репозиторіїв.'
+  journal:
+    title: 'Журнали systemd: 2 тижні / максимум 200 МБ'
+    desc: Видаляє записи журналу старші за 2 тижні та все понад 200 МБ (journalctl --vacuum).
+  old_logs:
+    title: Архівні журнали в /var/log (старші за 14 днів)
+    desc: Видаляє архівні журнали (*.gz, *.xz, *.1 ... *.9, *.old) старші за 14 днів. Поточні журнали та журнал systemd не чіпаються. Історію старих журналів буде втрачено.
+  crash_reports:
+    title: Звіти про збої (/var/crash)
+    desc: Видаляє звіти про збої Apport (Ubuntu / Linux Mint). Вони бувають великими й можуть містити фрагменти пам’яті програм.
+  coredumps:
+    title: Дампи пам’яті (systemd-coredump)
+    desc: Видаляє збережені дампи з /var/lib/systemd/coredump. systemd сам чистить їх за кілька днів; тут місце звільняється відразу.
+  tmp:
+    title: Тимчасові файли в /tmp старші за добу
+    desc: 'Безпечна заміна rm -rf /tmp/*: свіжі файли та сокети запущених програм не чіпаються.'
+  var_tmp:
+    title: Тимчасові файли в /var/tmp старші за 30 днів
+    desc: /var/tmp зберігає файли між перезавантаженнями, тому видаляється лише те, чого не торкалися 30 днів. Програмі, якій потрібен старий файл звідти, доведеться створити його знову.
+  thumbs:
+    title: Кеш мініатюр
+    desc: ~/.thumbnails і ~/.cache/thumbnails. Мініатюри створяться знову під час перегляду тек.
+  recent_docs:
+    title: Список нещодавніх файлів
+    desc: Очищає список «нещодавніх документів», який показують файлові менеджери та програми (приватність). Самі файли не чіпаються.
+  trash:
+    title: Очистити кошик
+    desc: Безповоротно видаляє все в ~/.local/share/Trash. Перевірте кошик перед запуском!
+  flatpak_cache:
+    title: Кеш репозиторіїв Flatpak
+    desc: ~/.cache/flatpak/system-cache.
+  flatpak_unused:
+    title: 'Flatpak: невикористані рантайми'
+    desc: flatpak uninstall --unused. Дані програм не видаляються.
+  flatpak_app_caches:
+    title: Кеші програм Flatpak
+    desc: Очищає теку кешу кожної програми Flatpak (~/.var/app/<програма>/cache), яку Flatpak визначає як несуттєві дані. Спершу закрийте програми; кеш вони створять знову.
+  deborphan:
+    title: Пакети-сироти (deborphan)
+    desc: Видаляє пакети, від яких ніщо не залежить. Можливі хибні спрацювання, тож перегляньте список у попередньому перегляді. Потрібен пакет deborphan.
+  firefox_cache:
+    title: Кеш Firefox
+    desc: Видаляє дисковий кеш Firefox (cache2) для звичайного, Snap- і Flatpak-встановлення. Паролі, історія, закладки та cookies зберігаються. Сторінки один раз завантажаться повільніше.
+  chrome_cache:
+    title: Кеш Google Chrome
+    desc: Видаляє теку кешу Chrome (~/.cache/google-chrome, а також Beta / Dev і кеш Flatpak). Профіль лежить у ~/.config і не зачіпається.
+  chromium_cache:
+    title: Кеш Chromium
+    desc: Видаляє теку кешу Chromium для звичайного, Snap- і Flatpak-встановлення. Профіль лежить у ~/.config і не зачіпається.
+  edge_cache:
+    title: Кеш Microsoft Edge
+    desc: Видаляє теку кешу Edge (~/.cache/microsoft-edge і кеш Flatpak). Профіль лежить у ~/.config і не зачіпається.
+  brave:
+    title: Кеш браузера Brave
+    desc: Видаляє теку кешу Brave (~/.cache/BraveSoftware і кеш Flatpak). Історія та паролі лежать у ~/.config і не зачіпаються; вкладки один раз завантажаться трохи повільніше.
+  vivaldi_cache:
+    title: Кеш Vivaldi
+    desc: Видаляє теку кешу Vivaldi (~/.cache/vivaldi). Профіль лежить у ~/.config і не зачіпається.
+  opera_cache:
+    title: Кеш Opera
+    desc: Видаляє теку кешу Opera (~/.cache/opera). Профіль лежить у ~/.config і не зачіпається.
+  npm:
+    title: Кеш npm
+    desc: npm cache clean --force.
+  pip:
+    title: Кеш pip
+    desc: pip cache purge.
+  pnpm_store:
+    title: Сховище pnpm (невикористані пакети)
+    desc: 'pnpm store prune: видаляє лише пакети, які не використовує жоден проєкт на цьому комп’ютері. Це рекомендований спосіб, видаляти сховище повністю не варто.'
+  yarn_classic:
+    title: Глобальний кеш Yarn (classic)
+    desc: Видаляє глобальний кеш Yarn 1.x у ~/.cache/yarn. Файли проєктів не зачіпаються, пакети завантажаться знову під час наступного встановлення. (Кеші проєктів Yarn 2+ не чіпаються.)
+  cargo_registry:
+    title: Кеш і вихідні коди реєстру Cargo (Rust)
+    desc: Видаляє ~/.cargo/registry/cache і ~/.cargo/registry/src. Крейти завантажаться знову під час наступної збірки, тож до того офлайн-збірка не працює.
+  gradle_caches:
+    title: Кеші Gradle
+    desc: Видаляє ~/.gradle/caches (часто кілька ГБ). Спершу зупиніть демони Gradle (gradle --stop). Залежності завантажаться знову під час наступної збірки.
+  go:
+    title: Кеш Go (build + modcache)
+    desc: go clean -cache -modcache. Може звільнити гігабайти; залежності завантажаться знову.
+  docker_img:
+    title: 'Docker: «висячі» образи та кеш збірки'
+    desc: docker image prune + builder prune. Томи, мережі та іменовані образи не чіпаються. Потрібен доступ до docker без sudo (група docker).
+  docker_cont:
+    title: 'Docker: зупинені контейнери'
+    desc: 'docker container prune. Спершу перегляньте docker ps -a: зупинений контейнер може бути потрібним (наприклад, стек Portainer).'
+  top_dirs:
+    title: Найбільші теки в /
+    desc: Які каталоги займають найбільше місця (інтерактивний варіант — на вкладці «Диск»).
+  top_home:
+    title: Найбільші теки в домашньому каталозі
+    desc: Що з’їдає місце в ~.
+  big_files:
+    title: Файли понад 500 МБ
+    desc: Пошук великих файлів на кореневому розділі.
+  debs:
+    title: Вручну завантажені .deb у ~
+    desc: Просто список — видаляти чи ні, вирішуєте ви.
+  big_logs:
+    title: Великі журнали в /var/log (>50 МБ)
+    desc: Лише список, нічого не видаляється.
+  kernels:
+    title: Встановлені ядра
+    desc: Поточне ядро (uname -r) видаляти НЕ МОЖНА.
+  est:
+    title: Поточні мережеві з’єднання
+    desc: ss -tunap state established.
+  listen:
+    title: Порти, що слухають
+    desc: Кожен порт має бути пояснюваним (Docker, Portainer, Deluge…).
+  ufw:
+    title: Стан firewall (ufw)
+    desc: 'Якщо вимкнено: sudo ufw enable.'
+  logins:
+    title: Входи в систему
+    desc: Останні входи, невдалі спроби, хто зараз увійшов.
+  autostart:
+    title: Автозапуск і cron
+    desc: Увімкнені служби, найповільніші під час завантаження, cron-завдання та автозапуск графічних програм.
+  recent:
+    title: Системні файли, змінені за 7 днів
+    desc: /usr/bin, /usr/local/bin, /etc — якщо щось насторожує.
+  rkhunter:
+    title: Перевірка rkhunter
+    desc: Тривала перевірка на руткіти.
+  upgrade:
+    title: Оновити систему (apt update && upgrade)
+    desc: Не лише читання — встановлює оновлення. Після оновлення ядра потрібне перезавантаження.

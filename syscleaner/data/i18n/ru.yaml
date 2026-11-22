@@ -86,7 +86,7 @@ ui:
   "not configured": "не настроено"
   "enabled · next run: {when}": "включено · следующий запуск: {when}"
 
-  "ℹ About": "ℹ О программе"
+  "About": "О программе"
   "Select all": "Отметить все"
   "starting…": "запуск…"
   "{pct}% · {done}/{n} · {elapsed} · {cur}": "{pct}% · {done}/{n} · {elapsed} · {cur}"

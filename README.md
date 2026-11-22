@@ -24,7 +24,7 @@ Pick tasks with checkboxes, read what each one does and how risky it is, preview
 - **Scheduling** via systemd timer (daily / weekly / monthly); logs: `journalctl -u syscleaner`.
 - **Tasks in YAML**: add your own without changing the code.
 - **One password prompt** for all root tasks (polkit / `pkexec`).
-- **Follows your system**: light/dark theme and language (English and Russian included), with a manual language choice.
+- **Follows your system**: light/dark theme and language (English, Russian, Ukrainian and Italian included), with a manual language choice.
 - **Remembers the window**: size, position and panel split are restored on the next start.
 - **About dialog**: version, update check with a link to the new release, issue tracker and ways to support the project.
 - **Headless / CLI mode** for scripts and the scheduler.
