@@ -1,0 +1,336 @@
+# Português translation of SysCleaner.
+# Keys of the `ui` section are the English source strings from the code (placeholders like {x} must stay unchanged).
+# Check: python3 tools/check_i18n.py
+
+meta:
+  name: Português
+ui:
+  (none — check tasks marked with ⏱ in the list): (nenhuma — marque na lista as tarefas com ⏱)
+  About: Sobre
+  About SysCleaner: Sobre o SysCleaner
+  About · new version {latest}: Sobre · nova versão {latest}
+  All releases: Todas as versões
+  Also see system folders you have no access to (asks for a password): Mostrar também pastas do sistema sem acesso (pede a senha)
+  B: B
+  Cancel: Cancelar
+  Check again: Verificar novamente
+  Check for updates automatically at startup: Verificar atualizações ao iniciar
+  'Checked tasks marked with ⏱ will run:': 'As tarefas marcadas com ⏱ serão executadas:'
+  Checking for updates…: Verificando atualizações…
+  Cleanup and diagnostics for Linux Mint / Debian / Ubuntu: Limpeza e diagnóstico para Linux Mint / Debian / Ubuntu
+  Cleanup schedule (systemd timer): Agendamento da limpeza (timer do systemd)
+  Clear history: Limpar histórico
+  Clear log: Limpar registro
+  Clear the run history?: Limpar o histórico de execuções?
+  Close: Fechar
+  Command line: Linha de comando
+  Contacts api.github.com at most every 12 hours. Only the app name and version are sent.: Contata api.github.com no máximo a cada 12 horas. Apenas o nome e a versão do aplicativo são enviados.
+  Continue: Continuar
+  Copy path: Copiar caminho
+  Could not check for updates ({reason}).: Não foi possível verificar atualizações ({reason}).
+  'Could not move to the trash: {err}': 'Não foi possível mover para a lixeira: {err}'
+  'Could not open: {err}': 'Não foi possível abrir: {err}'
+  Custom task from {file}: Tarefa própria de {file}
+  Daily: Diariamente
+  'Dangerous tasks:': 'Tarefas perigosas:'
+  Disable schedule: Desativar agendamento
+  Disabling schedule: Desativando o agendamento
+  'Disk <b>/</b>: used <b>{used:.1f}</b> GB of {total:.1f}, free <b>{free:.1f}</b> GB': 'Disco <b>/</b>: <b>{used:.1f}</b> GB usados de {total:.1f}, <b>{free:.1f}</b> GB livres'
+  Donate (NOWPayments): Doar (NOWPayments)
+  Duration: Duração
+  Enable / update: Ativar / atualizar
+  Enabling schedule: Ativando o agendamento
+  Estimated to free about {size} (from the last preview).: 'Espaço estimado a liberar: cerca de {size} (segundo a última prévia).'
+  'Estimated to free for the selection: <b>{size}</b> (approximate)': 'Espaço estimado a liberar com a seleção: <b>{size}</b> (aproximado)'
+  Failed: Erro
+  'Failed to start: {err}': 'Falha ao iniciar: {err}'
+  Freed: Liberado
+  'Frequency:': 'Frequência:'
+  GB: GB
+  GitHub rate limit reached, try again later: limite de solicitações do GitHub atingido, tente mais tarde
+  KB: KB
+  'Language:': 'Idioma:'
+  'Last run: never': 'Última execução: nunca'
+  'Last run: {when} ({result})': 'Última execução: {when} ({result})'
+  MB: MB
+  MIT license · © AG TEAM DEV: Licença MIT · © AG TEAM DEV
+  Manual: Manual
+  Monthly (1st day): Mensalmente (dia 1)
+  Move to trash: Mover para a lixeira
+  Move “{name}” to the trash?: Mover “{name}” para a lixeira?
+  'Moved to the trash: {name}': 'Movido para a lixeira: {name}'
+  Name: Nome
+  'New version available: {latest} (you have {current}).': 'Nova versão disponível: {latest} (você tem a {current}).'
+  New version {latest} is available. Open About to download it.: A versão {latest} está disponível. Abra “Sobre” para baixá-la.
+  No published releases found yet.: Ainda não há versões publicadas.
+  No runs recorded yet.: Nenhuma execução registrada ainda.
+  No schedulable tasks selected: Nenhuma tarefa agendável selecionada
+  'No size estimate yet. Tip: run “Preview” first.': 'Ainda não há estimativa de tamanho. Dica: execute primeiro a “Prévia”.'
+  'Not a folder: {path}': 'Não é uma pasta: {path}'
+  Nothing selected: Nada selecionado
+  Open in file manager: Abrir no gerenciador de arquivos
+  Open the release page: Abrir a página da versão
+  PREVIEW (nothing is deleted): PRÉVIA (nada é excluído)
+  'Path copied: {path}': 'Caminho copiado: {path}'
+  Press “Scan”. Double-click a folder to enter it.: Pressione “Escanear”. Clique duas vezes em uma pasta para entrar nela.
+  'Preview uses:': 'A prévia usa:'
+  RUN: EXECUÇÃO
+  Refresh: Atualizar
+  'Refusing to trash a system folder: {path}': 'Pastas do sistema não são movidas para a lixeira: {path}'
+  Report an issue: Relatar um problema
+  Restart now: Reiniciar agora
+  Result: Resultado
+  Risk: Risco
+  'Risk:': 'Risco:'
+  Run: Executar
+  Run now: Executar agora
+  Run the selected tasks? ({n}): Executar as tarefas selecionadas? ({n})
+  Run them only if you wrote or trust them.: Execute-as somente se você mesmo as escreveu ou confia nelas.
+  Running the schedule now: Executando o agendamento agora
+  'Runs as root via systemd with low priority; logs: journalctl -u syscleaner. Dangerous tasks are never scheduled.': 'Executa como root via systemd com baixa prioridade; registro: journalctl -u syscleaner. Tarefas perigosas nunca são agendadas.'
+  Safe only: Somente seguras
+  Scan: Escanear
+  Scan stopped: Escaneamento interrompido
+  Schedule disabled and removed: Agendamento desativado e removido
+  Schedule enabled: Agendamento ativado
+  Scheduled: Agendada
+  ? 'Select a task on the left to see its description and command.
+
+    ⏱ means the task can be added to the schedule. “Preview” deletes nothing and shows a size estimate.'
+  : 'Selecione uma tarefa à esquerda para ver a descrição e o comando.
+
+    ⏱ indica que a tarefa pode ser adicionada ao agendamento. A “Prévia” não exclui nada e mostra uma estimativa de tamanho.'
+  Select all: Selecionar tudo
+  Select none: Desmarcar tudo
+  Share of folder: Parte da pasta
+  Size: Tamanho
+  Started by: Iniciada por
+  'Status: {status}': 'Estado: {status}'
+  Stopped: Interrompida
+  Success: Concluída
+  Support the project: Apoiar o projeto
+  'SysCleaner is free and open source. If it saved you time, you can support its development:': 'O SysCleaner é gratuito e de código aberto. Se ele economizou seu tempo, você pode apoiar o desenvolvimento:'
+  System default: Padrão do sistema
+  TB: TB
+  Task: Tarefa
+  Tasks: Tarefas
+  Tasks that need root will ask for your password once.: Tarefas que precisam de root pedirão a senha uma única vez.
+  The SYSCLEANER_LANG environment variable is set and overrides this choice.: A variável de ambiente SYSCLEANER_LANG está definida e tem prioridade sobre esta escolha.
+  The new language is applied after a restart.: O novo idioma será aplicado após reiniciar.
+  The preview will run your own tasks as root. Continue?: A prévia executará suas próprias tarefas como root. Continuar?
+  This cannot be undone.: Isso não pode ser desfeito.
+  Time must be in HH:MM format: A hora deve estar no formato HH:MM
+  Version {version}: Versão {version}
+  Wait until the current operation finishes, then restart.: Aguarde a operação atual terminar e reinicie.
+  Website: Site
+  Weekly (Sunday): Semanalmente (domingo)
+  When: Quando
+  You have the latest version ({current}).: Você tem a versão mais recente ({current}).
+  'Your own tasks that run as root (full access to the system):': 'Suas próprias tarefas executadas como root (acesso total ao sistema):'
+  '[exit code: {rc}]': '[código de saída: {rc}]'
+  as root: como root
+  can be scheduled ⏱: agendável ⏱
+  custom: própria
+  'enabled · next run: {when}': 'ativado · próxima execução: {when}'
+  'estimate: {size}': 'estimativa: {size}'
+  'failed: {result}': 'falhou: {result}'
+  n/a: n/d
+  needs root (asks for a password): precisa de root (pede a senha)
+  no connection: sem conexão
+  no root needed: não precisa de root
+  not configured: não configurado
+  nothing found: nada encontrado
+  root tasks (single password prompt): tarefas root (um único pedido de senha)
+  starting…: iniciando…
+  success: concluída
+  'time (HH:MM):': 'hora (HH:MM):'
+  unexpected response: resposta inesperada
+  user tasks: tarefas do usuário
+  '{path} — total {total}, items: {n} (this filesystem only, -x)': '{path} — total {total}, itens: {n} (somente este sistema de arquivos, -x)'
+  '{pct}% · {done}/{n} · {elapsed} · {cur}': '{pct}% · {done}/{n} · {elapsed} · {cur}'
+  '{pct}% · {idx}/{total} · {elapsed} · {title}': '{pct}% · {idx}/{total} · {elapsed} · {title}'
+  '{prog} not found': '{prog} não encontrado'
+  '{runs} runs · about {size} freed in total': '{runs} execuções · cerca de {size} liberados no total'
+  ? '{size} · {path}
+
+    You can restore it from the trash.'
+  : '{size} · {path}
+
+    Você pode restaurá-lo pela lixeira.'
+  “Freed” is the growth of free space on / during a run, so it is approximate.: “Liberado” é o aumento do espaço livre em / durante a execução, portanto é aproximado.
+  ⏱ Schedule…: ⏱ Agendar…
+  ⏳ Scanning… (can take a minute on large filesystems): ⏳ Escaneando… (pode levar um minuto em sistemas de arquivos grandes)
+  ■ Stop: ■ Parar
+  ▶ Run selected: ▶ Executar seleção
+  ✔ Done. Free space increased by {size} · {elapsed}: ✔ Concluído. O espaço livre aumentou em {size} · {elapsed}
+  ✔ Preview finished. Can free ≈ {size} · {elapsed}: ✔ Prévia concluída. É possível liberar ≈ {size} · {elapsed}
+  ⬆ Up: ⬆ Acima
+  📊 Disk: 📊 Disco
+  📜 History: 📜 Histórico
+  🔍 Preview: 🔍 Prévia
+  🔴 dangerous: 🔴 perigosa
+  🟡 caution: 🟡 atenção
+  🟢 safe: 🟢 segura
+  🧹 Cleanup: 🧹 Limpeza
+  Updates: Atualizações
+  Project: Projeto
+  APT repository: Repositório APT
+  Preferences: Preferências
+  'Installed via APT? Update with: sudo apt update && sudo apt upgrade': 'Instalado via APT? Atualize com: sudo apt update && sudo apt upgrade'
+groups:
+  clean: 🧹 Sistema e pacotes
+  browsers: 🌐 Navegadores
+  dev: 🛠 Ferramentas de desenvolvimento e contêineres
+  find: 🔎 Procurar lixo (somente leitura)
+  security: 🔐 Diagnóstico e segurança
+tasks:
+  apt_clean:
+    title: Cache do APT
+    desc: Remove os .deb baixados de /var/cache/apt/archives e os arquivos obsoletos. Os pacotes são baixados novamente quando necessário.
+  apt_autoremove:
+    title: Pacotes não usados e kernels antigos (autoremove)
+    desc: Remove dependências automáticas de pacotes desinstalados e kernels que o próprio sistema marcou como desnecessários. O kernel em uso nunca é tocado pelo apt.
+  rc_configs:
+    title: Restos de configuração de pacotes removidos (rc)
+    desc: Pacotes removidos sem --purge deixam seus arquivos de configuração. A lista é escrita no registro.
+  snap_old:
+    title: Revisões antigas do Snap
+    desc: Remove as revisões desativadas (antigas) dos snaps instalados; o snapd as mantém para reverter. A revisão atual de cada snap permanece. No Ubuntu costuma liberar gigabytes.
+  dnf_clean:
+    title: Cache do DNF (família Fedora / RHEL)
+    desc: 'dnf clean all: remove os pacotes em cache e os metadados dos repositórios. Eles são baixados novamente quando necessário.'
+  pacman_cache:
+    title: Cache do Pacman (família Arch)
+    desc: 'paccache -r: remove as versões de pacotes em cache, exceto as três últimas. Requer o pacote pacman-contrib.'
+  zypper_clean:
+    title: Cache do Zypper (openSUSE)
+    desc: 'zypper clean --all: remove os pacotes em cache e os metadados dos repositórios.'
+  journal:
+    title: 'Registros do systemd: 2 semanas / máximo de 200 MB'
+    desc: Remove entradas do journal com mais de 2 semanas e tudo o que passar de 200 MB (journalctl --vacuum).
+  old_logs:
+    title: Registros arquivados em /var/log (mais de 14 dias)
+    desc: Remove registros arquivados (*.gz, *.xz, *.1 ... *.9, *.old) com mais de 14 dias. Os registros atuais e o journal do systemd não são tocados. O histórico dos registros antigos é perdido.
+  crash_reports:
+    title: Relatórios de falhas (/var/crash)
+    desc: Exclui relatórios de falhas do Apport (Ubuntu / Linux Mint). Podem ser grandes e conter trechos da memória dos programas.
+  coredumps:
+    title: Despejos de memória (systemd-coredump)
+    desc: Exclui os despejos guardados em /var/lib/systemd/coredump. O systemd os remove sozinho após alguns dias; aqui o espaço é liberado na hora.
+  tmp:
+    title: Arquivos temporários em /tmp com mais de 1 dia
+    desc: 'Uma alternativa segura a rm -rf /tmp/*: arquivos recentes e sockets de programas em execução não são tocados.'
+  var_tmp:
+    title: Arquivos temporários em /var/tmp com mais de 30 dias
+    desc: /var/tmp mantém arquivos entre reinicializações, por isso só são removidos os itens intocados há 30 dias. Um programa que dependa de um arquivo antigo ali pode precisar recriá-lo.
+  thumbs:
+    title: Cache de miniaturas
+    desc: ~/.thumbnails e ~/.cache/thumbnails. As miniaturas são recriadas ao navegar pelas pastas.
+  recent_docs:
+    title: Lista de arquivos recentes
+    desc: Limpa a lista de “documentos recentes” exibida por gerenciadores de arquivos e aplicativos (privacidade). Os arquivos em si não são tocados.
+  trash:
+    title: Esvaziar a lixeira
+    desc: Exclui definitivamente tudo em ~/.local/share/Trash. Confira a lixeira antes!
+  flatpak_cache:
+    title: Cache de repositórios do Flatpak
+    desc: ~/.cache/flatpak/system-cache.
+  flatpak_unused:
+    title: 'Flatpak: runtimes não usados'
+    desc: flatpak uninstall --unused. Os dados dos aplicativos não são removidos.
+  flatpak_app_caches:
+    title: Caches de aplicativos Flatpak
+    desc: Esvazia a pasta de cache de cada aplicativo Flatpak (~/.var/app/<app>/cache), que o Flatpak define como dados não essenciais. Feche os aplicativos antes; eles recriarão seus caches.
+  deborphan:
+    title: Pacotes órfãos (deborphan)
+    desc: Remove pacotes dos quais nada depende. Falsos positivos são possíveis, então confira antes a lista na prévia. Requer o pacote deborphan.
+  firefox_cache:
+    title: Cache do Firefox
+    desc: Exclui o cache em disco do Firefox (cache2) nas instalações normal, Snap e Flatpak. Senhas, histórico, favoritos e cookies são mantidos. As páginas carregarão mais devagar uma vez.
+  chrome_cache:
+    title: Cache do Google Chrome
+    desc: Exclui a pasta de cache do Chrome (~/.cache/google-chrome, também Beta / Dev, e o cache do Flatpak). O perfil fica em ~/.config e não é tocado.
+  chromium_cache:
+    title: Cache do Chromium
+    desc: Exclui a pasta de cache do Chromium nas instalações normal, Snap e Flatpak. O perfil fica em ~/.config e não é tocado.
+  edge_cache:
+    title: Cache do Microsoft Edge
+    desc: Exclui a pasta de cache do Edge (~/.cache/microsoft-edge e o cache do Flatpak). O perfil fica em ~/.config e não é tocado.
+  brave:
+    title: Cache do navegador Brave
+    desc: Exclui a pasta de cache do Brave (~/.cache/BraveSoftware e o cache do Flatpak). Histórico e senhas ficam em ~/.config e não são tocados; as abas carregarão um pouco mais devagar uma vez.
+  vivaldi_cache:
+    title: Cache do Vivaldi
+    desc: Exclui a pasta de cache do Vivaldi (~/.cache/vivaldi). O perfil fica em ~/.config e não é tocado.
+  opera_cache:
+    title: Cache do Opera
+    desc: Exclui a pasta de cache do Opera (~/.cache/opera). O perfil fica em ~/.config e não é tocado.
+  npm:
+    title: Cache do npm
+    desc: npm cache clean --force.
+  pip:
+    title: Cache do pip
+    desc: pip cache purge.
+  pnpm_store:
+    title: Armazenamento do pnpm (pacotes sem referência)
+    desc: 'pnpm store prune: remove apenas os pacotes que nenhum projeto deste computador usa. É a forma recomendada; apagar todo o armazenamento não é.'
+  yarn_classic:
+    title: Cache global do Yarn (classic)
+    desc: Remove o cache global do Yarn 1.x em ~/.cache/yarn. Os arquivos dos projetos não são tocados e os pacotes são baixados novamente na próxima instalação. (Os caches de projeto do Yarn 2+ permanecem intactos.)
+  cargo_registry:
+    title: Cache e fontes do registro do Cargo (Rust)
+    desc: Remove ~/.cargo/registry/cache e ~/.cargo/registry/src. Os crates são baixados novamente na próxima compilação, então até lá as compilações offline não funcionam.
+  gradle_caches:
+    title: Caches do Gradle
+    desc: Remove ~/.gradle/caches (muitas vezes vários GB). Pare antes os daemons do Gradle (gradle --stop). As dependências são baixadas novamente na próxima compilação.
+  go:
+    title: Cache do Go (build + modcache)
+    desc: go clean -cache -modcache. Pode liberar gigabytes; as dependências são baixadas novamente.
+  docker_img:
+    title: 'Docker: imagens órfãs (dangling) e cache de build'
+    desc: docker image prune + builder prune. Volumes, redes e imagens com tag não são tocados. Requer acesso ao docker sem sudo (grupo docker).
+  docker_cont:
+    title: 'Docker: contêineres parados'
+    desc: 'docker container prune. Confira antes docker ps -a: um contêiner parado pode ainda ser necessário (por exemplo, uma stack do Portainer).'
+  top_dirs:
+    title: Maiores pastas em /
+    desc: Quais diretórios ocupam mais espaço (para uma visão interativa, use a aba “Disco”).
+  top_home:
+    title: Maiores pastas na pasta pessoal
+    desc: O que ocupa espaço em ~.
+  big_files:
+    title: Arquivos maiores que 500 MB
+    desc: Procura arquivos grandes no sistema de arquivos raiz.
+  debs:
+    title: Arquivos .deb baixados manualmente em ~
+    desc: Apenas uma lista; excluir ou não é decisão sua.
+  big_logs:
+    title: Registros grandes em /var/log (>50 MB)
+    desc: Apenas uma lista, nada é excluído.
+  kernels:
+    title: Kernels instalados
+    desc: O kernel em uso (uname -r) NUNCA deve ser removido.
+  est:
+    title: Conexões de rede atuais
+    desc: ss -tunap state established.
+  listen:
+    title: Portas em escuta
+    desc: Cada porta em escuta deve ser explicável (Docker, Portainer, Deluge...).
+  ufw:
+    title: Estado do firewall (ufw)
+    desc: 'Se estiver desativado: sudo ufw enable.'
+  logins:
+    title: Logins
+    desc: Últimos logins, tentativas falhas e quem está conectado agora.
+  autostart:
+    title: Inicialização automática e cron
+    desc: Serviços ativados, unidades mais lentas na inicialização, tarefas cron e entradas de inicialização automática de aplicativos gráficos.
+  recent:
+    title: Arquivos do sistema alterados nos últimos 7 dias
+    desc: '/usr/bin, /usr/local/bin, /etc: útil se algo parecer suspeito.'
+  rkhunter:
+    title: Verificação com rkhunter
+    desc: Uma verificação longa à procura de rootkits.
+  upgrade:
+    title: Atualizar o sistema (apt update && upgrade)
+    desc: 'Não é somente leitura: instala atualizações. Após atualizar o kernel é preciso reiniciar.'

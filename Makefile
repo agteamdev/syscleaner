@@ -1,10 +1,12 @@
-.PHONY: run check deb appimage clean
+.PHONY: run check test deb appimage clean
 run:
 	python3 -m syscleaner
 check:
 	python3 -m compileall -q syscleaner
 	python3 tools/check_i18n.py
 	python3 -c "from syscleaner.tasks import load; g,t,w=load(); print(len(t),'tasks'); assert not w, w"
+test:
+	python3 -m unittest discover -s tests
 deb:
 	./packaging/build_deb.sh
 appimage:

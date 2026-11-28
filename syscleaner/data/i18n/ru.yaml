@@ -1,281 +1,336 @@
-# Русский перевод SysCleaner.
-# Ключи раздела ui — английские исходные строки из кода (плейсхолдеры {x} менять нельзя).
-# Проверка: python3 tools/check_i18n.py
+# Русский translation of SysCleaner.
+# Keys of the `ui` section are the English source strings from the code (placeholders like {x} must stay unchanged).
+# Check: python3 tools/check_i18n.py
 
 meta:
-  name: "Русский"
-
+  name: Русский
 ui:
-  "🟢 safe": "🟢 безопасно"
-  "🟡 caution": "🟡 внимание"
-  "🔴 dangerous": "🔴 опасно"
-  "B": "Б"
-  "KB": "КБ"
-  "MB": "МБ"
-  "GB": "ГБ"
-  "TB": "ТБ"
+  (none — check tasks marked with ⏱ in the list): (нет — отметь в списке задачи со значком ⏱)
+  About: О программе
+  About SysCleaner: О программе SysCleaner
+  About · new version {latest}: О программе · новая версия {latest}
+  All releases: Все релизы
+  Also see system folders you have no access to (asks for a password): Показать и системные папки без прав доступа (запросит пароль)
+  B: Б
+  Cancel: Отмена
+  Check again: Проверить снова
+  Check for updates automatically at startup: Проверять обновления при запуске
+  'Checked tasks marked with ⏱ will run:': 'Будут запускаться отмеченные задачи с ⏱:'
+  Checking for updates…: Проверка обновлений…
+  Cleanup and diagnostics for Linux Mint / Debian / Ubuntu: Очистка и диагностика для Linux Mint / Debian / Ubuntu
+  Cleanup schedule (systemd timer): Расписание очистки (systemd timer)
+  Clear history: Очистить историю
+  Clear log: Очистить лог
+  Clear the run history?: Очистить историю запусков?
+  Close: Закрыть
+  Command line: Командная строка
+  Contacts api.github.com at most every 12 hours. Only the app name and version are sent.: Обращается к api.github.com не чаще раза в 12 часов. Передаются только название и версия программы.
+  Continue: Продолжить
+  Copy path: Копировать путь
+  Could not check for updates ({reason}).: Не удалось проверить обновления ({reason}).
+  'Could not move to the trash: {err}': 'Не удалось переместить в корзину: {err}'
+  'Could not open: {err}': 'Не удалось открыть: {err}'
+  Custom task from {file}: Своя задача из {file}
+  Daily: Ежедневно
+  'Dangerous tasks:': 'Опасные задачи:'
+  Disable schedule: Отключить расписание
+  Disabling schedule: Отключение расписания
+  'Disk <b>/</b>: used <b>{used:.1f}</b> GB of {total:.1f}, free <b>{free:.1f}</b> GB': 'Диск <b>/</b>: занято <b>{used:.1f}</b> ГБ из {total:.1f}, свободно <b>{free:.1f}</b> ГБ'
+  Donate (NOWPayments): Пожертвовать (NOWPayments)
+  Duration: Длительность
+  Enable / update: Включить / обновить
+  Enabling schedule: Включение расписания
+  Estimated to free about {size} (from the last preview).: 'Оценка освобождаемого места: около {size} (по последнему предпросмотру).'
+  'Estimated to free for the selection: <b>{size}</b> (approximate)': 'Оценка к освобождению по выбранным: <b>{size}</b> (приблизительно)'
+  Failed: Ошибка
+  'Failed to start: {err}': 'Не удалось запустить: {err}'
+  Freed: Освобождено
+  'Frequency:': 'Периодичность:'
+  GB: ГБ
+  GitHub rate limit reached, try again later: превышен лимит запросов GitHub, повторите позже
+  KB: КБ
+  'Language:': 'Язык:'
+  'Last run: never': 'Последний запуск: не было'
+  'Last run: {when} ({result})': 'Последний запуск: {when} ({result})'
+  MB: МБ
+  MIT license · © AG TEAM DEV: Лицензия MIT · © AG TEAM DEV
+  Manual: Вручную
+  Monthly (1st day): Ежемесячно (1-го числа)
+  Move to trash: В корзину
+  Move “{name}” to the trash?: Переместить «{name}» в корзину?
+  'Moved to the trash: {name}': 'Перемещено в корзину: {name}'
+  Name: Имя
+  'New version available: {latest} (you have {current}).': 'Доступна новая версия: {latest} (у вас {current}).'
+  New version {latest} is available. Open About to download it.: Доступна новая версия {latest}. Откройте «О программе», чтобы скачать.
+  No published releases found yet.: Опубликованных релизов пока нет.
+  No runs recorded yet.: Запусков пока нет.
+  No schedulable tasks selected: Нет задач для расписания
+  'No size estimate yet. Tip: run “Preview” first.': 'Оценки размера ещё нет. Совет: сначала сделайте «Предпросмотр».'
+  'Not a folder: {path}': 'Не папка: {path}'
+  Nothing selected: Ничего не выбрано
+  Open in file manager: Открыть в файловом менеджере
+  Open the release page: Открыть страницу релиза
+  PREVIEW (nothing is deleted): ПРЕДПРОСМОТР (ничего не удаляется)
+  'Path copied: {path}': 'Путь скопирован: {path}'
+  Press “Scan”. Double-click a folder to enter it.: Нажми «Сканировать». Двойной клик по папке — зайти внутрь.
+  'Preview uses:': 'Для предпросмотра:'
+  RUN: ЗАПУСК
+  Refresh: Обновить
+  'Refusing to trash a system folder: {path}': 'Системную папку в корзину не отправляю: {path}'
+  Report an issue: Сообщить о проблеме
+  Restart now: Перезапустить сейчас
+  Result: Результат
+  Risk: Риск
+  'Risk:': 'Риск:'
+  Run: Запустить
+  Run now: Запустить сейчас
+  Run the selected tasks? ({n}): Запустить выбранные задачи? ({n})
+  Run them only if you wrote or trust them.: Запускайте их, только если вы сами их написали или доверяете.
+  Running the schedule now: Запуск расписания сейчас
+  'Runs as root via systemd with low priority; logs: journalctl -u syscleaner. Dangerous tasks are never scheduled.': 'Запуск от root через systemd с низким приоритетом; журнал: journalctl -u syscleaner. Опасные задачи в расписание не попадают.'
+  Safe only: Только безопасные
+  Scan: Сканировать
+  Scan stopped: Сканирование остановлено
+  Schedule disabled and removed: Расписание отключено и удалено
+  Schedule enabled: Расписание включено
+  Scheduled: По расписанию
+  ? 'Select a task on the left to see its description and command.
 
-  "🧹 Cleanup": "🧹 Очистка"
-  "📊 Disk": "📊 Диск"
-  "Task": "Задача"
-  "Size": "Размер"
-  "Risk": "Риск"
-  "Risk:": "Риск:"
-  "Name": "Имя"
-  "Share of folder": "Доля от папки"
+    ⏱ means the task can be added to the schedule. “Preview” deletes nothing and shows a size estimate.'
+  : 'Выбери задачу слева — здесь появятся описание и команда.
 
-  "⬆ Up": "⬆ Вверх"
-  "as root": "от root"
-  "Also see system folders you have no access to (asks for a password)": "Показать и системные папки без прав доступа (запросит пароль)"
-  "Scan": "Сканировать"
-  "Press “Scan”. Double-click a folder to enter it.": "Нажми «Сканировать». Двойной клик по папке — зайти внутрь."
-  "Not a folder: {path}": "Не папка: {path}"
-  "⏳ Scanning… (can take a minute on large filesystems)": "⏳ Сканирование… (на больших разделах может занять минуту)"
-  "Scan stopped": "Сканирование остановлено"
-  "{path} — total {total}, items: {n} (this filesystem only, -x)": "{path} — всего {total}, элементов: {n} (только этот раздел, -x)"
+    ⏱ — задачу можно поставить в расписание. «Предпросмотр» ничего не удаляет и показывает оценку размера.'
+  Select all: Отметить все
+  Select none: Снять всё
+  Share of folder: Доля от папки
+  Size: Размер
+  Started by: Источник
+  'Status: {status}': 'Статус: {status}'
+  Stopped: Остановлено
+  Success: Успешно
+  Support the project: Поддержать проект
+  'SysCleaner is free and open source. If it saved you time, you can support its development:': 'SysCleaner бесплатный и с открытым исходным кодом. Если он сэкономил вам время, можно поддержать разработку:'
+  System default: Как в системе
+  TB: ТБ
+  Task: Задача
+  Tasks: Задачи
+  Tasks that need root will ask for your password once.: Задачи с правами root запросят пароль один раз.
+  The SYSCLEANER_LANG environment variable is set and overrides this choice.: В окружении задана переменная SYSCLEANER_LANG, она важнее этого выбора.
+  The new language is applied after a restart.: Новый язык применится после перезапуска.
+  The preview will run your own tasks as root. Continue?: Предпросмотр выполнит ваши собственные задачи от root. Продолжить?
+  This cannot be undone.: Это нельзя отменить.
+  Time must be in HH:MM format: Время должно быть в формате ЧЧ:ММ
+  Version {version}: Версия {version}
+  Wait until the current operation finishes, then restart.: Дождитесь окончания текущей операции и перезапустите.
+  Website: Сайт проекта
+  Weekly (Sunday): Еженедельно (вс)
+  When: Когда
+  You have the latest version ({current}).: У вас последняя версия ({current}).
+  'Your own tasks that run as root (full access to the system):': 'Ваши собственные задачи, работающие от root (полный доступ к системе):'
+  '[exit code: {rc}]': '[код возврата: {rc}]'
+  as root: от root
+  can be scheduled ⏱: можно по расписанию ⏱
+  custom: своя
+  'enabled · next run: {when}': 'включено · следующий запуск: {when}'
+  'estimate: {size}': 'оценка: {size}'
+  'failed: {result}': 'ошибка: {result}'
+  n/a: н/д
+  needs root (asks for a password): нужен root (запросит пароль)
+  no connection: нет соединения
+  no root needed: без root
+  not configured: не настроено
+  nothing found: ничего не найдено
+  root tasks (single password prompt): root-задачи (один запрос пароля)
+  starting…: запуск…
+  success: успешно
+  'time (HH:MM):': 'время (ЧЧ:ММ):'
+  unexpected response: неожиданный ответ сервера
+  user tasks: пользовательские задачи
+  '{path} — total {total}, items: {n} (this filesystem only, -x)': '{path} — всего {total}, элементов: {n} (только этот раздел, -x)'
+  '{pct}% · {done}/{n} · {elapsed} · {cur}': '{pct}% · {done}/{n} · {elapsed} · {cur}'
+  '{pct}% · {idx}/{total} · {elapsed} · {title}': '{pct}% · {idx}/{total} · {elapsed} · {title}'
+  '{prog} not found': '{prog} не найден'
+  '{runs} runs · about {size} freed in total': 'Запусков: {runs} · всего освобождено около {size}'
+  ? '{size} · {path}
 
-  "{prog} not found": "{prog} не найден"
-  "nothing found": "ничего не найдено"
-  "Select a task on the left to see its description and command.\n⏱ means the task can be added to the schedule. “Preview” deletes nothing and shows a size estimate.": "Выбери задачу слева — здесь появятся описание и команда.\n⏱ — задачу можно поставить в расписание. «Предпросмотр» ничего не удаляет и показывает оценку размера."
-  "Safe only": "Только безопасные"
-  "Select none": "Снять всё"
-  "Clear log": "Очистить лог"
-  "⏱ Schedule…": "⏱ Расписание…"
-  "🔍 Preview": "🔍 Предпросмотр"
-  "▶ Run selected": "▶ Запустить выбранное"
-  "■ Stop": "■ Стоп"
+    You can restore it from the trash.'
+  : '{size} · {path}
 
-  "Disk <b>/</b>: used <b>{used:.1f}</b> GB of {total:.1f}, free <b>{free:.1f}</b> GB": "Диск <b>/</b>: занято <b>{used:.1f}</b> ГБ из {total:.1f}, свободно <b>{free:.1f}</b> ГБ"
-  "Preview uses:": "Для предпросмотра:"
-  "needs root (asks for a password)": "нужен root (запросит пароль)"
-  "no root needed": "без root"
-  "can be scheduled ⏱": "можно по расписанию ⏱"
-  "Estimated to free for the selection: <b>{size}</b> (approximate)": "Оценка к освобождению по выбранным: <b>{size}</b> (приблизительно)"
-  "n/a": "н/д"
-  "estimate: {size}": "оценка: {size}"
-
-  "Nothing selected": "Ничего не выбрано"
-  "Dangerous tasks selected": "Выбраны опасные задачи"
-  "Run “Preview” first. Continue anyway?": "Сначала сделай «Предпросмотр». Продолжить?"
-  "PREVIEW (nothing is deleted)": "ПРЕДПРОСМОТР (ничего не удаляется)"
-  "RUN": "ЗАПУСК"
-  "root tasks (single password prompt)": "root-задачи (один запрос пароля)"
-  "user tasks": "пользовательские задачи"
-  "[exit code: {rc}]": "[код возврата: {rc}]"
-  "Failed to start: {err}": "Не удалось запустить: {err}"
-
-  "Cleanup schedule (systemd timer)": "Расписание очистки (systemd timer)"
-  "Close": "Закрыть"
-  "Disable schedule": "Отключить расписание"
-  "Enable / update": "Включить / обновить"
-  "Status: {status}": "Статус: {status}"
-  "(none — check tasks marked with ⏱ in the list)": "(нет — отметь в списке задачи со значком ⏱)"
-  "Checked tasks marked with ⏱ will run:": "Будут запускаться отмеченные задачи с ⏱:"
-  "Frequency:": "Периодичность:"
-  "time (HH:MM):": "время (ЧЧ:ММ):"
-  "Runs as root via systemd with low priority; logs: journalctl -u syscleaner. Dangerous tasks are never scheduled.": "Запуск от root через systemd с низким приоритетом; журнал: journalctl -u syscleaner. Опасные задачи в расписание не попадают."
-  "No schedulable tasks selected": "Нет задач для расписания"
-  "Time must be in HH:MM format": "Время должно быть в формате ЧЧ:ММ"
-  "Enabling schedule": "Включение расписания"
-  "Disabling schedule": "Отключение расписания"
-  "Daily": "Ежедневно"
-  "Weekly (Sunday)": "Еженедельно (вс)"
-  "Monthly (1st day)": "Ежемесячно (1-го числа)"
-  "Schedule enabled": "Расписание включено"
-  "Schedule disabled and removed": "Расписание отключено и удалено"
-  "not configured": "не настроено"
-  "enabled · next run: {when}": "включено · следующий запуск: {when}"
-
-  "About": "О программе"
-  "Select all": "Отметить все"
-  "starting…": "запуск…"
-  "{pct}% · {done}/{n} · {elapsed} · {cur}": "{pct}% · {done}/{n} · {elapsed} · {cur}"
-  "{pct}% · {idx}/{total} · {elapsed} · {title}": "{pct}% · {idx}/{total} · {elapsed} · {title}"
-  "✔ Preview finished. Can free ≈ {size} · {elapsed}": "✔ Предпросмотр завершён. Можно освободить ≈ {size} · {elapsed}"
-  "✔ Done. Free space increased by {size} · {elapsed}": "✔ Готово. Свободного места стало больше на {size} · {elapsed}"
-
-  "About SysCleaner": "О программе SysCleaner"
-  "Version {version}": "Версия {version}"
-  "Cleanup and diagnostics for Linux Mint / Debian / Ubuntu": "Очистка и диагностика для Linux Mint / Debian / Ubuntu"
-  "MIT license · © AG TEAM DEV": "Лицензия MIT · © AG TEAM DEV"
-  "Checking for updates…": "Проверка обновлений…"
-  "Check again": "Проверить снова"
-  "Open the release page": "Открыть страницу релиза"
-  "New version available: {latest} (you have {current}).": "Доступна новая версия: {latest} (у вас {current})."
-  "You have the latest version ({current}).": "У вас последняя версия ({current})."
-  "No published releases found yet.": "Опубликованных релизов пока нет."
-  "Could not check for updates ({reason}).": "Не удалось проверить обновления ({reason})."
-  "no connection": "нет соединения"
-  "GitHub rate limit reached, try again later": "превышен лимит запросов GitHub, повторите позже"
-  "unexpected response": "неожиданный ответ сервера"
-  "Website": "Сайт проекта"
-  "Report an issue": "Сообщить о проблеме"
-  "All releases": "Все релизы"
-  "Support the project": "Поддержать проект"
-  "SysCleaner is free and open source. If it saved you time, you can support its development:": "SysCleaner бесплатный и с открытым исходным кодом. Если он сэкономил вам время, можно поддержать разработку:"
-  "Donate (NOWPayments)": "Пожертвовать (NOWPayments)"
-  "Language:": "Язык:"
-  "System default": "Как в системе"
-  "Restart now": "Перезапустить сейчас"
-  "The new language is applied after a restart.": "Новый язык применится после перезапуска."
-  "Wait until the current operation finishes, then restart.": "Дождитесь окончания текущей операции и перезапустите."
-  "The SYSCLEANER_LANG environment variable is set and overrides this choice.": "В окружении задана переменная SYSCLEANER_LANG, она важнее этого выбора."
-
+    Восстановить можно из корзины.'
+  “Freed” is the growth of free space on / during a run, so it is approximate.: «Освобождено» — прирост свободного места на / за время запуска, поэтому значение приблизительное.
+  ⏱ Schedule…: ⏱ Расписание…
+  ⏳ Scanning… (can take a minute on large filesystems): ⏳ Сканирование… (на больших разделах может занять минуту)
+  ■ Stop: ■ Стоп
+  ▶ Run selected: ▶ Запустить выбранное
+  ✔ Done. Free space increased by {size} · {elapsed}: ✔ Готово. Свободного места стало больше на {size} · {elapsed}
+  ✔ Preview finished. Can free ≈ {size} · {elapsed}: ✔ Предпросмотр завершён. Можно освободить ≈ {size} · {elapsed}
+  ⬆ Up: ⬆ Вверх
+  📊 Disk: 📊 Диск
+  📜 History: 📜 История
+  🔍 Preview: 🔍 Предпросмотр
+  🔴 dangerous: 🔴 опасно
+  🟡 caution: 🟡 внимание
+  🟢 safe: 🟢 безопасно
+  🧹 Cleanup: 🧹 Очистка
+  Updates: Обновления
+  Project: Проект
+  APT repository: Репозиторий APT
+  Preferences: Настройки
+  'Installed via APT? Update with: sudo apt update && sudo apt upgrade': 'Установлено через APT? Обновите командой: sudo apt update && sudo apt upgrade'
 groups:
-  clean: "🧹 Система и пакеты"
-  browsers: "🌐 Браузеры"
-  dev: "🛠 Инструменты разработчика и контейнеры"
-  find: "🔎 Поиск мусора (только чтение)"
-  security: "🔐 Диагностика и безопасность"
-
+  clean: 🧹 Система и пакеты
+  browsers: 🌐 Браузеры
+  dev: 🛠 Инструменты разработчика и контейнеры
+  find: 🔎 Поиск мусора (только чтение)
+  security: 🔐 Диагностика и безопасность
 tasks:
   apt_clean:
-    title: "Кэш APT"
-    desc: "Удаляет скачанные .deb из /var/cache/apt/archives и устаревшие архивы. Нужные пакеты при необходимости скачаются заново."
+    title: Кэш APT
+    desc: Удаляет скачанные .deb из /var/cache/apt/archives и устаревшие архивы. Нужные пакеты при необходимости скачаются заново.
   apt_autoremove:
-    title: "Неиспользуемые пакеты и старые ядра (autoremove)"
-    desc: "Убирает автозависимости удалённых пакетов и ядра, которые система сама пометила ненужными. Текущее ядро apt не трогает."
+    title: Неиспользуемые пакеты и старые ядра (autoremove)
+    desc: Убирает автозависимости удалённых пакетов и ядра, которые система сама пометила ненужными. Текущее ядро apt не трогает.
   rc_configs:
-    title: "Остатки конфигов удалённых пакетов (rc)"
-    desc: "Пакеты, удалённые без --purge, оставляют конфиги. Список выводится в лог."
+    title: Остатки конфигов удалённых пакетов (rc)
+    desc: Пакеты, удалённые без --purge, оставляют конфиги. Список выводится в лог.
   journal:
-    title: "Логи systemd: 2 недели / максимум 200 МБ"
-    desc: "Удаляет записи журнала старше 2 недель и всё сверх 200 МБ (journalctl --vacuum)."
+    title: 'Логи systemd: 2 недели / максимум 200 МБ'
+    desc: Удаляет записи журнала старше 2 недель и всё сверх 200 МБ (journalctl --vacuum).
   tmp:
-    title: "Временные файлы в /tmp старше суток"
-    desc: "Безопасная замена rm -rf /tmp/*: свежие файлы и сокеты работающих программ не трогаются."
+    title: Временные файлы в /tmp старше суток
+    desc: 'Безопасная замена rm -rf /tmp/*: свежие файлы и сокеты работающих программ не трогаются.'
   thumbs:
-    title: "Кэш миниатюр"
-    desc: "~/.thumbnails и ~/.cache/thumbnails. Миниатюры пересоздадутся при просмотре папок."
+    title: Кэш миниатюр
+    desc: ~/.thumbnails и ~/.cache/thumbnails. Миниатюры пересоздадутся при просмотре папок.
   brave:
-    title: "Кэш браузера Brave"
-    desc: "Удаляет папку кэша Brave (~/.cache/BraveSoftware и кэш Flatpak). История и пароли лежат в ~/.config и не затрагиваются; вкладки один раз загрузятся медленнее."
+    title: Кэш браузера Brave
+    desc: Удаляет папку кэша Brave (~/.cache/BraveSoftware и кэш Flatpak). История и пароли лежат в ~/.config и не затрагиваются; вкладки один раз загрузятся медленнее.
   flatpak_cache:
-    title: "Кэш репозиториев Flatpak"
-    desc: "~/.cache/flatpak/system-cache."
+    title: Кэш репозиториев Flatpak
+    desc: ~/.cache/flatpak/system-cache.
   trash:
-    title: "Очистить корзину"
-    desc: "Безвозвратно удаляет всё в ~/.local/share/Trash. Проверь корзину перед запуском!"
+    title: Очистить корзину
+    desc: Безвозвратно удаляет всё в ~/.local/share/Trash. Проверь корзину перед запуском!
   npm:
-    title: "Кэш npm"
-    desc: "npm cache clean --force."
+    title: Кэш npm
+    desc: npm cache clean --force.
   pip:
-    title: "Кэш pip"
-    desc: "pip cache purge."
+    title: Кэш pip
+    desc: pip cache purge.
   go:
-    title: "Кэш Go (build + modcache)"
-    desc: "go clean -cache -modcache. Может освободить гигабайты; зависимости скачаются заново."
+    title: Кэш Go (build + modcache)
+    desc: go clean -cache -modcache. Может освободить гигабайты; зависимости скачаются заново.
   flatpak_unused:
-    title: "Flatpak: неиспользуемые рантаймы"
-    desc: "flatpak uninstall --unused. Данные приложений не удаляются."
+    title: 'Flatpak: неиспользуемые рантаймы'
+    desc: flatpak uninstall --unused. Данные приложений не удаляются.
   docker_img:
-    title: "Docker: «висячие» образы и кэш сборки"
-    desc: "docker image prune + builder prune. Тома, сети и именованные образы не трогаются. Нужен доступ к docker без sudo (группа docker)."
+    title: 'Docker: «висячие» образы и кэш сборки'
+    desc: docker image prune + builder prune. Тома, сети и именованные образы не трогаются. Нужен доступ к docker без sudo (группа docker).
   docker_cont:
-    title: "Docker: остановленные контейнеры"
-    desc: "docker container prune. Сначала посмотри docker ps -a: остановленный контейнер может быть нужным (например, стек Portainer)."
+    title: 'Docker: остановленные контейнеры'
+    desc: 'docker container prune. Сначала посмотри docker ps -a: остановленный контейнер может быть нужным (например, стек Portainer).'
   deborphan:
-    title: "Пакеты-сироты (deborphan)"
-    desc: "Удаляет пакеты, на которые никто не ссылается. Возможны ложные срабатывания — смотри список в предпросмотре. Нужен пакет deborphan."
+    title: Пакеты-сироты (deborphan)
+    desc: Удаляет пакеты, на которые никто не ссылается. Возможны ложные срабатывания — смотри список в предпросмотре. Нужен пакет deborphan.
   top_dirs:
-    title: "Самые большие папки в /"
-    desc: "Какие каталоги занимают больше всего места (интерактивный вариант — на вкладке «Диск»)."
+    title: Самые большие папки в /
+    desc: Какие каталоги занимают больше всего места (интерактивный вариант — на вкладке «Диск»).
   top_home:
-    title: "Самые большие папки в домашней директории"
-    desc: "Что съедает место в ~."
+    title: Самые большие папки в домашней директории
+    desc: Что съедает место в ~.
   big_files:
-    title: "Файлы больше 500 МБ"
-    desc: "Поиск крупных файлов на корневом разделе."
+    title: Файлы больше 500 МБ
+    desc: Поиск крупных файлов на корневом разделе.
   debs:
-    title: "Скачанные вручную .deb в ~"
-    desc: "Просто список — удалять решаешь сам."
+    title: Скачанные вручную .deb в ~
+    desc: Просто список — удалять решаешь сам.
   big_logs:
-    title: "Крупные логи в /var/log (>50 МБ)"
-    desc: "Только список, ничего не удаляется."
+    title: Крупные логи в /var/log (>50 МБ)
+    desc: Только список, ничего не удаляется.
   kernels:
-    title: "Установленные ядра"
-    desc: "Текущее ядро (uname -r) удалять НЕЛЬЗЯ."
+    title: Установленные ядра
+    desc: Текущее ядро (uname -r) удалять НЕЛЬЗЯ.
   est:
-    title: "Текущие сетевые соединения"
-    desc: "ss -tunap state established."
+    title: Текущие сетевые соединения
+    desc: ss -tunap state established.
   listen:
-    title: "Слушающие порты"
-    desc: "Каждый порт должен быть объясним (Docker, Portainer, Deluge…)."
+    title: Слушающие порты
+    desc: Каждый порт должен быть объясним (Docker, Portainer, Deluge…).
   ufw:
-    title: "Статус firewall (ufw)"
-    desc: "Если выключен: sudo ufw enable."
+    title: Статус firewall (ufw)
+    desc: 'Если выключен: sudo ufw enable.'
   logins:
-    title: "Входы в систему"
-    desc: "Последние входы, неудачные попытки, кто залогинен сейчас."
+    title: Входы в систему
+    desc: Последние входы, неудачные попытки, кто залогинен сейчас.
   autostart:
-    title: "Автозапуск и cron"
-    desc: "Включённые сервисы, самые медленные при загрузке, кроны и автозапуск GUI-приложений."
+    title: Автозапуск и cron
+    desc: Включённые сервисы, самые медленные при загрузке, кроны и автозапуск GUI-приложений.
   recent:
-    title: "Системные файлы, изменённые за 7 дней"
-    desc: "/usr/bin, /usr/local/bin, /etc — если что-то смущает."
+    title: Системные файлы, изменённые за 7 дней
+    desc: /usr/bin, /usr/local/bin, /etc — если что-то смущает.
   rkhunter:
-    title: "Проверка rkhunter"
-    desc: "Долгая проверка на руткиты."
+    title: Проверка rkhunter
+    desc: Долгая проверка на руткиты.
   upgrade:
-    title: "Обновить систему (apt update && upgrade)"
-    desc: "Не только чтение — ставит обновления. После обновления ядра нужна перезагрузка."
+    title: Обновить систему (apt update && upgrade)
+    desc: Не только чтение — ставит обновления. После обновления ядра нужна перезагрузка.
   snap_old:
-    title: "Старые ревизии Snap"
-    desc: "Удаляет отключённые (старые) ревизии установленных snap-пакетов: snapd хранит их для отката. Текущая ревизия каждого пакета остаётся. На Ubuntu обычно освобождает гигабайты."
+    title: Старые ревизии Snap
+    desc: 'Удаляет отключённые (старые) ревизии установленных snap-пакетов: snapd хранит их для отката. Текущая ревизия каждого пакета остаётся. На Ubuntu обычно освобождает гигабайты.'
   dnf_clean:
-    title: "Кэш DNF (Fedora / семейство RHEL)"
-    desc: "dnf clean all: удаляет кэш пакетов и метаданные репозиториев. При необходимости они скачаются заново."
+    title: Кэш DNF (Fedora / семейство RHEL)
+    desc: 'dnf clean all: удаляет кэш пакетов и метаданные репозиториев. При необходимости они скачаются заново.'
   pacman_cache:
-    title: "Кэш Pacman (семейство Arch)"
-    desc: "paccache -r: удаляет версии пакетов в кэше, кроме трёх последних. Нужен пакет pacman-contrib."
+    title: Кэш Pacman (семейство Arch)
+    desc: 'paccache -r: удаляет версии пакетов в кэше, кроме трёх последних. Нужен пакет pacman-contrib.'
   zypper_clean:
-    title: "Кэш Zypper (openSUSE)"
-    desc: "zypper clean --all: удаляет кэш пакетов и метаданные репозиториев."
+    title: Кэш Zypper (openSUSE)
+    desc: 'zypper clean --all: удаляет кэш пакетов и метаданные репозиториев.'
   old_logs:
-    title: "Архивные логи в /var/log (старше 14 дней)"
-    desc: "Удаляет архивные логи (*.gz, *.xz, *.1 ... *.9, *.old) старше 14 дней. Текущие логи и журнал systemd не затрагиваются. История старых логов будет потеряна."
+    title: Архивные логи в /var/log (старше 14 дней)
+    desc: Удаляет архивные логи (*.gz, *.xz, *.1 ... *.9, *.old) старше 14 дней. Текущие логи и журнал systemd не затрагиваются. История старых логов будет потеряна.
   crash_reports:
-    title: "Отчёты о сбоях (/var/crash)"
-    desc: "Удаляет отчёты о сбоях Apport (Ubuntu / Linux Mint). Они бывают большими и могут содержать фрагменты памяти программ."
+    title: Отчёты о сбоях (/var/crash)
+    desc: Удаляет отчёты о сбоях Apport (Ubuntu / Linux Mint). Они бывают большими и могут содержать фрагменты памяти программ.
   coredumps:
-    title: "Дампы памяти (systemd-coredump)"
-    desc: "Удаляет сохранённые дампы из /var/lib/systemd/coredump. systemd сам чистит их через несколько дней; здесь место освобождается сразу."
+    title: Дампы памяти (systemd-coredump)
+    desc: Удаляет сохранённые дампы из /var/lib/systemd/coredump. systemd сам чистит их через несколько дней; здесь место освобождается сразу.
   var_tmp:
-    title: "Временные файлы в /var/tmp старше 30 дней"
-    desc: "/var/tmp сохраняет файлы между перезагрузками, поэтому удаляется только то, к чему не прикасались 30 дней. Программе, которой нужен старый файл оттуда, придётся создать его заново."
+    title: Временные файлы в /var/tmp старше 30 дней
+    desc: /var/tmp сохраняет файлы между перезагрузками, поэтому удаляется только то, к чему не прикасались 30 дней. Программе, которой нужен старый файл оттуда, придётся создать его заново.
   recent_docs:
-    title: "Список недавних файлов"
-    desc: "Очищает список «недавних документов», который показывают файловые менеджеры и приложения (приватность). Сами файлы не затрагиваются."
+    title: Список недавних файлов
+    desc: Очищает список «недавних документов», который показывают файловые менеджеры и приложения (приватность). Сами файлы не затрагиваются.
   flatpak_app_caches:
-    title: "Кэши приложений Flatpak"
-    desc: "Очищает папку кэша каждого Flatpak-приложения (~/.var/app/<приложение>/cache): по правилам Flatpak это несущественные данные. Сначала закрой приложения; кэш они пересоздадут."
+    title: Кэши приложений Flatpak
+    desc: 'Очищает папку кэша каждого Flatpak-приложения (~/.var/app/<приложение>/cache): по правилам Flatpak это несущественные данные. Сначала закрой приложения; кэш они пересоздадут.'
   firefox_cache:
-    title: "Кэш Firefox"
-    desc: "Удаляет дисковый кэш Firefox (cache2) для обычной, Snap- и Flatpak-установки. Пароли, история, закладки и cookies сохраняются. Страницы один раз загрузятся медленнее."
+    title: Кэш Firefox
+    desc: Удаляет дисковый кэш Firefox (cache2) для обычной, Snap- и Flatpak-установки. Пароли, история, закладки и cookies сохраняются. Страницы один раз загрузятся медленнее.
   chrome_cache:
-    title: "Кэш Google Chrome"
-    desc: "Удаляет папку кэша Chrome (~/.cache/google-chrome, а также Beta / Dev и кэш Flatpak). Профиль лежит в ~/.config и не затрагивается."
+    title: Кэш Google Chrome
+    desc: Удаляет папку кэша Chrome (~/.cache/google-chrome, а также Beta / Dev и кэш Flatpak). Профиль лежит в ~/.config и не затрагивается.
   chromium_cache:
-    title: "Кэш Chromium"
-    desc: "Удаляет папку кэша Chromium для обычной, Snap- и Flatpak-установки. Профиль лежит в ~/.config и не затрагивается."
+    title: Кэш Chromium
+    desc: Удаляет папку кэша Chromium для обычной, Snap- и Flatpak-установки. Профиль лежит в ~/.config и не затрагивается.
   edge_cache:
-    title: "Кэш Microsoft Edge"
-    desc: "Удаляет папку кэша Edge (~/.cache/microsoft-edge и кэш Flatpak). Профиль лежит в ~/.config и не затрагивается."
+    title: Кэш Microsoft Edge
+    desc: Удаляет папку кэша Edge (~/.cache/microsoft-edge и кэш Flatpak). Профиль лежит в ~/.config и не затрагивается.
   vivaldi_cache:
-    title: "Кэш Vivaldi"
-    desc: "Удаляет папку кэша Vivaldi (~/.cache/vivaldi). Профиль лежит в ~/.config и не затрагивается."
+    title: Кэш Vivaldi
+    desc: Удаляет папку кэша Vivaldi (~/.cache/vivaldi). Профиль лежит в ~/.config и не затрагивается.
   opera_cache:
-    title: "Кэш Opera"
-    desc: "Удаляет папку кэша Opera (~/.cache/opera). Профиль лежит в ~/.config и не затрагивается."
+    title: Кэш Opera
+    desc: Удаляет папку кэша Opera (~/.cache/opera). Профиль лежит в ~/.config и не затрагивается.
   pnpm_store:
-    title: "Хранилище pnpm (неиспользуемые пакеты)"
-    desc: "pnpm store prune: удаляет только пакеты, которые не использует ни один проект на этом компьютере. Это рекомендуемый способ, удалять хранилище целиком не стоит."
+    title: Хранилище pnpm (неиспользуемые пакеты)
+    desc: 'pnpm store prune: удаляет только пакеты, которые не использует ни один проект на этом компьютере. Это рекомендуемый способ, удалять хранилище целиком не стоит.'
   yarn_classic:
-    title: "Глобальный кэш Yarn (classic)"
-    desc: "Удаляет глобальный кэш Yarn 1.x в ~/.cache/yarn. Файлы проектов не затрагиваются, пакеты скачаются заново при следующей установке. (Кэши проектов Yarn 2+ не трогаются.)"
+    title: Глобальный кэш Yarn (classic)
+    desc: Удаляет глобальный кэш Yarn 1.x в ~/.cache/yarn. Файлы проектов не затрагиваются, пакеты скачаются заново при следующей установке. (Кэши проектов Yarn 2+ не трогаются.)
   cargo_registry:
-    title: "Кэш и исходники реестра Cargo (Rust)"
-    desc: "Удаляет ~/.cargo/registry/cache и ~/.cargo/registry/src. Крейты скачаются заново при следующей сборке, поэтому до этого офлайн-сборка не работает."
+    title: Кэш и исходники реестра Cargo (Rust)
+    desc: Удаляет ~/.cargo/registry/cache и ~/.cargo/registry/src. Крейты скачаются заново при следующей сборке, поэтому до этого офлайн-сборка не работает.
   gradle_caches:
-    title: "Кэши Gradle"
-    desc: "Удаляет ~/.gradle/caches (часто несколько ГБ). Сначала останови демоны Gradle (gradle --stop). Зависимости скачаются заново при следующей сборке."
+    title: Кэши Gradle
+    desc: Удаляет ~/.gradle/caches (часто несколько ГБ). Сначала останови демоны Gradle (gradle --stop). Зависимости скачаются заново при следующей сборке.

@@ -1,0 +1,336 @@
+# Deutsch translation of SysCleaner.
+# Keys of the `ui` section are the English source strings from the code (placeholders like {x} must stay unchanged).
+# Check: python3 tools/check_i18n.py
+
+meta:
+  name: Deutsch
+ui:
+  (none — check tasks marked with ⏱ in the list): (keine — in der Liste Aufgaben mit ⏱ ankreuzen)
+  About: Info
+  About SysCleaner: Über SysCleaner
+  About · new version {latest}: Info · neue Version {latest}
+  All releases: Alle Versionen
+  Also see system folders you have no access to (asks for a password): Auch Systemordner ohne Zugriffsrechte anzeigen (fragt nach dem Passwort)
+  B: B
+  Cancel: Abbrechen
+  Check again: Erneut prüfen
+  Check for updates automatically at startup: Beim Start automatisch nach Updates suchen
+  'Checked tasks marked with ⏱ will run:': 'Angekreuzte Aufgaben mit ⏱ werden ausgeführt:'
+  Checking for updates…: Suche nach Updates …
+  Cleanup and diagnostics for Linux Mint / Debian / Ubuntu: Bereinigung und Diagnose für Linux Mint / Debian / Ubuntu
+  Cleanup schedule (systemd timer): Zeitplan für die Bereinigung (systemd-Timer)
+  Clear history: Verlauf löschen
+  Clear log: Protokoll leeren
+  Clear the run history?: Ausführungsverlauf löschen?
+  Close: Schließen
+  Command line: Kommandozeile
+  Contacts api.github.com at most every 12 hours. Only the app name and version are sent.: Kontaktiert api.github.com höchstens alle 12 Stunden. Gesendet werden nur App-Name und Version.
+  Continue: Fortfahren
+  Copy path: Pfad kopieren
+  Could not check for updates ({reason}).: Updates konnten nicht geprüft werden ({reason}).
+  'Could not move to the trash: {err}': 'Verschieben in den Papierkorb nicht möglich: {err}'
+  'Could not open: {err}': 'Öffnen nicht möglich: {err}'
+  Custom task from {file}: Eigene Aufgabe aus {file}
+  Daily: Täglich
+  'Dangerous tasks:': 'Gefährliche Aufgaben:'
+  Disable schedule: Zeitplan deaktivieren
+  Disabling schedule: Zeitplan wird deaktiviert
+  'Disk <b>/</b>: used <b>{used:.1f}</b> GB of {total:.1f}, free <b>{free:.1f}</b> GB': 'Datenträger <b>/</b>: <b>{used:.1f}</b> GB von {total:.1f} belegt, <b>{free:.1f}</b> GB frei'
+  Donate (NOWPayments): Spenden (NOWPayments)
+  Duration: Dauer
+  Enable / update: Aktivieren / aktualisieren
+  Enabling schedule: Zeitplan wird aktiviert
+  Estimated to free about {size} (from the last preview).: 'Geschätzt freiwerdender Platz: etwa {size} (laut letzter Vorschau).'
+  'Estimated to free for the selection: <b>{size}</b> (approximate)': 'Geschätzt freiwerdender Platz für die Auswahl: <b>{size}</b> (ungefähr)'
+  Failed: Fehler
+  'Failed to start: {err}': 'Start fehlgeschlagen: {err}'
+  Freed: Freigegeben
+  'Frequency:': 'Häufigkeit:'
+  GB: GB
+  GitHub rate limit reached, try again later: GitHub-Anfragelimit erreicht, später erneut versuchen
+  KB: KB
+  'Language:': 'Sprache:'
+  'Last run: never': 'Letzte Ausführung: nie'
+  'Last run: {when} ({result})': 'Letzte Ausführung: {when} ({result})'
+  MB: MB
+  MIT license · © AG TEAM DEV: MIT-Lizenz · © AG TEAM DEV
+  Manual: Manuell
+  Monthly (1st day): Monatlich (am 1.)
+  Move to trash: In den Papierkorb
+  Move “{name}” to the trash?: „{name}“ in den Papierkorb verschieben?
+  'Moved to the trash: {name}': 'In den Papierkorb verschoben: {name}'
+  Name: Name
+  'New version available: {latest} (you have {current}).': 'Neue Version verfügbar: {latest} (installiert: {current}).'
+  New version {latest} is available. Open About to download it.: Version {latest} ist verfügbar. Öffnen Sie „Info“, um sie herunterzuladen.
+  No published releases found yet.: Noch keine veröffentlichten Versionen gefunden.
+  No runs recorded yet.: Noch keine Ausführungen aufgezeichnet.
+  No schedulable tasks selected: Keine zeitplanbaren Aufgaben ausgewählt
+  'No size estimate yet. Tip: run “Preview” first.': 'Noch keine Größenschätzung. Tipp: zuerst die „Vorschau“ ausführen.'
+  'Not a folder: {path}': 'Kein Ordner: {path}'
+  Nothing selected: Nichts ausgewählt
+  Open in file manager: Im Dateimanager öffnen
+  Open the release page: Release-Seite öffnen
+  PREVIEW (nothing is deleted): VORSCHAU (es wird nichts gelöscht)
+  'Path copied: {path}': 'Pfad kopiert: {path}'
+  Press “Scan”. Double-click a folder to enter it.: „Scannen“ drücken. Doppelklick auf einen Ordner öffnet ihn.
+  'Preview uses:': 'Die Vorschau verwendet:'
+  RUN: AUSFÜHRUNG
+  Refresh: Aktualisieren
+  'Refusing to trash a system folder: {path}': 'Systemordner werden nicht in den Papierkorb verschoben: {path}'
+  Report an issue: Problem melden
+  Restart now: Jetzt neu starten
+  Result: Ergebnis
+  Risk: Risiko
+  'Risk:': 'Risiko:'
+  Run: Ausführen
+  Run now: Jetzt ausführen
+  Run the selected tasks? ({n}): Ausgewählte Aufgaben ausführen? ({n})
+  Run them only if you wrote or trust them.: Führen Sie sie nur aus, wenn Sie sie selbst geschrieben haben oder ihnen vertrauen.
+  Running the schedule now: Zeitplan wird jetzt ausgeführt
+  'Runs as root via systemd with low priority; logs: journalctl -u syscleaner. Dangerous tasks are never scheduled.': 'Läuft als root über systemd mit niedriger Priorität; Protokoll: journalctl -u syscleaner. Gefährliche Aufgaben werden nie eingeplant.'
+  Safe only: Nur sichere
+  Scan: Scannen
+  Scan stopped: Scan abgebrochen
+  Schedule disabled and removed: Zeitplan deaktiviert und entfernt
+  Schedule enabled: Zeitplan aktiviert
+  Scheduled: Geplant
+  ? 'Select a task on the left to see its description and command.
+
+    ⏱ means the task can be added to the schedule. “Preview” deletes nothing and shows a size estimate.'
+  : 'Wählen Sie links eine Aufgabe, um Beschreibung und Befehl zu sehen.
+
+    ⏱ bedeutet, dass die Aufgabe in den Zeitplan aufgenommen werden kann. Die „Vorschau“ löscht nichts und zeigt eine Größenschätzung.'
+  Select all: Alle auswählen
+  Select none: Auswahl aufheben
+  Share of folder: Anteil am Ordner
+  Size: Größe
+  Started by: Gestartet durch
+  'Status: {status}': 'Status: {status}'
+  Stopped: Gestoppt
+  Success: Erfolgreich
+  Support the project: Projekt unterstützen
+  'SysCleaner is free and open source. If it saved you time, you can support its development:': 'SysCleaner ist kostenlos und Open Source. Wenn es Ihnen Zeit gespart hat, können Sie die Entwicklung unterstützen:'
+  System default: Systemstandard
+  TB: TB
+  Task: Aufgabe
+  Tasks: Aufgaben
+  Tasks that need root will ask for your password once.: Aufgaben mit root-Rechten fragen einmalig nach dem Passwort.
+  The SYSCLEANER_LANG environment variable is set and overrides this choice.: Die Umgebungsvariable SYSCLEANER_LANG ist gesetzt und hat Vorrang vor dieser Auswahl.
+  The new language is applied after a restart.: Die neue Sprache wird nach einem Neustart angewendet.
+  The preview will run your own tasks as root. Continue?: Die Vorschau führt Ihre eigenen Aufgaben als root aus. Fortfahren?
+  This cannot be undone.: Das kann nicht rückgängig gemacht werden.
+  Time must be in HH:MM format: Die Zeit muss im Format HH:MM angegeben werden
+  Version {version}: Version {version}
+  Wait until the current operation finishes, then restart.: Warten Sie, bis der aktuelle Vorgang beendet ist, und starten Sie dann neu.
+  Website: Webseite
+  Weekly (Sunday): Wöchentlich (sonntags)
+  When: Wann
+  You have the latest version ({current}).: Sie haben die neueste Version ({current}).
+  'Your own tasks that run as root (full access to the system):': 'Ihre eigenen Aufgaben, die als root laufen (voller Systemzugriff):'
+  '[exit code: {rc}]': '[Exit-Code: {rc}]'
+  as root: als root
+  can be scheduled ⏱: zeitplanbar ⏱
+  custom: eigene
+  'enabled · next run: {when}': 'aktiv · nächste Ausführung: {when}'
+  'estimate: {size}': 'Schätzung: {size}'
+  'failed: {result}': 'fehlgeschlagen: {result}'
+  n/a: k. A.
+  needs root (asks for a password): benötigt root (fragt nach dem Passwort)
+  no connection: keine Verbindung
+  no root needed: kein root nötig
+  not configured: nicht eingerichtet
+  nothing found: nichts gefunden
+  root tasks (single password prompt): root-Aufgaben (eine einzige Passwortabfrage)
+  starting…: wird gestartet …
+  success: erfolgreich
+  'time (HH:MM):': 'Zeit (HH:MM):'
+  unexpected response: unerwartete Antwort
+  user tasks: Benutzeraufgaben
+  '{path} — total {total}, items: {n} (this filesystem only, -x)': '{path} — gesamt {total}, Elemente: {n} (nur dieses Dateisystem, -x)'
+  '{pct}% · {done}/{n} · {elapsed} · {cur}': '{pct}% · {done}/{n} · {elapsed} · {cur}'
+  '{pct}% · {idx}/{total} · {elapsed} · {title}': '{pct}% · {idx}/{total} · {elapsed} · {title}'
+  '{prog} not found': '{prog} nicht gefunden'
+  '{runs} runs · about {size} freed in total': '{runs} Ausführungen · insgesamt etwa {size} freigegeben'
+  ? '{size} · {path}
+
+    You can restore it from the trash.'
+  : '{size} · {path}
+
+    Sie können es aus dem Papierkorb wiederherstellen.'
+  “Freed” is the growth of free space on / during a run, so it is approximate.: „Freigegeben“ ist der Zuwachs an freiem Platz auf / während einer Ausführung und daher ungefähr.
+  ⏱ Schedule…: ⏱ Zeitplan …
+  ⏳ Scanning… (can take a minute on large filesystems): ⏳ Scan läuft … (auf großen Dateisystemen kann das eine Minute dauern)
+  ■ Stop: ■ Stopp
+  ▶ Run selected: ▶ Auswahl ausführen
+  ✔ Done. Free space increased by {size} · {elapsed}: ✔ Fertig. Freier Platz um {size} gewachsen · {elapsed}
+  ✔ Preview finished. Can free ≈ {size} · {elapsed}: '✔ Vorschau abgeschlossen. Freigebbar: ≈ {size} · {elapsed}'
+  ⬆ Up: ⬆ Hoch
+  📊 Disk: 📊 Datenträger
+  📜 History: 📜 Verlauf
+  🔍 Preview: 🔍 Vorschau
+  🔴 dangerous: 🔴 gefährlich
+  🟡 caution: 🟡 Vorsicht
+  🟢 safe: 🟢 sicher
+  🧹 Cleanup: 🧹 Bereinigung
+  Updates: Updates
+  Project: Projekt
+  APT repository: APT-Repository
+  Preferences: Einstellungen
+  'Installed via APT? Update with: sudo apt update && sudo apt upgrade': 'Über APT installiert? Aktualisieren mit: sudo apt update && sudo apt upgrade'
+groups:
+  clean: 🧹 System und Pakete
+  browsers: 🌐 Browser
+  dev: 🛠 Entwicklerwerkzeuge und Container
+  find: 🔎 Datenmüll finden (nur lesen)
+  security: 🔐 Diagnose und Sicherheit
+tasks:
+  apt_clean:
+    title: APT-Cache
+    desc: Entfernt heruntergeladene .deb-Dateien aus /var/cache/apt/archives sowie veraltete Archive. Pakete werden bei Bedarf erneut heruntergeladen.
+  apt_autoremove:
+    title: Nicht benötigte Pakete und alte Kernel (autoremove)
+    desc: Entfernt automatisch installierte Abhängigkeiten gelöschter Pakete und Kernel, die das System selbst als überflüssig markiert hat. Der laufende Kernel wird von apt nie angetastet.
+  rc_configs:
+    title: Konfigurationsreste entfernter Pakete (rc)
+    desc: Pakete, die ohne --purge entfernt wurden, hinterlassen ihre Konfigurationsdateien. Die Liste wird ins Protokoll geschrieben.
+  snap_old:
+    title: Alte Snap-Revisionen
+    desc: Entfernt deaktivierte (alte) Revisionen installierter Snaps; snapd behält sie für ein Zurücksetzen. Die aktuelle Revision jedes Snaps bleibt erhalten. Unter Ubuntu werden damit meist Gigabytes frei.
+  dnf_clean:
+    title: DNF-Cache (Fedora / RHEL-Familie)
+    desc: 'dnf clean all: entfernt zwischengespeicherte Pakete und Repository-Metadaten. Sie werden bei Bedarf erneut heruntergeladen.'
+  pacman_cache:
+    title: Pacman-Paketcache (Arch-Familie)
+    desc: 'paccache -r: entfernt zwischengespeicherte Paketversionen bis auf die letzten drei. Benötigt das Paket pacman-contrib.'
+  zypper_clean:
+    title: Zypper-Cache (openSUSE)
+    desc: 'zypper clean --all: entfernt zwischengespeicherte Pakete und Repository-Metadaten.'
+  journal:
+    title: 'systemd-Protokolle: 2 Wochen / höchstens 200 MB'
+    desc: Entfernt Journal-Einträge, die älter als 2 Wochen sind, und alles über 200 MB (journalctl --vacuum).
+  old_logs:
+    title: Archivierte Protokolle in /var/log (älter als 14 Tage)
+    desc: Entfernt archivierte Protokolle (*.gz, *.xz, *.1 ... *.9, *.old), die älter als 14 Tage sind. Aktuelle Protokolle und das systemd-Journal bleiben unberührt. Der Verlauf alter Protokolle geht verloren.
+  crash_reports:
+    title: Absturzberichte (/var/crash)
+    desc: Löscht Absturzberichte von Apport (Ubuntu / Linux Mint). Sie können groß sein und Teile des Programmspeichers enthalten.
+  coredumps:
+    title: Core-Dumps (systemd-coredump)
+    desc: Löscht gespeicherte Core-Dumps aus /var/lib/systemd/coredump. systemd entfernt sie nach einigen Tagen selbst; hier wird der Platz sofort frei.
+  tmp:
+    title: Temporäre Dateien in /tmp, älter als 1 Tag
+    desc: 'Ein sicherer Ersatz für rm -rf /tmp/*: frische Dateien und Sockets laufender Programme bleiben unberührt.'
+  var_tmp:
+    title: Temporäre Dateien in /var/tmp, älter als 30 Tage
+    desc: /var/tmp behält Dateien über Neustarts hinweg, daher werden nur Einträge entfernt, die seit 30 Tagen unberührt sind. Ein Programm, das dort eine alte Datei braucht, muss sie eventuell neu anlegen.
+  thumbs:
+    title: Miniaturansichten-Cache
+    desc: ~/.thumbnails und ~/.cache/thumbnails. Miniaturansichten werden beim Durchsuchen von Ordnern neu erzeugt.
+  recent_docs:
+    title: Liste zuletzt verwendeter Dateien
+    desc: Leert die Liste „Zuletzt verwendet“, die Dateimanager und Anwendungen anzeigen (Datenschutz). Die Dateien selbst bleiben unberührt.
+  trash:
+    title: Papierkorb leeren
+    desc: Löscht alles in ~/.local/share/Trash endgültig. Prüfen Sie den Papierkorb vorher!
+  flatpak_cache:
+    title: Flatpak-Repository-Cache
+    desc: ~/.cache/flatpak/system-cache.
+  flatpak_unused:
+    title: 'Flatpak: nicht verwendete Runtimes'
+    desc: flatpak uninstall --unused. Anwendungsdaten werden nicht entfernt.
+  flatpak_app_caches:
+    title: Flatpak-App-Caches
+    desc: Leert den Cache-Ordner jeder Flatpak-App (~/.var/app/<App>/cache), den Flatpak als nicht essenzielle App-Daten definiert. Schließen Sie die Apps vorher; sie bauen ihre Caches neu auf.
+  deborphan:
+    title: Verwaiste Pakete (deborphan)
+    desc: Entfernt Pakete, von denen nichts abhängt. Fehlalarme sind möglich, prüfen Sie daher zuerst die Liste in der Vorschau. Benötigt das Paket deborphan.
+  firefox_cache:
+    title: Firefox-Cache
+    desc: Löscht den Festplatten-Cache von Firefox (cache2) für die normale, die Snap- und die Flatpak-Installation. Passwörter, Verlauf, Lesezeichen und Cookies bleiben erhalten. Seiten laden einmalig langsamer.
+  chrome_cache:
+    title: Google-Chrome-Cache
+    desc: Löscht den Cache-Ordner von Chrome (~/.cache/google-chrome, auch Beta / Dev, und den Flatpak-Cache). Das Profil liegt in ~/.config und bleibt unberührt.
+  chromium_cache:
+    title: Chromium-Cache
+    desc: Löscht den Cache-Ordner von Chromium für die normale, die Snap- und die Flatpak-Installation. Das Profil liegt in ~/.config und bleibt unberührt.
+  edge_cache:
+    title: Microsoft-Edge-Cache
+    desc: Löscht den Cache-Ordner von Edge (~/.cache/microsoft-edge und den Flatpak-Cache). Das Profil liegt in ~/.config und bleibt unberührt.
+  brave:
+    title: Brave-Browser-Cache
+    desc: Löscht den Cache-Ordner von Brave (~/.cache/BraveSoftware und den Flatpak-Cache). Verlauf und Passwörter liegen in ~/.config und bleiben unberührt; Tabs laden einmalig etwas langsamer.
+  vivaldi_cache:
+    title: Vivaldi-Cache
+    desc: Löscht den Cache-Ordner von Vivaldi (~/.cache/vivaldi). Das Profil liegt in ~/.config und bleibt unberührt.
+  opera_cache:
+    title: Opera-Cache
+    desc: Löscht den Cache-Ordner von Opera (~/.cache/opera). Das Profil liegt in ~/.config und bleibt unberührt.
+  npm:
+    title: npm-Cache
+    desc: npm cache clean --force.
+  pip:
+    title: pip-Cache
+    desc: pip cache purge.
+  pnpm_store:
+    title: pnpm-Store (nicht referenzierte Pakete)
+    desc: 'pnpm store prune: entfernt nur Pakete, die kein Projekt auf diesem Rechner verwendet. Das ist der empfohlene Weg; den ganzen Store zu löschen ist es nicht.'
+  yarn_classic:
+    title: Globaler Yarn-Cache (Classic)
+    desc: Entfernt den globalen Yarn-1.x-Cache in ~/.cache/yarn. Projektdateien bleiben unberührt, Pakete werden bei der nächsten Installation erneut heruntergeladen. (Projekt-Caches von Yarn 2+ bleiben unberührt.)
+  cargo_registry:
+    title: Cargo-Registry-Cache und -Quellen (Rust)
+    desc: Entfernt ~/.cargo/registry/cache und ~/.cargo/registry/src. Crates werden beim nächsten Build erneut heruntergeladen, Offline-Builds funktionieren bis dahin nicht.
+  gradle_caches:
+    title: Gradle-Caches
+    desc: Entfernt ~/.gradle/caches (oft mehrere GB). Beenden Sie vorher die Gradle-Daemons (gradle --stop). Abhängigkeiten werden beim nächsten Build erneut heruntergeladen.
+  go:
+    title: Go-Cache (Build + Modcache)
+    desc: go clean -cache -modcache. Kann Gigabytes freigeben; Abhängigkeiten werden erneut heruntergeladen.
+  docker_img:
+    title: 'Docker: ungenutzte (dangling) Images und Build-Cache'
+    desc: docker image prune + builder prune. Volumes, Netzwerke und getaggte Images bleiben unberührt. Benötigt Docker-Zugriff ohne sudo (Gruppe docker).
+  docker_cont:
+    title: 'Docker: gestoppte Container'
+    desc: 'docker container prune. Prüfen Sie vorher docker ps -a: Ein gestoppter Container kann noch gebraucht werden (zum Beispiel ein Portainer-Stack).'
+  top_dirs:
+    title: Größte Ordner in /
+    desc: Welche Verzeichnisse den meisten Platz belegen (eine interaktive Ansicht bietet der Tab „Datenträger“).
+  top_home:
+    title: Größte Ordner im Home-Verzeichnis
+    desc: Was in ~ den Platz belegt.
+  big_files:
+    title: Dateien über 500 MB
+    desc: Sucht große Dateien auf dem Root-Dateisystem.
+  debs:
+    title: Manuell heruntergeladene .deb-Dateien in ~
+    desc: Nur eine Liste; ob Sie löschen, entscheiden Sie.
+  big_logs:
+    title: Große Protokolle in /var/log (>50 MB)
+    desc: Nur eine Liste, es wird nichts gelöscht.
+  kernels:
+    title: Installierte Kernel
+    desc: Der laufende Kernel (uname -r) darf NIEMALS entfernt werden.
+  est:
+    title: Aktuelle Netzwerkverbindungen
+    desc: ss -tunap state established.
+  listen:
+    title: Lauschende Ports
+    desc: Jeder lauschende Port sollte erklärbar sein (Docker, Portainer, Deluge ...).
+  ufw:
+    title: Firewall-Status (ufw)
+    desc: 'Falls deaktiviert: sudo ufw enable.'
+  logins:
+    title: Anmeldungen
+    desc: Letzte Anmeldungen, fehlgeschlagene Versuche und wer gerade angemeldet ist.
+  autostart:
+    title: Autostart und Cron
+    desc: Aktivierte Dienste, die langsamsten Einheiten beim Start, Cron-Jobs und Autostart-Einträge grafischer Anwendungen.
+  recent:
+    title: Systemdateien, die in den letzten 7 Tagen geändert wurden
+    desc: /usr/bin, /usr/local/bin, /etc – nützlich, wenn etwas verdächtig aussieht.
+  rkhunter:
+    title: rkhunter-Scan
+    desc: Ein langer Rootkit-Scan.
+  upgrade:
+    title: System aktualisieren (apt update && upgrade)
+    desc: 'Nicht nur lesend: installiert Updates. Nach einem Kernel-Update ist ein Neustart nötig.'

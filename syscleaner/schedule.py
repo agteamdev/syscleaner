@@ -77,13 +77,54 @@ echo "{_('Schedule disabled and removed')}"
 """
 
 
-def status() -> str:
+def _show(unit: str, *props: str) -> dict:
+    """`systemctl show UNIT -p A -p B` parsed into {A: value, B: value}."""
+    cmd = ["systemctl", "show", unit]
+    for prop in props:
+        cmd += ["-p", prop]
     try:
-        en = subprocess.run(["systemctl", "is-enabled", f"{UNIT}.timer"], capture_output=True, text=True)
-        if en.returncode != 0:
-            return _("not configured")
-        nxt = subprocess.run(["systemctl", "show", f"{UNIT}.timer", "-p", "NextElapseUSecRealtime", "--value"],
-                             capture_output=True, text=True).stdout.strip()
-        return _("enabled · next run: {when}").format(when=nxt or _("n/a"))
-    except Exception as e:  # noqa: BLE001
-        return f"n/a ({e})"
+        out = subprocess.run(cmd, capture_output=True, text=True, timeout=10).stdout
+    except (OSError, subprocess.SubprocessError):
+        return {}
+    return dict(line.split("=", 1) for line in out.splitlines() if "=" in line)
+
+
+def is_installed() -> bool:
+    try:
+        return subprocess.run(["systemctl", "is-enabled", f"{UNIT}.timer"], capture_output=True,
+                              text=True, timeout=10).returncode == 0
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def status() -> str:
+    if not is_installed():
+        return _("not configured")
+    nxt = _show(f"{UNIT}.timer", "NextElapseUSecRealtime").get("NextElapseUSecRealtime", "").strip()
+    return _("enabled · next run: {when}").format(when=nxt or _("n/a"))
+
+
+def last_run():
+    """{"when", "result", "exit"} of the last service run, or None if it never ran."""
+    d = _show(f"{UNIT}.service", "Result", "ExecMainExitTimestamp", "ExecMainStatus")
+    when = d.get("ExecMainExitTimestamp", "").strip()
+    if not when or when == "n/a":
+        return None
+    return {"when": when, "result": d.get("Result", "").strip(), "exit": d.get("ExecMainStatus", "").strip()}
+
+
+def last_run_text() -> str:
+    run = last_run()
+    if run is None:
+        return _("Last run: never")
+    result = _("success") if run["result"] == "success" else _("failed: {result}").format(result=run["result"] or "?")
+    return _("Last run: {when} ({result})").format(when=run["when"], result=result)
+
+
+def run_now_script() -> str:
+    """Start the scheduled job right now and print what it logged (needs root)."""
+    return f"""systemctl start {UNIT}.service
+rc=$?
+echo "[systemctl start: exit $rc]"
+journalctl -u {UNIT}.service -n 80 --no-pager -o cat
+"""

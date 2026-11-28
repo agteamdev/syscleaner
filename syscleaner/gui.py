@@ -18,7 +18,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
-from . import __version__, diskscan, schedule, settings  # noqa: E402
+from . import __version__, diskscan, fileops, history, schedule, settings, updater  # noqa: E402
 from .about import RESTART, AboutDialog  # noqa: E402
 from .i18n import _  # noqa: E402
 from .runner import BEGIN_RE, EST_RE, Runner, build_script, fmt_duration, fmt_size  # noqa: E402
@@ -138,6 +138,7 @@ class DiskTab(Gtk.Box):
         self.cur = str(Path.home())
         self.store = Gtk.ListStore(str, str, int, str, bool)  # name, size, percent, path, is_dir
         tv = Gtk.TreeView(model=self.store)
+        self.tv = tv
         tv.get_style_context().add_class("sc-nofocus")
         c1 = Gtk.TreeViewColumn(_("Name"), Gtk.CellRendererText(xpad=8, ypad=4), text=0)
         c1.set_expand(True)
@@ -146,6 +147,8 @@ class DiskTab(Gtk.Box):
         c2.set_min_width(320)
         tv.append_column(c2)
         tv.connect("row-activated", self.on_activate)
+        tv.connect("button-press-event", self.on_press)
+        tv.get_selection().connect("changed", self.on_sel_changed)
         sw = Gtk.ScrolledWindow()
         sw.set_shadow_type(Gtk.ShadowType.NONE)
         sw.add(tv)
@@ -153,6 +156,16 @@ class DiskTab(Gtk.Box):
         frame.set_shadow_type(Gtk.ShadowType.IN)
         frame.add(sw)
         self.pack_start(frame, True, True, 0)
+
+        acts = Gtk.Box(spacing=6)
+        self._act_btns = []
+        for label, fn in ((_("Open in file manager"), self.act_open), (_("Copy path"), self.act_copy),
+                          (_("Move to trash"), self.act_trash)):
+            b = Gtk.Button(label=label, sensitive=False)
+            b.connect("clicked", fn)
+            acts.pack_start(b, False, False, 0)
+            self._act_btns.append(b)
+        self.pack_start(acts, False, False, 0)
 
         self.progress = Gtk.ProgressBar(show_text=True)
         self.progress.set_no_show_all(True)  # shown only while scanning
@@ -164,6 +177,78 @@ class DiskTab(Gtk.Box):
         row = self.store[path]
         if row[4]:
             self.scan(row[3])
+
+    # ---- actions on the selected item ----
+    def _selected(self):
+        model, it = self.tv.get_selection().get_selected()
+        return (model, it, model[it]) if it else None
+
+    def on_sel_changed(self, *_a):
+        on = self.tv.get_selection().get_selected()[1] is not None
+        for b in self._act_btns:
+            b.set_sensitive(on)
+
+    def on_press(self, tv, ev):
+        """Right click: select the row under the pointer and show the same actions as a menu."""
+        if ev.button != 3:
+            return False
+        hit = tv.get_path_at_pos(int(ev.x), int(ev.y))
+        if not hit:
+            return False
+        tv.get_selection().select_path(hit[0])
+        menu = Gtk.Menu()
+        for label, fn in ((_("Open in file manager"), self.act_open), (_("Copy path"), self.act_copy),
+                          (_("Move to trash"), self.act_trash)):
+            item = Gtk.MenuItem(label=label)
+            item.connect("activate", fn)
+            menu.append(item)
+        menu.show_all()
+        menu.popup_at_pointer(ev)
+        return True
+
+    def act_open(self, *_a):
+        sel = self._selected()
+        if not sel:
+            return
+        row = sel[2]
+        try:
+            fileops.open_folder(row[3], row[4])
+        except GLib.Error as e:
+            self.status.set_text(_("Could not open: {err}").format(err=e.message))
+
+    def act_copy(self, *_a):
+        sel = self._selected()
+        if not sel:
+            return
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        clipboard.set_text(sel[2][3], -1)
+        clipboard.store()  # keep the text after the app closes (needs a clipboard manager)
+        self.status.set_text(_("Path copied: {path}").format(path=sel[2][3]))
+
+    def act_trash(self, *_a):
+        sel = self._selected()
+        if not sel:
+            return
+        model, it, row = sel
+        path, name = row[3], os.path.basename(row[3])
+        refuse = _("Refusing to trash a system folder: {path}").format(path=path)
+        if fileops.is_protected(path):
+            self.status.set_text(refuse)
+            return
+        if _msg(self.get_toplevel(), Gtk.MessageType.QUESTION, _("Move “{name}” to the trash?").format(name=name),
+                _("{size} · {path}\nYou can restore it from the trash.").format(size=row[1], path=path),
+                Gtk.ButtonsType.OK_CANCEL) != Gtk.ResponseType.OK:
+            return
+        try:
+            fileops.trash(path)
+        except PermissionError:
+            self.status.set_text(refuse)
+        except GLib.Error as e:
+            self.status.set_text(_("Could not move to the trash: {err}").format(err=e.message))
+        else:
+            model.remove(it)
+            self._items = [x for x in self._items if x[1] != path]
+            self.status.set_text(_("Moved to the trash: {name}").format(name=name))
 
     # ---- scan control ----
     def scan(self, path):
@@ -282,6 +367,72 @@ class DiskTab(Gtk.Box):
             self.status.set_text(_("Failed to start: {err}").format(err=err))
 
 
+# ───────────────────────── "History" tab ─────────────────────────
+class HistoryTab(Gtk.Box):
+    """Runs of the cleanup (manual, scheduled, command line) with duration and freed space."""
+
+    def __init__(self, titles: dict):
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        self.set_border_width(PAD)
+        self.titles = titles  # task id -> title, for the tooltip
+        self.store = Gtk.ListStore(str, str, str, str, str, str, str)  # when, source, tasks, duration, freed, result, tip
+        tv = Gtk.TreeView(model=self.store)
+        tv.get_style_context().add_class("sc-nofocus")
+        tv.set_tooltip_column(6)
+        for i, title in enumerate((_("When"), _("Started by"), _("Tasks"), _("Duration"), _("Freed"), _("Result"))):
+            col = Gtk.TreeViewColumn(title, Gtk.CellRendererText(xpad=8, ypad=4), text=i)
+            col.set_expand(i == 0)
+            tv.append_column(col)
+        sw = Gtk.ScrolledWindow()
+        sw.set_shadow_type(Gtk.ShadowType.NONE)
+        sw.add(tv)
+        frame = Gtk.Frame()
+        frame.set_shadow_type(Gtk.ShadowType.IN)
+        frame.add(sw)
+        self.pack_start(frame, True, True, 0)
+        self.summary = Gtk.Label(xalign=0)
+        self.pack_start(self.summary, False, False, 0)
+        note = Gtk.Label(xalign=0, wrap=True)
+        note.set_markup("<small>" + GLib.markup_escape_text(
+            _("“Freed” is the growth of free space on / during a run, so it is approximate.")) + "</small>")
+        self.pack_start(note, False, False, 0)
+        bar = Gtk.Box(spacing=6)
+        for label, fn in ((_("Refresh"), lambda *_a: self.reload()), (_("Clear history"), self.on_clear)):
+            b = Gtk.Button(label=label)
+            b.connect("clicked", fn)
+            bar.pack_start(b, False, False, 0)
+        self.pack_start(bar, False, False, 0)
+
+    @staticmethod
+    def _when(ts: str) -> str:
+        try:
+            return datetime.fromisoformat(ts).astimezone().strftime("%Y-%m-%d %H:%M")
+        except ValueError:
+            return ts
+
+    def reload(self):
+        records = history.load()
+        sources = {"gui": _("Manual"), "schedule": _("Scheduled"), "cli": _("Command line")}
+        self.store.clear()
+        for r in reversed(records):  # newest first
+            result = _("Stopped") if r["stopped"] else (_("Success") if r["ok"] else _("Failed"))
+            tip = ", ".join(self.titles.get(i, i) for i in r["tasks"])
+            self.store.append([self._when(r["ts"]), sources.get(r["source"], r["source"]), str(len(r["tasks"])),
+                               fmt_duration(r["seconds"]), fmt_size(r["freed"]), result, tip])
+        if records:
+            t = history.totals(records)
+            self.summary.set_markup(_("{runs} runs · about {size} freed in total").format(
+                runs=t["runs"], size="<b>" + fmt_size(t["freed"]) + "</b>"))
+        else:
+            self.summary.set_text(_("No runs recorded yet."))
+
+    def on_clear(self, *_a):
+        if _msg(self.get_toplevel(), Gtk.MessageType.WARNING, _("Clear the run history?"), _("This cannot be undone."),
+                Gtk.ButtonsType.OK_CANCEL) == Gtk.ResponseType.OK:
+            history.clear()
+            self.reload()
+
+
 # ───────────────────────── main window ─────────────────────────
 class MainWindow(Gtk.Window):
     def __init__(self):
@@ -320,9 +471,9 @@ class MainWindow(Gtk.Window):
         top = Gtk.Box(spacing=8)
         self.disk_lbl = Gtk.Label(xalign=0)
         top.pack_start(self.disk_lbl, True, True, 0)
-        about = themed_button(_("About"), "help-about")
-        about.connect("clicked", self.on_about)
-        top.pack_end(about, False, False, 0)
+        self.about_btn = themed_button(_("About"), "help-about")
+        self.about_btn.connect("clicked", self.on_about)
+        top.pack_end(self.about_btn, False, False, 0)
         outer.pack_start(top, False, False, 0)
         self.disk_bar = Gtk.ProgressBar()
         outer.pack_start(self.disk_bar, False, False, 0)
@@ -332,11 +483,39 @@ class MainWindow(Gtk.Window):
         self.disk_tab = DiskTab()
         self.nb.append_page(self._clean_tab(), Gtk.Label(label=_("🧹 Cleanup")))
         self.nb.append_page(self.disk_tab, Gtk.Label(label=_("📊 Disk")))
+        self.history_tab = HistoryTab({t.id: t.title for t in self.tasks})
+        self.nb.append_page(self.history_tab, Gtk.Label(label=_("📜 History")))
+        self.history_tab.reload()
         self.update_disk()
         self.log.connect("style-updated", self.apply_theme)  # follow light/dark system theme
         self.apply_theme()
         for w in self.warnings:
             self.write(f"⚠ {w}\n", "err")
+        if self.cfg.get("check_updates") is True:  # opt-in, switched on in the About dialog
+            self.start_update_check()
+
+    # ---- update check at startup (only if the user opted in) ----
+    def start_update_check(self):
+        cache = self.cfg.get("update_cache")
+        if isinstance(cache, dict) and cache.get("latest") and isinstance(cache.get("ts"), (int, float)) \
+                and abs(time.time() - cache["ts"]) < 12 * 3600:
+            self._apply_update(str(cache["latest"]))  # checked recently: no network needed
+            return
+        threading.Thread(target=lambda: GLib.idle_add(self._update_done, updater.check(__version__)),
+                         daemon=True).start()
+
+    def _update_done(self, res):
+        if res["ok"] and res["latest"]:
+            self.cfg["update_cache"] = {"ts": time.time(), "latest": res["latest"], "url": res["url"]}
+            settings.save(self.cfg)
+            self._apply_update(res["latest"])
+
+    def _apply_update(self, latest):
+        if updater.is_newer(latest, __version__):
+            self.about_btn.set_label(_("About · new version {latest}").format(latest=latest))
+            self.about_btn.get_style_context().add_class("suggested-action")
+            self.about_btn.set_tooltip_text(_("New version {latest} is available. Open About to download it.").format(
+                latest=latest))
 
     # ---- window state (remembered between runs) ----
     def _position_ok(self, x, y, w) -> bool:
@@ -427,6 +606,8 @@ class MainWindow(Gtk.Window):
         for t in visible:
             ok = available(t)
             label = GLib.markup_escape_text(t.title) + (" ⏱" if t.schedule else "")
+            if t.source:
+                label = ("⚠ " if t.root else "") + label + "  <i>(" + _("custom") + ")</i>"
             if not ok:
                 why = _("{prog} not found").format(prog=GLib.markup_escape_text(t.requires)) if t.requires \
                     else _("nothing found")
@@ -564,9 +745,10 @@ class MainWindow(Gtk.Window):
             extra = "\n\n<small>" + _("Preview uses:") + " " + esc((t.estimate or t.preview).splitlines()[0]) + "</small>"
         root = _("needs root (asks for a password)") if t.root else _("no root needed")
         sched = "  ·  " + _("can be scheduled ⏱") if t.schedule else ""
+        own = "\n" + esc(_("Custom task from {file}").format(file=t.source)) if t.source else ""
         self.desc.set_markup(
             f"<big><b>{esc(t.title)}</b></big>\n"
-            f"{esc(_('Risk:'))} {esc(RISK[t.risk])}  ·  {esc(root)}{esc(sched)}\n\n"
+            f"{esc(_('Risk:'))} {esc(RISK[t.risk])}  ·  {esc(root)}{esc(sched)}{own}\n\n"
             f"{esc(t.desc)}\n\n<tt>{esc(('sudo ' if t.root else '') + t.cmd)}</tt>{extra}")
 
     def sel_safe(self, *_a):
@@ -664,18 +846,16 @@ class MainWindow(Gtk.Window):
             _msg(self, Gtk.MessageType.INFO, _("Nothing selected"))
             return
         tasks = [self.by_id[i] for i in ids]
-        risky = [t for t in tasks if t.risk == "danger"]
-        if risky and not dry:
-            r = _msg(self, Gtk.MessageType.WARNING, _("Dangerous tasks selected"),
-                     "\n".join("• " + t.title for t in risky) + "\n\n" + _("Run “Preview” first. Continue anyway?"),
-                     Gtk.ButtonsType.OK_CANCEL)
-            if r != Gtk.ResponseType.OK:
-                return
+        custom_root = [t for t in tasks if t.source and t.root]
+        if (not dry or custom_root) and not self.confirm_run(tasks, dry):
+            return
         self.set_busy(True)
         self.runner.stopped = False
         self.free_before = self.update_disk()
         gen = self._run["gen"] + 1
-        self._run = {"gen": gen, "active": True, "t0": time.monotonic(), "idx": 0, "total": len(tasks), "title": ""}
+        self._run = {"gen": gen, "active": True, "t0": time.monotonic(), "idx": 0, "total": len(tasks), "title": "",
+                     "ids": [t.id for t in tasks]}
+        self._rc_bad = False
         self.run_bar.set_fraction(0.0)
         self._update_run_bar()
         self.run_bar.show()
@@ -684,6 +864,40 @@ class MainWindow(Gtk.Window):
         self.write(f"\n=== {head} · {datetime.now():%H:%M:%S} ===\n", "head")
         threading.Thread(target=self.worker, args=(tasks, dry), daemon=True).start()
 
+    def confirm_run(self, tasks, dry) -> bool:
+        """The last question before anything runs: size estimate, dangerous and own root tasks."""
+        risky = [t for t in tasks if t.risk == "danger"] if not dry else []
+        custom_root = [t for t in tasks if t.source and t.root]
+        lines = []
+        if not dry:
+            known = [self.estimates.get(t.id) for t in tasks]
+            if any(known):
+                lines.append(_("Estimated to free about {size} (from the last preview).").format(
+                    size=fmt_size(sum(v or 0 for v in known))))
+            else:
+                lines.append(_("No size estimate yet. Tip: run “Preview” first."))
+        if any(t.root for t in tasks):
+            lines.append(_("Tasks that need root will ask for your password once."))
+        if risky:
+            lines.append(_("Dangerous tasks:") + "\n" + "\n".join("  • " + t.title for t in risky))
+        if custom_root:
+            lines.append(_("Your own tasks that run as root (full access to the system):") + "\n" + "\n".join(
+                f"  • {t.title} ({t.source})" for t in custom_root))
+            lines.append(_("Run them only if you wrote or trust them."))
+        careful = bool(risky or custom_root)
+        title = (_("The preview will run your own tasks as root. Continue?") if dry
+                 else _("Run the selected tasks? ({n})").format(n=len(tasks)))
+        dlg = Gtk.MessageDialog(transient_for=self, modal=True, buttons=Gtk.ButtonsType.NONE, text=title,
+                                message_type=Gtk.MessageType.WARNING if careful else Gtk.MessageType.QUESTION)
+        dlg.format_secondary_text("\n\n".join(lines))
+        dlg.add_button(_("Cancel"), Gtk.ResponseType.CANCEL)
+        go = dlg.add_button(_("Continue") if dry else _("Run"), Gtk.ResponseType.OK)
+        go.get_style_context().add_class("destructive-action" if careful else "suggested-action")
+        dlg.set_default_response(Gtk.ResponseType.CANCEL if careful else Gtk.ResponseType.OK)
+        resp = dlg.run()
+        dlg.destroy()
+        return resp == Gtk.ResponseType.OK
+
     def worker(self, tasks, dry):
         try:
             rt = [t for t in tasks if t.root]
@@ -691,10 +905,12 @@ class MainWindow(Gtk.Window):
             if rt:
                 GLib.idle_add(self.write, "━━ " + _("root tasks (single password prompt)") + " ━━\n", "head")
                 rc = self.runner.stream(["pkexec", "bash", "-c", build_script(rt, dry, 0, len(tasks))], self.handle_line)
+                self._rc_bad = self._rc_bad or rc != 0
                 GLib.idle_add(self.write, _("[exit code: {rc}]").format(rc=rc) + "\n", "ok" if rc == 0 else "err")
             if ut and not self.runner.stopped:
                 GLib.idle_add(self.write, "━━ " + _("user tasks") + " ━━\n", "head")
                 rc = self.runner.stream(["bash", "-c", build_script(ut, dry, len(rt), len(tasks))], self.handle_line)
+                self._rc_bad = self._rc_bad or rc != 0
                 GLib.idle_add(self.write, _("[exit code: {rc}]").format(rc=rc) + "\n", "ok" if rc == 0 else "err")
         except Exception as e:  # noqa: BLE001
             GLib.idle_add(self.write, _("Failed to start: {err}").format(err=e) + "\n", "err")
@@ -712,8 +928,13 @@ class MainWindow(Gtk.Window):
             self.write("\n" + _("✔ Preview finished. Can free ≈ {size} · {elapsed}").format(
                 size=fmt_size(tot), elapsed=took) + "\n", "ok")
         else:
+            freed = max(0, free - self.free_before)
             self.write("\n" + _("✔ Done. Free space increased by {size} · {elapsed}").format(
-                size=fmt_size(max(0, free - self.free_before)), elapsed=took) + "\n", "ok")
+                size=fmt_size(freed), elapsed=took) + "\n", "ok")
+            history.add(history.make_record("gui", self._run.get("ids", []), freed,
+                                            time.monotonic() - self._run["t0"], not self._rc_bad,
+                                            self.runner.stopped))
+            self.history_tab.reload()
             self.estimates.clear()
             self.refresh_sizes()
         self.set_busy(False)
@@ -725,11 +946,14 @@ class MainWindow(Gtk.Window):
         dlg.add_button(_("Close"), Gtk.ResponseType.CLOSE)
         dlg.add_button(_("Disable schedule"), 2)
         dlg.add_button(_("Enable / update"), 1)
+        run_now = dlg.add_button(_("Run now"), 3)
+        run_now.set_sensitive(schedule.is_installed())
         area = dlg.get_content_area()
         area.set_spacing(10)
         area.set_border_width(PAD + 4)
         area.pack_start(Gtk.Label(xalign=0, label=_("Status: {status}").format(status=schedule.status())),
                         False, False, 0)
+        area.pack_start(Gtk.Label(xalign=0, label=schedule.last_run_text()), False, False, 0)
         names = "\n".join("  • " + self.by_id[i].title for i in ids) or "  " + _(
             "(none — check tasks marked with ⏱ in the list)")
         area.pack_start(Gtk.Label(xalign=0, label=_("Checked tasks marked with ⏱ will run:") + "\n" + names),
@@ -764,6 +988,8 @@ class MainWindow(Gtk.Window):
             self.run_root_script(schedule.install_script(ids, freq, hhmm.zfill(5), user), _("Enabling schedule"))
         elif resp == 2:
             self.run_root_script(schedule.uninstall_script(), _("Disabling schedule"))
+        elif resp == 3:
+            self.run_root_script(schedule.run_now_script(), _("Running the schedule now"))
 
     def run_root_script(self, script, title):
         self.set_busy(True)

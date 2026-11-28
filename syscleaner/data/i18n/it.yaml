@@ -8,58 +8,92 @@ ui:
   (none — check tasks marked with ⏱ in the list): (nessuna — spunta nell’elenco le attività con ⏱)
   About: Informazioni
   About SysCleaner: Informazioni su SysCleaner
+  About · new version {latest}: Informazioni · nuova versione {latest}
   All releases: Tutte le versioni
   Also see system folders you have no access to (asks for a password): Mostra anche le cartelle di sistema senza accesso (chiede la password)
   B: B
-  KB: KB
-  MB: MB
-  GB: GB
-  TB: TB
+  Cancel: Annulla
   Check again: Controlla di nuovo
+  Check for updates automatically at startup: Controlla gli aggiornamenti all’avvio
   'Checked tasks marked with ⏱ will run:': 'Verranno eseguite le attività selezionate con ⏱:'
   Checking for updates…: Controllo aggiornamenti…
   Cleanup and diagnostics for Linux Mint / Debian / Ubuntu: Pulizia e diagnostica per Linux Mint / Debian / Ubuntu
   Cleanup schedule (systemd timer): Pianificazione della pulizia (systemd timer)
+  Clear history: Cancella cronologia
   Clear log: Svuota registro
+  Clear the run history?: Cancellare la cronologia delle esecuzioni?
   Close: Chiudi
+  Command line: Riga di comando
+  Contacts api.github.com at most every 12 hours. Only the app name and version are sent.: Contatta api.github.com al massimo ogni 12 ore. Vengono inviati solo il nome e la versione dell’app.
+  Continue: Continua
+  Copy path: Copia percorso
   Could not check for updates ({reason}).: Impossibile controllare gli aggiornamenti ({reason}).
+  'Could not move to the trash: {err}': 'Impossibile spostare nel cestino: {err}'
+  'Could not open: {err}': 'Impossibile aprire: {err}'
+  Custom task from {file}: Attività personalizzata da {file}
   Daily: Ogni giorno
-  Dangerous tasks selected: Attività pericolose selezionate
+  'Dangerous tasks:': 'Attività pericolose:'
   Disable schedule: Disattiva pianificazione
   Disabling schedule: Disattivazione della pianificazione
   'Disk <b>/</b>: used <b>{used:.1f}</b> GB of {total:.1f}, free <b>{free:.1f}</b> GB': 'Disco <b>/</b>: usati <b>{used:.1f}</b> GB su {total:.1f}, liberi <b>{free:.1f}</b> GB'
   Donate (NOWPayments): Dona (NOWPayments)
+  Duration: Durata
   Enable / update: Attiva / aggiorna
   Enabling schedule: Attivazione della pianificazione
+  Estimated to free about {size} (from the last preview).: 'Spazio stimato da liberare: circa {size} (dall’ultima anteprima).'
   'Estimated to free for the selection: <b>{size}</b> (approximate)': 'Spazio stimato da liberare per la selezione: <b>{size}</b> (approssimativo)'
+  Failed: Errore
   'Failed to start: {err}': 'Avvio non riuscito: {err}'
+  Freed: Liberato
   'Frequency:': 'Frequenza:'
+  GB: GB
   GitHub rate limit reached, try again later: limite di richieste GitHub raggiunto, riprova più tardi
+  KB: KB
   'Language:': 'Lingua:'
+  'Last run: never': 'Ultima esecuzione: mai'
+  'Last run: {when} ({result})': 'Ultima esecuzione: {when} ({result})'
+  MB: MB
   MIT license · © AG TEAM DEV: Licenza MIT · © AG TEAM DEV
+  Manual: Manuale
   Monthly (1st day): Ogni mese (il 1°)
+  Move to trash: Sposta nel cestino
+  Move “{name}” to the trash?: Spostare «{name}» nel cestino?
+  'Moved to the trash: {name}': 'Spostato nel cestino: {name}'
   Name: Nome
   'New version available: {latest} (you have {current}).': 'Nuova versione disponibile: {latest} (hai la {current}).'
+  New version {latest} is available. Open About to download it.: È disponibile la nuova versione {latest}. Apri «Informazioni» per scaricarla.
   No published releases found yet.: Nessuna versione pubblicata finora.
+  No runs recorded yet.: Nessuna esecuzione registrata.
   No schedulable tasks selected: Nessuna attività pianificabile selezionata
+  'No size estimate yet. Tip: run “Preview” first.': 'Nessuna stima delle dimensioni. Suggerimento: esegui prima l’«Anteprima».'
   'Not a folder: {path}': 'Non è una cartella: {path}'
   Nothing selected: Nessuna selezione
+  Open in file manager: Apri nel file manager
   Open the release page: Apri la pagina della versione
   PREVIEW (nothing is deleted): ANTEPRIMA (non viene eliminato nulla)
+  'Path copied: {path}': 'Percorso copiato: {path}'
   Press “Scan”. Double-click a folder to enter it.: Premi «Scansiona». Doppio clic su una cartella per entrarci.
   'Preview uses:': 'L’anteprima usa:'
   RUN: ESECUZIONE
+  Refresh: Aggiorna
+  'Refusing to trash a system folder: {path}': 'Non sposto nel cestino una cartella di sistema: {path}'
   Report an issue: Segnala un problema
   Restart now: Riavvia ora
+  Result: Esito
   Risk: Rischio
   'Risk:': 'Rischio:'
-  Run “Preview” first. Continue anyway?: Esegui prima l’«Anteprima». Continuare comunque?
+  Run: Esegui
+  Run now: Esegui ora
+  Run the selected tasks? ({n}): Eseguire le attività selezionate? ({n})
+  Run them only if you wrote or trust them.: Eseguile solo se le hai scritte tu o ti fidi.
+  Running the schedule now: Esecuzione della pianificazione ora
   'Runs as root via systemd with low priority; logs: journalctl -u syscleaner. Dangerous tasks are never scheduled.': 'Eseguita come root tramite systemd con bassa priorità; log: journalctl -u syscleaner. Le attività pericolose non vengono mai pianificate.'
   Safe only: Solo sicure
   Scan: Scansiona
   Scan stopped: Scansione interrotta
   Schedule disabled and removed: Pianificazione disattivata e rimossa
   Schedule enabled: Pianificazione attivata
+  Scheduled: Pianificata
   ? 'Select a task on the left to see its description and command.
 
     ⏱ means the task can be added to the schedule. “Preview” deletes nothing and shows a size estimate.'
@@ -70,24 +104,36 @@ ui:
   Select none: Deseleziona tutto
   Share of folder: Quota della cartella
   Size: Dimensione
+  Started by: Avviata da
   'Status: {status}': 'Stato: {status}'
+  Stopped: Interrotta
+  Success: Riuscita
   Support the project: Sostieni il progetto
   'SysCleaner is free and open source. If it saved you time, you can support its development:': 'SysCleaner è gratuito e open source. Se ti ha fatto risparmiare tempo, puoi sostenerne lo sviluppo:'
   System default: Predefinita di sistema
+  TB: TB
   Task: Attività
+  Tasks: Attività
+  Tasks that need root will ask for your password once.: Le attività che richiedono root chiederanno la password una sola volta.
   The SYSCLEANER_LANG environment variable is set and overrides this choice.: La variabile d’ambiente SYSCLEANER_LANG è impostata e ha la precedenza su questa scelta.
   The new language is applied after a restart.: La nuova lingua verrà applicata dopo il riavvio.
+  The preview will run your own tasks as root. Continue?: L’anteprima eseguirà le tue attività personalizzate come root. Continuare?
+  This cannot be undone.: Questa azione non può essere annullata.
   Time must be in HH:MM format: L’ora deve essere nel formato HH:MM
   Version {version}: Versione {version}
   Wait until the current operation finishes, then restart.: Attendi la fine dell’operazione in corso, poi riavvia.
   Website: Sito web
   Weekly (Sunday): Ogni settimana (domenica)
+  When: Quando
   You have the latest version ({current}).: Hai l’ultima versione ({current}).
+  'Your own tasks that run as root (full access to the system):': 'Le tue attività personalizzate eseguite come root (accesso completo al sistema):'
   '[exit code: {rc}]': '[codice di uscita: {rc}]'
   as root: come root
   can be scheduled ⏱: pianificabile ⏱
+  custom: personalizzata
   'enabled · next run: {when}': 'attiva · prossima esecuzione: {when}'
   'estimate: {size}': 'stima: {size}'
+  'failed: {result}': 'non riuscita: {result}'
   n/a: n/d
   needs root (asks for a password): richiede root (chiede la password)
   no connection: nessuna connessione
@@ -96,6 +142,7 @@ ui:
   nothing found: nulla trovato
   root tasks (single password prompt): attività root (una sola richiesta di password)
   starting…: avvio…
+  success: riuscita
   'time (HH:MM):': 'ora (HH:MM):'
   unexpected response: risposta inattesa
   user tasks: attività utente
@@ -103,6 +150,14 @@ ui:
   '{pct}% · {done}/{n} · {elapsed} · {cur}': '{pct}% · {done}/{n} · {elapsed} · {cur}'
   '{pct}% · {idx}/{total} · {elapsed} · {title}': '{pct}% · {idx}/{total} · {elapsed} · {title}'
   '{prog} not found': '{prog} non trovato'
+  '{runs} runs · about {size} freed in total': '{runs} esecuzioni · circa {size} liberati in totale'
+  ? '{size} · {path}
+
+    You can restore it from the trash.'
+  : '{size} · {path}
+
+    Puoi ripristinarlo dal cestino.'
+  “Freed” is the growth of free space on / during a run, so it is approximate.: «Liberato» è l’aumento di spazio libero su / durante l’esecuzione, quindi è approssimativo.
   ⏱ Schedule…: ⏱ Pianifica…
   ⏳ Scanning… (can take a minute on large filesystems): ⏳ Scansione… (può richiedere un minuto su file system grandi)
   ■ Stop: ■ Stop
@@ -111,11 +166,17 @@ ui:
   ✔ Preview finished. Can free ≈ {size} · {elapsed}: ✔ Anteprima completata. Si possono liberare ≈ {size} · {elapsed}
   ⬆ Up: ⬆ Su
   📊 Disk: 📊 Disco
+  📜 History: 📜 Cronologia
   🔍 Preview: 🔍 Anteprima
   🔴 dangerous: 🔴 pericolosa
   🟡 caution: 🟡 attenzione
   🟢 safe: 🟢 sicura
   🧹 Cleanup: 🧹 Pulizia
+  Updates: Aggiornamenti
+  Project: Progetto
+  APT repository: Repository APT
+  Preferences: Preferenze
+  'Installed via APT? Update with: sudo apt update && sudo apt upgrade': 'Installato tramite APT? Aggiorna con: sudo apt update && sudo apt upgrade'
 groups:
   clean: 🧹 Sistema e pacchetti
   browsers: 🌐 Browser

@@ -18,20 +18,36 @@ Pick tasks with checkboxes, read what each one does and how risky it is, preview
 - **Only what applies to your system is shown**: missing browsers, package managers and tools are hidden.
 - **Tasks with explanations and risk levels**: 🟢 safe · 🟡 caution · 🔴 dangerous (dangerous tasks ask for confirmation).
 - **Preview (dry-run)**: deletes nothing; shows what would be affected and a size estimate per task and in total.
-- **Live log** of every command, plus a "freed space" summary.
+- **Live log** of every command, plus a "freed space" summary, and a **run history** (manual, scheduled and command-line runs).
 - **Progress** with percent and elapsed time (00:00:00) while scanning and cleaning.
-- **Disk tab**: ncdu-style browser; double-click to drill down, bars show the share of the parent folder, optional scan as root.
-- **Scheduling** via systemd timer (daily / weekly / monthly); logs: `journalctl -u syscleaner`.
+- **Disk tab**: ncdu-style browser with *Open in file manager*, *Copy path* and *Move to trash*; double-click to drill down, bars show the share of the parent folder, optional scan as root.
+- **Scheduling** via systemd timer (daily / weekly / monthly) with *Run now* and the last run's result; logs: `journalctl -u syscleaner`.
 - **Tasks in YAML**: add your own without changing the code.
-- **One password prompt** for all root tasks (polkit / `pkexec`).
-- **Follows your system**: light/dark theme and language (English, Russian, Ukrainian and Italian included), with a manual language choice.
+- **One password prompt** for all root tasks (polkit / `pkexec`), and a confirmation with a size estimate before anything runs.
+- **Follows your system**: light/dark theme and language (English, Russian, Ukrainian, Italian, German, Spanish, French, Polish and Portuguese included), with a manual language choice.
 - **Remembers the window**: size, position and panel split are restored on the next start.
-- **About dialog**: version, update check with a link to the new release, issue tracker and ways to support the project.
+- **About dialog**: version, update check (optional automatic check at startup) with a link to the new release, issue tracker and ways to support the project.
 - **Headless / CLI mode** for scripts and the scheduler.
 
 ## Install
 
-Download the latest `.deb` or `.AppImage` from the [Releases page](https://github.com/agteamdev/syscleaner/releases/latest).
+### APT repository (recommended)
+
+Debian 12+, Ubuntu 22.04+, Linux Mint 21+. Updates arrive together with the rest of your system.
+
+```bash
+sudo install -d -m 0755 /etc/apt/keyrings
+sudo curl -fsSL https://apt.alexgor.com/key.asc -o /etc/apt/keyrings/agteamdev.asc
+sudo curl -fsSL https://apt.alexgor.com/agteamdev.sources -o /etc/apt/sources.list.d/agteamdev.sources
+sudo apt update
+sudo apt install syscleaner
+```
+
+The signed repository lives at [agteamdev/apt](https://github.com/agteamdev/apt). Later versions: `sudo apt update && sudo apt upgrade`.
+
+### Other ways
+
+Download a `.deb` or `.AppImage` from the [Releases page](https://github.com/agteamdev/syscleaner/releases/latest), or run from source:
 
 ```bash
 # .deb (Linux Mint / Debian / Ubuntu)
@@ -78,10 +94,11 @@ tasks:
     risk: safe                       # safe | caution | danger
     estimate: sz ~/.cache/myapp      # prints bytes; sz = total size of paths
     preview: ls -la ~/.cache/myapp | head
-    schedule: true                   # may be scheduled (never for danger)
   - id: brave                        # hide a built-in task
     disabled: true
 ```
+
+Your own tasks are marked *(custom)*; those that run as root also get a ⚠ and always ask for confirmation. They can't be scheduled, because the schedule runs as root and only knows the built-in tasks.
 
 Other fields: `root`, `default`, `requires` (a program that must exist), `requires_path` (folders that must exist, `~` and `*` allowed) and `hide_missing` (hide the task instead of greying it out when those are missing). YAML errors are shown as warnings in the log.
 
@@ -95,6 +112,7 @@ Other fields: `root`, `default`, `requires` (a program that must exist), `requir
 
 ```bash
 make check      # compile + validate YAML + check translations
+make test       # unit tests
 make deb        # dist/syscleaner_<version>_all.deb
 make appimage   # dist/SysCleaner-<version>-x86_64.AppImage
 ```

@@ -7,7 +7,9 @@ import re
 import shlex
 import shutil
 import subprocess
+import time
 
+from . import history
 from .i18n import _
 from .tasks import Task, available
 
@@ -85,7 +87,7 @@ def user_argv(script: str, user: str):
     return ["runuser", "-u", user, "--", "env", f"HOME={home}", "bash", "-c", script]
 
 
-def headless(ids, user: str, tasks, dry: bool = False) -> int:
+def headless(ids, user: str, tasks, dry: bool = False, source: str = "cli") -> int:
     """Run without a GUI (systemd timer / CLI). Tasks with risk=danger are never executed."""
     by = {t.id: t for t in tasks}
     sel: list[Task] = []
@@ -110,6 +112,7 @@ def headless(ids, user: str, tasks, dry: bool = False) -> int:
             print(line, flush=True)
 
     free0 = shutil.disk_usage("/").free
+    t0 = time.monotonic()
     r = Runner()
     rc_all = 0
     root_t = [t for t in sel if t.root]
@@ -122,5 +125,21 @@ def headless(ids, user: str, tasks, dry: bool = False) -> int:
     if user_t:
         rc_all |= r.stream(user_argv(build_script(user_t, dry, len(root_t), len(sel)), user), out)
     if not dry:
-        print(f"\nTotal freed: {fmt_size(max(0, shutil.disk_usage('/').free - free0))}")
+        freed = max(0, shutil.disk_usage("/").free - free0)
+        print(f"\nTotal freed: {fmt_size(freed)}")
+        if sel:
+            _record_history(source, user, sel, freed, time.monotonic() - t0, rc_all == 0)
     return 1 if rc_all else 0
+
+
+def _record_history(source, user, sel, freed, seconds, ok) -> None:
+    """Append the run to the history of `user` (root hands the file over to that user)."""
+    rec = history.make_record(source, [t.id for t in sel], freed, seconds, ok)
+    try:
+        if os.geteuid() == 0:
+            pw = pwd.getpwnam(user)
+            history.add(rec, home=pw.pw_dir, owner=(pw.pw_uid, pw.pw_gid))
+        else:
+            history.add(rec)
+    except KeyError:
+        pass  # unknown user: nothing sensible to write

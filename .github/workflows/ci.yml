@@ -1,0 +1,27 @@
+name: ci
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+jobs:
+  system-python:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Dependencies
+        run: sudo apt-get update && sudo apt-get install -y python3-yaml python3-gi
+      - run: make check
+      - run: make test
+  python-3-10:
+    # Linux Mint 21 ships Python 3.10. A non-English locale proves the tests do not depend on the system language.
+    runs-on: ubuntu-24.04
+    env:
+      LANG: uk_UA.UTF-8
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.10"
+      - run: pip install pyyaml
+      - run: make check
+      - run: make test

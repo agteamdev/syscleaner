@@ -36,6 +36,7 @@ class Task:
     schedule: bool = False  # may be added to the systemd timer schedule
     requires_path: tuple = ()   # globs (~ allowed); the task needs at least one of them to exist
     hide_missing: bool = False  # hide the task entirely when `requires` / `requires_path` is not met
+    source: str = ""            # "" = built-in; otherwise the user's YAML file name (a custom task)
 
 
 def available(t: Task) -> bool:
@@ -75,7 +76,7 @@ def load():
     files = [DATA_DIR / "tasks.yaml"]
     if USER_DIR.is_dir():
         files += sorted(list(USER_DIR.glob("*.yaml")) + list(USER_DIR.glob("*.yml")))
-    for f in files:
+    for idx, f in enumerate(files):
         data = _read(f, warnings)
         for g in data.get("groups") or []:
             try:
@@ -103,8 +104,11 @@ def load():
                     raise ValueError(f"risk must be one of {RISKS}")
                 if t.group not in groups:
                     raise ValueError(f"unknown group '{t.group}'")
-                if t.risk == "danger":
-                    t.schedule = False  # dangerous tasks are never scheduled
+                if idx > 0:
+                    t.source = f.name  # custom task: the GUI marks it and asks before running it as root
+                if t.risk == "danger" or t.source:
+                    # dangerous tasks are never scheduled; the root-run schedule only knows built-in tasks
+                    t.schedule = False
                 tasks[tid] = t
             except Exception as e:  # noqa: BLE001
                 warnings.append(f"{f.name}: task {str(raw)[:50]!r}: {e}")

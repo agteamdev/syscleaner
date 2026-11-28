@@ -41,7 +41,7 @@ def main():
         if a.tasks:
             ids = [x for x in a.tasks.split(",") if x]
         user = user or os.environ.get("SUDO_USER") or pwd.getpwuid(os.getuid()).pw_name
-        return headless(ids, user, tasks, dry=a.dry_run)
+        return headless(ids, user, tasks, dry=a.dry_run, source="schedule" if a.config else "cli")
 
     from .gui import run
     run()

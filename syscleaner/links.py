@@ -2,6 +2,7 @@
 REPO_URL = "https://github.com/agteamdev/syscleaner"
 ISSUES_URL = REPO_URL + "/issues"
 RELEASES_URL = REPO_URL + "/releases"
+APT_URL = "https://github.com/agteamdev/apt"
 PATREON_URL = "https://patreon.com/al3xg0r"
 DONATE_URL = "https://nowpayments.io/donation/al3xg0r"
 API_RELEASES = "https://api.github.com/repos/agteamdev/syscleaner/releases?per_page=10"

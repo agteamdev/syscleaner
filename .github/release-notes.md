@@ -8,14 +8,15 @@ SysCleaner is a graphical cleanup and diagnostics tool for Linux Mint, Debian an
 - Only tasks that apply to your system are shown
 - Risk levels (safe / caution / dangerous) with an explanation for every task; dangerous tasks ask for confirmation and are never scheduled
 - Preview (dry-run) with per-task and total size estimates; nothing is deleted
-- Live log with a summary of freed space
-- Disk tab: ncdu-style browser with scan progress, drill-down and an optional scan as root
-- Scheduling with a systemd timer (daily, weekly, monthly); logs via `journalctl -u syscleaner`
+- Live log with a summary of freed space, plus a run history (manual, scheduled and command-line runs)
+- Disk tab: ncdu-style browser with scan progress, drill-down, an optional scan as root, and actions: open in file manager, copy path, move to trash
+- Scheduling with a systemd timer (daily, weekly, monthly) with "Run now" and the result of the last run; logs via `journalctl -u syscleaner`
 - Your own tasks in YAML (`~/.config/syscleaner/tasks.d/`), no code changes needed
-- Follows the system light/dark theme and language (English, Russian, Ukrainian and Italian included); the language can also be chosen manually
+- Follows the system light/dark theme and language (English, Russian, Ukrainian, Italian, German, Spanish, French, Polish and Portuguese included); the language can also be chosen manually
 - Remembers the window size, position and panel split between runs
 - Progress bar with percent and elapsed time while scanning and cleaning
-- About dialog: version, update check, links to the issue tracker, ways to support the project
+- About dialog: version, update check (optional automatic check at startup), links to the issue tracker, ways to support the project
+- A confirmation with a size estimate before every run; your own root tasks are marked and always confirmed
 - One password prompt per run (polkit / pkexec)
 - CLI / headless mode: `syscleaner --list`, `syscleaner --headless --dry-run --tasks tmp,thumbs`
 
@@ -25,6 +26,7 @@ SysCleaner deliberately does not run `rm -rf /tmp/*`, `rm -rf ~/.cache/*`, `dock
 
 | File | Use with |
 |---|---|
+| APT repository | Debian 12+, Ubuntu 22.04+, Linux Mint 21+: [instructions](https://github.com/agteamdev/apt); updates arrive with `apt upgrade` |
 | `syscleaner_<version>_all.deb` | Linux Mint / Debian / Ubuntu: `sudo apt install ./syscleaner_*_all.deb` |
 | `SysCleaner-<version>-x86_64.AppImage` | Any distro with `python3-gi` and GTK 3: `chmod +x SysCleaner-*.AppImage && ./SysCleaner-*.AppImage` |
 

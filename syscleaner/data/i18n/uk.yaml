@@ -8,58 +8,92 @@ ui:
   (none — check tasks marked with ⏱ in the list): (немає — позначте у списку завдання зі значком ⏱)
   About: Про програму
   About SysCleaner: Про SysCleaner
+  About · new version {latest}: Про програму · нова версія {latest}
   All releases: Усі випуски
   Also see system folders you have no access to (asks for a password): Показати також системні теки без прав доступу (запитає пароль)
   B: Б
-  KB: КБ
-  MB: МБ
-  GB: ГБ
-  TB: ТБ
+  Cancel: Скасувати
   Check again: Перевірити знову
+  Check for updates automatically at startup: Перевіряти оновлення під час запуску
   'Checked tasks marked with ⏱ will run:': 'Запускатимуться позначені завдання зі значком ⏱:'
   Checking for updates…: Перевірка оновлень…
   Cleanup and diagnostics for Linux Mint / Debian / Ubuntu: Очищення та діагностика для Linux Mint / Debian / Ubuntu
   Cleanup schedule (systemd timer): Розклад очищення (systemd timer)
+  Clear history: Очистити історію
   Clear log: Очистити журнал
+  Clear the run history?: Очистити історію запусків?
   Close: Закрити
+  Command line: Командний рядок
+  Contacts api.github.com at most every 12 hours. Only the app name and version are sent.: Звертається до api.github.com не частіше ніж раз на 12 годин. Передаються лише назва й версія програми.
+  Continue: Продовжити
+  Copy path: Копіювати шлях
   Could not check for updates ({reason}).: Не вдалося перевірити оновлення ({reason}).
+  'Could not move to the trash: {err}': 'Не вдалося перемістити до кошика: {err}'
+  'Could not open: {err}': 'Не вдалося відкрити: {err}'
+  Custom task from {file}: Власне завдання з {file}
   Daily: Щодня
-  Dangerous tasks selected: Вибрано небезпечні завдання
+  'Dangerous tasks:': 'Небезпечні завдання:'
   Disable schedule: Вимкнути розклад
   Disabling schedule: Вимкнення розкладу
   'Disk <b>/</b>: used <b>{used:.1f}</b> GB of {total:.1f}, free <b>{free:.1f}</b> GB': 'Диск <b>/</b>: зайнято <b>{used:.1f}</b> ГБ із {total:.1f}, вільно <b>{free:.1f}</b> ГБ'
   Donate (NOWPayments): Пожертвувати (NOWPayments)
+  Duration: Тривалість
   Enable / update: Увімкнути / оновити
   Enabling schedule: Увімкнення розкладу
+  Estimated to free about {size} (from the last preview).: 'Оцінка обсягу, що звільниться: близько {size} (за останнім попереднім переглядом).'
   'Estimated to free for the selection: <b>{size}</b> (approximate)': 'Оцінка обсягу, що звільниться для вибраного: <b>{size}</b> (приблизно)'
+  Failed: Помилка
   'Failed to start: {err}': 'Не вдалося запустити: {err}'
+  Freed: Звільнено
   'Frequency:': 'Періодичність:'
+  GB: ГБ
   GitHub rate limit reached, try again later: перевищено ліміт запитів GitHub, спробуйте пізніше
+  KB: КБ
   'Language:': 'Мова:'
+  'Last run: never': 'Останній запуск: не було'
+  'Last run: {when} ({result})': 'Останній запуск: {when} ({result})'
+  MB: МБ
   MIT license · © AG TEAM DEV: Ліцензія MIT · © AG TEAM DEV
+  Manual: Вручну
   Monthly (1st day): Щомісяця (1-го числа)
+  Move to trash: До кошика
+  Move “{name}” to the trash?: Перемістити «{name}» до кошика?
+  'Moved to the trash: {name}': 'Переміщено до кошика: {name}'
   Name: Назва
   'New version available: {latest} (you have {current}).': 'Доступна нова версія: {latest} (у вас {current}).'
+  New version {latest} is available. Open About to download it.: Доступна нова версія {latest}. Відкрийте «Про програму», щоб завантажити.
   No published releases found yet.: Опублікованих випусків поки немає.
+  No runs recorded yet.: Запусків поки немає.
   No schedulable tasks selected: Немає завдань для розкладу
+  'No size estimate yet. Tip: run “Preview” first.': 'Оцінки розміру ще немає. Порада: спершу зробіть «Попередній перегляд».'
   'Not a folder: {path}': 'Не тека: {path}'
   Nothing selected: Нічого не вибрано
+  Open in file manager: Відкрити у файловому менеджері
   Open the release page: Відкрити сторінку випуску
   PREVIEW (nothing is deleted): ПОПЕРЕДНІЙ ПЕРЕГЛЯД (нічого не видаляється)
+  'Path copied: {path}': 'Шлях скопійовано: {path}'
   Press “Scan”. Double-click a folder to enter it.: Натисніть «Сканувати». Подвійний клік по теці — зайти всередину.
   'Preview uses:': 'Для попереднього перегляду:'
   RUN: ЗАПУСК
+  Refresh: Оновити
+  'Refusing to trash a system folder: {path}': 'Системну теку до кошика не надсилаю: {path}'
   Report an issue: Повідомити про проблему
   Restart now: Перезапустити зараз
+  Result: Результат
   Risk: Ризик
   'Risk:': 'Ризик:'
-  Run “Preview” first. Continue anyway?: Спершу зробіть «Попередній перегляд». Усе одно продовжити?
+  Run: Запустити
+  Run now: Запустити зараз
+  Run the selected tasks? ({n}): Запустити вибрані завдання? ({n})
+  Run them only if you wrote or trust them.: Запускайте їх, лише якщо ви самі їх написали або довіряєте їм.
+  Running the schedule now: Запуск розкладу зараз
   'Runs as root via systemd with low priority; logs: journalctl -u syscleaner. Dangerous tasks are never scheduled.': 'Запуск від root через systemd з низьким пріоритетом; журнал: journalctl -u syscleaner. Небезпечні завдання до розкладу не потрапляють.'
   Safe only: Лише безпечні
   Scan: Сканувати
   Scan stopped: Сканування зупинено
   Schedule disabled and removed: Розклад вимкнено й видалено
   Schedule enabled: Розклад увімкнено
+  Scheduled: За розкладом
   ? 'Select a task on the left to see its description and command.
 
     ⏱ means the task can be added to the schedule. “Preview” deletes nothing and shows a size estimate.'
@@ -70,24 +104,36 @@ ui:
   Select none: Зняти все
   Share of folder: Частка теки
   Size: Розмір
+  Started by: Джерело
   'Status: {status}': 'Стан: {status}'
+  Stopped: Зупинено
+  Success: Успішно
   Support the project: Підтримати проєкт
   'SysCleaner is free and open source. If it saved you time, you can support its development:': 'SysCleaner безкоштовний і з відкритим кодом. Якщо він заощадив вам час, можна підтримати розробку:'
   System default: Як у системі
+  TB: ТБ
   Task: Завдання
+  Tasks: Завдання
+  Tasks that need root will ask for your password once.: Завдання з правами root запросять пароль один раз.
   The SYSCLEANER_LANG environment variable is set and overrides this choice.: У середовищі задано змінну SYSCLEANER_LANG, вона важливіша за цей вибір.
   The new language is applied after a restart.: Нова мова застосується після перезапуску.
+  The preview will run your own tasks as root. Continue?: Попередній перегляд виконає ваші власні завдання від root. Продовжити?
+  This cannot be undone.: Це неможливо скасувати.
   Time must be in HH:MM format: Час має бути у форматі ГГ:ХХ
   Version {version}: Версія {version}
   Wait until the current operation finishes, then restart.: Дочекайтеся завершення поточної операції та перезапустіть.
   Website: Сайт проєкту
   Weekly (Sunday): Щотижня (неділя)
+  When: Коли
   You have the latest version ({current}).: У вас остання версія ({current}).
+  'Your own tasks that run as root (full access to the system):': 'Ваші власні завдання, що працюють від root (повний доступ до системи):'
   '[exit code: {rc}]': '[код повернення: {rc}]'
   as root: від root
   can be scheduled ⏱: можна за розкладом ⏱
+  custom: власне
   'enabled · next run: {when}': 'увімкнено · наступний запуск: {when}'
   'estimate: {size}': 'оцінка: {size}'
+  'failed: {result}': 'помилка: {result}'
   n/a: н/д
   needs root (asks for a password): потрібен root (запитає пароль)
   no connection: немає з’єднання
@@ -96,6 +142,7 @@ ui:
   nothing found: нічого не знайдено
   root tasks (single password prompt): завдання root (один запит пароля)
   starting…: запуск…
+  success: успішно
   'time (HH:MM):': 'час (ГГ:ХХ):'
   unexpected response: неочікувана відповідь сервера
   user tasks: користувацькі завдання
@@ -103,6 +150,14 @@ ui:
   '{pct}% · {done}/{n} · {elapsed} · {cur}': '{pct}% · {done}/{n} · {elapsed} · {cur}'
   '{pct}% · {idx}/{total} · {elapsed} · {title}': '{pct}% · {idx}/{total} · {elapsed} · {title}'
   '{prog} not found': '{prog} не знайдено'
+  '{runs} runs · about {size} freed in total': 'Запусків: {runs} · усього звільнено близько {size}'
+  ? '{size} · {path}
+
+    You can restore it from the trash.'
+  : '{size} · {path}
+
+    Відновити можна з кошика.'
+  “Freed” is the growth of free space on / during a run, so it is approximate.: «Звільнено» — приріст вільного місця на / за час запуску, тому значення приблизне.
   ⏱ Schedule…: ⏱ Розклад…
   ⏳ Scanning… (can take a minute on large filesystems): ⏳ Сканування… (на великих розділах може тривати хвилину)
   ■ Stop: ■ Стоп
@@ -111,11 +166,17 @@ ui:
   ✔ Preview finished. Can free ≈ {size} · {elapsed}: ✔ Попередній перегляд завершено. Можна звільнити ≈ {size} · {elapsed}
   ⬆ Up: ⬆ Вгору
   📊 Disk: 📊 Диск
+  📜 History: 📜 Історія
   🔍 Preview: 🔍 Попередній перегляд
   🔴 dangerous: 🔴 небезпечно
   🟡 caution: 🟡 обережно
   🟢 safe: 🟢 безпечно
   🧹 Cleanup: 🧹 Очищення
+  Updates: Оновлення
+  Project: Проєкт
+  APT repository: Репозиторій APT
+  Preferences: Налаштування
+  'Installed via APT? Update with: sudo apt update && sudo apt upgrade': 'Встановлено через APT? Оновіть командою: sudo apt update && sudo apt upgrade'
 groups:
   clean: 🧹 Система та пакети
   browsers: 🌐 Браузери
